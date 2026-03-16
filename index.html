@@ -4,824 +4,960 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMZ گومرگ - نرخی میوەکان</title>
+<title>خواردنگەی کوردستان</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-:root{
-–gold:#D4A017;
-–gold2:#F5C842;
-–dark:#0A0E1A;
-–dark2:#111827;
-–dark3:#1C2536;
-–card:#16202F;
-–border:#2A3A52;
-–text:#E8EDF5;
-–text2:#8FA3BF;
-–green:#22C97A;
-–red:#FF4D6A;
-–blue:#3B82F6;
-–shadow:0 8px 32px rgba(0,0,0,.5);
+:root {
+–clay: #8B3A0F;
+–gold: #C8941A;
+–cream: #F5EDD8;
+–dark: #1A0E05;
+–olive: #5C6B2E;
+–rust: #A84B1E;
+–sand: #E8D5A3;
+–smoke: #F9F4EA;
 }
 
-html{scroll-behavior:smooth}
+- { margin: 0; padding: 0; box-sizing: border-box; }
 
-body{
-background:var(–dark);
-color:var(–text);
-font-family:‘Noto Naskh Arabic’,serif;
-min-height:100vh;
-direction:rtl;
-overflow-x:hidden;
-}
-
-/* BG GRID */
-body::before{
-content:’’;
-position:fixed;inset:0;
-background:
-linear-gradient(rgba(212,160,23,.03) 1px,transparent 1px),
-linear-gradient(90deg,rgba(212,160,23,.03) 1px,transparent 1px);
-background-size:40px 40px;
-pointer-events:none;z-index:0;
+body {
+font-family: ‘Noto Naskh Arabic’, ‘Arial Unicode MS’, Arial, sans-serif;
+background-color: var(–cream);
+color: var(–dark);
+min-height: 100vh;
+position: relative;
+overflow-x: hidden;
 }
 
-/* HEADER */
-header{
-position:sticky;top:0;z-index:100;
-background:rgba(10,14,26,.92);
-backdrop-filter:blur(16px);
-border-bottom:1px solid var(–border);
-padding:0 24px;
-display:flex;align-items:center;justify-content:space-between;
-height:64px;
+/* ===== PATTERN BACKGROUND ===== */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+z-index: 0;
+opacity: 0.06;
+background-image:
+repeating-linear-gradient(45deg, var(–clay) 0, var(–clay) 1px, transparent 0, transparent 50%),
+repeating-linear-gradient(-45deg, var(–clay) 0, var(–clay) 1px, transparent 0, transparent 50%);
+background-size: 20px 20px;
+pointer-events: none;
 }
 
-.logo{
-display:flex;align-items:center;gap:10px;
-font-size:1.5rem;font-weight:700;
-color:var(–gold);
-letter-spacing:1px;
-text-shadow:0 0 20px rgba(212,160,23,.4);
+/* ===== BORDER FRAME ===== */
+.page-frame {
+position: fixed;
+inset: 10px;
+border: 3px solid var(–gold);
+z-index: 999;
+pointer-events: none;
 }
-.logo span{font-size:.85rem;color:var(–text2);font-weight:400}
-
-.header-right{display:flex;align-items:center;gap:16px}
-
-.live-badge{
-display:flex;align-items:center;gap:6px;
-background:rgba(34,201,122,.1);
-border:1px solid rgba(34,201,122,.3);
-border-radius:20px;padding:4px 12px;
-font-size:.78rem;color:var(–green);
-}
-.live-dot{
-width:7px;height:7px;border-radius:50%;
-background:var(–green);
-animation:pulse 1.5s infinite;
+.page-frame::before {
+content: ‘’;
+position: absolute;
+inset: 4px;
+border: 1px solid var(–rust);
+pointer-events: none;
 }
 
-#clock{font-size:.85rem;color:var(–text2)}
+/* Corner ornaments */
+.corner {
+position: absolute;
+width: 40px;
+height: 40px;
+pointer-events: none;
+}
+.corner-tl { top: -3px; right: -3px; border-top: 6px solid var(–clay); border-right: 6px solid var(–clay); }
+.corner-tr { top: -3px; left: -3px; border-top: 6px solid var(–clay); border-left: 6px solid var(–clay); }
+.corner-bl { bottom: -3px; right: -3px; border-bottom: 6px solid var(–clay); border-right: 6px solid var(–clay); }
+.corner-br { bottom: -3px; left: -3px; border-bottom: 6px solid var(–clay); border-left: 6px solid var(–clay); }
 
-/* TICKER */
-.ticker-wrap{
-background:var(–dark3);
-border-bottom:1px solid var(–border);
-overflow:hidden;padding:8px 0;
-position:relative;z-index:1;
-}
-.ticker-inner{
-display:flex;gap:0;
-animation:ticker 35s linear infinite;
-white-space:nowrap;
-}
-.ticker-item{
-display:inline-flex;align-items:center;gap:8px;
-padding:0 28px;font-size:.82rem;
-border-right:1px solid var(–border);
-}
-.ticker-item .t-name{color:var(–text2)}
-.ticker-item .t-price{color:var(–gold);font-weight:600}
-.ticker-item .t-chg.up{color:var(–green)}
-.ticker-item .t-chg.dn{color:var(–red)}
-
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* MAIN */
-main{position:relative;z-index:1;padding:28px 24px 60px;max-width:1400px;margin:0 auto}
-
-/* STATS ROW */
-.stats-row{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:16px;margin-bottom:32px;
-}
-.stat-card{
-background:var(–card);
-border:1px solid var(–border);
-border-radius:14px;
-padding:18px 20px;
-display:flex;flex-direction:column;gap:6px;
-transition:border-color .2s;
-}
-.stat-card:hover{border-color:var(–gold)}
-.stat-label{font-size:.75rem;color:var(–text2)}
-.stat-val{font-size:1.4rem;font-weight:700;color:var(–gold)}
-.stat-sub{font-size:.72rem;color:var(–text2)}
-
-/* SECTION TITLE */
-.sec-head{
-display:flex;align-items:center;justify-content:space-between;
-margin-bottom:20px;
-}
-.sec-title{font-size:1.1rem;font-weight:600;display:flex;align-items:center;gap:8px}
-.sec-title::before{
-content:’’;display:inline-block;
-width:4px;height:20px;border-radius:2px;
-background:var(–gold);
+/* ===== MAIN WRAPPER ===== */
+.wrapper {
+position: relative;
+z-index: 1;
+max-width: 900px;
+margin: 0 auto;
+padding: 40px 30px 60px;
 }
 
-/* FILTER BAR */
-.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
-.filter-btn{
-background:var(–card);
-border:1px solid var(–border);
-border-radius:20px;padding:6px 16px;
-color:var(–text2);font-size:.8rem;
-cursor:pointer;transition:.2s;
-font-family:inherit;
-}
-.filter-btn:hover,.filter-btn.active{
-background:var(–gold);
-border-color:var(–gold);
-color:#000;font-weight:600;
+/* ===== HEADER ===== */
+.header {
+text-align: center;
+padding: 40px 20px 30px;
+position: relative;
 }
 
-/* SEARCH */
-.search-box{
-position:relative;margin-bottom:24px;
-max-width:360px;
-}
-.search-box input{
-width:100%;background:var(–card);
-border:1px solid var(–border);border-radius:10px;
-padding:10px 16px 10px 40px;
-color:var(–text);font-size:.88rem;
-font-family:inherit;direction:rtl;
-transition:border-color .2s;
-outline:none;
-}
-.search-box input:focus{border-color:var(–gold)}
-.search-box input::placeholder{color:var(–text2)}
-.search-icon{
-position:absolute;left:12px;top:50%;transform:translateY(-50%);
-color:var(–text2);font-size:.9rem;pointer-events:none;
+.header-ornament {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+margin-bottom: 18px;
 }
 
-/* GRID */
-.fruits-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:18px;
+.ornament-line {
+flex: 1;
+height: 2px;
+background: linear-gradient(to left, transparent, var(–gold), var(–rust), var(–gold), transparent);
+max-width: 160px;
 }
 
-.fruit-card{
-background:var(–card);
-border:1px solid var(–border);
-border-radius:16px;
-overflow:hidden;
-cursor:pointer;
-transition:transform .2s,border-color .2s,box-shadow .2s;
-animation:fadeUp .4s ease both;
-position:relative;
+.ornament-diamond {
+width: 14px;
+height: 14px;
+background: var(–clay);
+transform: rotate(45deg);
+position: relative;
+flex-shrink: 0;
 }
-.fruit-card:hover{
-transform:translateY(-4px);
-border-color:var(–gold);
-box-shadow:0 12px 40px rgba(212,160,23,.15);
-}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-.card-top{
-padding:22px 18px 14px;
-display:flex;flex-direction:column;align-items:center;gap:8px;
-background:linear-gradient(160deg,rgba(212,160,23,.06),transparent);
-}
-.fruit-emoji{font-size:2.6rem;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
-.fruit-name{font-size:1rem;font-weight:600}
-.fruit-origin{
-font-size:.72rem;color:var(–text2);
-background:rgba(255,255,255,.05);
-border-radius:8px;padding:2px 8px;
+.ornament-diamond::before {
+content: ‘’;
+position: absolute;
+inset: 3px;
+background: var(–gold);
+transform: rotate(0deg);
 }
 
-.card-body{padding:14px 18px 16px}
+.header-badge {
+display: inline-block;
+background: var(–clay);
+color: var(–cream);
+font-size: 12px;
+letter-spacing: 3px;
+padding: 5px 20px;
+border-radius: 0;
+text-transform: uppercase;
+margin-bottom: 14px;
+position: relative;
+}
+.header-badge::before,
+.header-badge::after {
+content: ‘✦’;
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+color: var(–gold);
+font-size: 10px;
+}
+.header-badge::before { right: -18px; }
+.header-badge::after { left: -18px; }
 
-.price-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}
-.price-main{font-size:1.35rem;font-weight:700;color:var(–gold)}
-.price-unit{font-size:.7rem;color:var(–text2);margin-bottom:2px}
-.price-change{
-display:flex;align-items:center;gap:3px;
-font-size:.8rem;font-weight:600;padding:3px 8px;
-border-radius:8px;
-}
-.price-change.up{background:rgba(34,201,122,.12);color:var(–green)}
-.price-change.dn{background:rgba(255,77,106,.12);color:var(–red)}
-.price-change.flat{background:rgba(255,255,255,.06);color:var(–text2)}
-
-.mini-chart{
-height:38px;display:flex;align-items:flex-end;gap:3px;
-margin-bottom:10px;
-}
-.mini-bar{
-flex:1;border-radius:3px 3px 0 0;
-background:var(–border);
-transition:height .4s ease;
-position:relative;
-}
-.mini-bar.active{background:var(–gold);opacity:.7}
-.mini-bar.today{background:var(–gold);opacity:1}
-
-.card-footer{
-display:flex;justify-content:space-between;
-font-size:.72rem;color:var(–text2);
-padding-top:10px;
-border-top:1px solid var(–border);
+.restaurant-name {
+font-size: clamp(36px, 7vw, 64px);
+font-weight: 700;
+color: var(–clay);
+line-height: 1.2;
+text-shadow: 2px 3px 0px rgba(139,58,15,0.15);
+margin-bottom: 6px;
 }
 
-/* BADGE */
-.badge{
-position:absolute;top:10px;left:10px;
-font-size:.65rem;font-weight:700;
-padding:3px 8px;border-radius:6px;
-text-transform:uppercase;letter-spacing:.5px;
+.restaurant-sub {
+font-size: 16px;
+color: var(–rust);
+letter-spacing: 1px;
+margin-bottom: 20px;
+opacity: 0.85;
 }
-.badge.new{background:rgba(59,130,246,.2);color:var(–blue);border:1px solid rgba(59,130,246,.3)}
-.badge.hot{background:rgba(255,77,106,.2);color:var(–red);border:1px solid rgba(255,77,106,.3)}
-.badge.sale{background:rgba(212,160,23,.2);color:var(–gold);border:1px solid rgba(212,160,23,.3)}
 
-/* MODAL */
-.modal-overlay{
-position:fixed;inset:0;
-background:rgba(0,0,0,.75);
-backdrop-filter:blur(6px);
-z-index:200;
-display:flex;align-items:center;justify-content:center;
-padding:20px;
-opacity:0;pointer-events:none;
-transition:opacity .25s;
+.header-kilim {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 0;
+margin: 18px auto 0;
+max-width: 400px;
+height: 18px;
+overflow: hidden;
 }
-.modal-overlay.open{opacity:1;pointer-events:all}
 
-.modal{
-background:var(–dark2);
-border:1px solid var(–border);
-border-radius:20px;
-width:100%;max-width:480px;
-max-height:90vh;overflow-y:auto;
-transform:scale(.95);
-transition:transform .25s;
-box-shadow:0 24px 80px rgba(0,0,0,.7);
+.kilim-seg {
+height: 100%;
+flex: 1;
 }
-.modal-overlay.open .modal{transform:scale(1)}
 
-.modal-header{
-padding:20px 24px;
-border-bottom:1px solid var(–border);
-display:flex;justify-content:space-between;align-items:center;
+/* ===== SECTION ===== */
+.section {
+margin-bottom: 40px;
+animation: fadeUp 0.6s ease both;
 }
-.modal-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px}
-.modal-close{
-background:rgba(255,255,255,.06);border:none;
-width:32px;height:32px;border-radius:8px;
-color:var(–text);font-size:1.1rem;cursor:pointer;
-display:flex;align-items:center;justify-content:center;
-transition:.2s;
-}
-.modal-close:hover{background:var(–red);color:#fff}
 
-.modal-body{padding:24px}
-
-.modal-price-big{
-text-align:center;margin-bottom:20px;
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to   { opacity: 1; transform: translateY(0); }
 }
-.modal-price-big .mprice{font-size:2.4rem;font-weight:700;color:var(–gold)}
-.modal-price-big .munit{font-size:.85rem;color:var(–text2)}
 
-.info-grid{
-display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;
-}
-.info-item{
-background:var(–card);border:1px solid var(–border);
-border-radius:10px;padding:12px 14px;
-}
-.info-item .il{font-size:.72rem;color:var(–text2);margin-bottom:4px}
-.info-item .iv{font-size:.95rem;font-weight:600}
+.section:nth-child(1) { animation-delay: 0.1s; }
+.section:nth-child(2) { animation-delay: 0.2s; }
+.section:nth-child(3) { animation-delay: 0.3s; }
+.section:nth-child(4) { animation-delay: 0.4s; }
+.section:nth-child(5) { animation-delay: 0.5s; }
 
-.week-chart{margin-bottom:20px}
-.week-chart-title{font-size:.8rem;color:var(–text2);margin-bottom:10px}
-.week-bars{display:flex;align-items:flex-end;gap:6px;height:80px}
-.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.week-bar{
-width:100%;border-radius:4px 4px 0 0;
-background:var(–border);
-transition:height .5s ease;
+.section-header {
+display: flex;
+align-items: center;
+gap: 14px;
+margin-bottom: 20px;
+padding-bottom: 12px;
+border-bottom: 2px solid var(–sand);
+position: relative;
 }
-.week-bar.today{background:var(–gold)}
-.week-day{font-size:.6rem;color:var(–text2)}
-.week-price-label{font-size:.6rem;color:var(–text2)}
 
-.ai-note{
-background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(212,160,23,.08));
-border:1px solid rgba(212,160,23,.2);
-border-radius:12px;padding:14px;
-font-size:.8rem;color:var(–text2);
-line-height:1.7;
-display:flex;gap:10px;
+.section-header::after {
+content: ‘’;
+position: absolute;
+bottom: -2px;
+right: 0;
+width: 80px;
+height: 2px;
+background: var(–clay);
 }
-.ai-icon{font-size:1.2rem;flex-shrink:0}
 
-/* AI REFRESH */
-.refresh-bar{
-display:flex;align-items:center;justify-content:space-between;
-background:var(–dark3);border:1px solid var(–border);
-border-radius:12px;padding:12px 18px;
-margin-bottom:28px;
+.section-icon {
+width: 46px;
+height: 46px;
+background: var(–clay);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 22px;
+flex-shrink: 0;
+box-shadow: 0 3px 10px rgba(139,58,15,0.3);
+border: 2px solid var(–gold);
 }
-.refresh-info{font-size:.8rem;color:var(–text2)}
-.refresh-info strong{color:var(–text)}
-.refresh-btn{
-background:var(–gold);
-border:none;border-radius:8px;
-padding:8px 18px;
-color:#000;font-weight:700;font-size:.8rem;
-font-family:inherit;cursor:pointer;
-display:flex;align-items:center;gap:6px;
-transition:.2s;
+
+.section-title {
+font-size: 26px;
+font-weight: 700;
+color: var(–clay);
 }
-.refresh-btn:hover{background:var(–gold2)}
-.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
-.spin{animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 
-/* LOADING SKELETON */
-.skeleton{
-background:linear-gradient(90deg,var(–card) 25%,var(–dark3) 50%,var(–card) 75%);
-background-size:200% 100%;
-animation:shimmer 1.4s infinite;
-border-radius:8px;
+.section-title-en {
+font-size: 12px;
+color: var(–rust);
+opacity: 0.7;
+display: block;
+font-weight: 400;
+margin-top: 2px;
+letter-spacing: 1.5px;
+text-transform: uppercase;
 }
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(–dark)}
-::-webkit-scrollbar-thumb{background:var(–border);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(–gold)}
-
-/* TOAST */
-.toast{
-position:fixed;bottom:24px;right:24px;
-background:var(–dark3);border:1px solid var(–border);
-border-radius:12px;padding:12px 18px;
-font-size:.82rem;color:var(–text);
-display:flex;align-items:center;gap:10px;
-z-index:300;
-transform:translateY(80px);opacity:0;
-transition:.3s cubic-bezier(.34,1.56,.64,1);
-box-shadow:var(–shadow);
+/* ===== MENU GRID ===== */
+.menu-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 16px;
 }
-.toast.show{transform:translateY(0);opacity:1}
-.toast-icon{font-size:1.1rem}
 
-/* RESPONSIVE */
-@media(max-width:640px){
-header{padding:0 14px}
-main{padding:18px 14px 50px}
-.fruits-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.stats-row{grid-template-columns:repeat(2,1fr)}
-.info-grid{grid-template-columns:1fr 1fr}
+/* ===== MENU CARD ===== */
+.menu-card {
+background: var(–smoke);
+border: 1px solid var(–sand);
+border-radius: 2px;
+padding: 18px 16px;
+position: relative;
+transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+cursor: default;
+overflow: hidden;
+}
+
+.menu-card::before {
+content: ‘’;
+position: absolute;
+top: 0;
+right: 0;
+width: 4px;
+height: 100%;
+background: var(–clay);
+opacity: 0;
+transition: opacity 0.25s;
+}
+
+.menu-card:hover {
+box-shadow: 0 6px 24px rgba(139,58,15,0.14);
+transform: translateY(-2px);
+border-color: var(–gold);
+}
+
+.menu-card:hover::before { opacity: 1; }
+
+.card-pattern {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 4px;
+background: repeating-linear-gradient(
+90deg,
+var(–clay) 0, var(–clay) 8px,
+var(–gold) 8px, var(–gold) 16px,
+var(–olive) 16px, var(–olive) 24px,
+var(–gold) 24px, var(–gold) 32px
+);
+}
+
+.card-top {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 8px;
+gap: 10px;
+}
+
+.item-name {
+font-size: 18px;
+font-weight: 700;
+color: var(–dark);
+line-height: 1.3;
+flex: 1;
+}
+
+.item-name-en {
+font-size: 11px;
+color: var(–rust);
+opacity: 0.65;
+display: block;
+margin-top: 2px;
+font-weight: 400;
+letter-spacing: 0.5px;
+}
+
+.price-tag {
+background: var(–clay);
+color: var(–cream);
+font-size: 14px;
+font-weight: 700;
+padding: 4px 12px;
+border-radius: 20px;
+white-space: nowrap;
+flex-shrink: 0;
+box-shadow: 0 2px 6px rgba(139,58,15,0.3);
+}
+
+.item-desc {
+font-size: 13px;
+color: #5a4030;
+line-height: 1.7;
+margin-bottom: 10px;
+opacity: 0.85;
+}
+
+.item-badges {
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+}
+
+.badge {
+font-size: 11px;
+padding: 2px 10px;
+border-radius: 20px;
+font-weight: 600;
+letter-spacing: 0.3px;
+}
+.badge-spicy  { background: #fff0eb; color: #c0390e; border: 1px solid #f0b8a0; }
+.badge-veg    { background: #edf5e5; color: #3a6b1a; border: 1px solid #b5d99a; }
+.badge-popular{ background: #fff8e6; color: #8a6000; border: 1px solid #f0d070; }
+.badge-grilled{ background: #f5f0e8; color: #6b4c1a; border: 1px solid #d4b87a; }
+
+/* ===== DRINKS SECTION SPECIAL CARD ===== */
+.drinks-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+gap: 14px;
+}
+
+.drink-card {
+background: var(–smoke);
+border: 1px solid var(–sand);
+padding: 16px;
+text-align: center;
+position: relative;
+transition: transform 0.25s, box-shadow 0.25s;
+}
+.drink-card:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 18px rgba(139,58,15,0.12);
+}
+
+.drink-icon { font-size: 30px; margin-bottom: 8px; display: block; }
+
+.drink-name {
+font-size: 15px;
+font-weight: 700;
+color: var(–dark);
+margin-bottom: 3px;
+}
+
+.drink-price {
+font-size: 13px;
+color: var(–clay);
+font-weight: 600;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+display: flex;
+align-items: center;
+gap: 14px;
+margin: 36px 0;
+}
+.divider-line {
+flex: 1;
+height: 1px;
+background: linear-gradient(to left, transparent, var(–sand), var(–gold), var(–sand), transparent);
+}
+.divider-symbol {
+font-size: 20px;
+color: var(–clay);
+flex-shrink: 0;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+text-align: center;
+padding: 30px 20px 20px;
+border-top: 2px solid var(–sand);
+position: relative;
+}
+.footer::before {
+content: ‘’;
+position: absolute;
+top: -2px;
+left: 50%;
+transform: translateX(-50%);
+width: 100px;
+height: 2px;
+background: var(–clay);
+}
+
+.footer-logo {
+font-size: 28px;
+margin-bottom: 10px;
+}
+
+.footer-text {
+font-size: 14px;
+color: var(–rust);
+opacity: 0.75;
+line-height: 1.8;
+}
+
+.footer-contact {
+display: flex;
+justify-content: center;
+gap: 24px;
+margin-top: 14px;
+flex-wrap: wrap;
+}
+.contact-item {
+font-size: 13px;
+color: var(–clay);
+font-weight: 600;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 600px) {
+.wrapper { padding: 30px 18px 50px; }
+.restaurant-name { font-size: 36px; }
+.menu-grid { grid-template-columns: 1fr; }
+.drinks-grid { grid-template-columns: repeat(2, 1fr); }
+.page-frame { inset: 6px; }
 }
 </style>
 
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- Page Border Frame -->
 
-<header>
-  <div class="logo">
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      <rect width="28" height="28" rx="7" fill="#D4A017" opacity=".15"/>
-      <path d="M6 20L10 8L14 16L18 10L22 20" stroke="#D4A017" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    AMZ <span>گومرگ</span>
-  </div>
-  <div class="header-right">
-    <div class="live-badge"><div class="live-dot"></div> زیندوو</div>
-    <div id="clock">--:--:--</div>
-  </div>
-</header>
-
-<!-- TICKER -->
-
-<div class="ticker-wrap">
-  <div class="ticker-inner" id="ticker"></div>
+<div class="page-frame">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
 </div>
 
-<main>
+<div class="wrapper">
 
-  <!-- STATS -->
+  <!-- ===== HEADER ===== -->
 
-  <div class="stats-row" id="statsRow">
-    <div class="stat-card"><div class="stat-label">کۆی میوەکان</div><div class="stat-val" id="st1">--</div><div class="stat-sub">جۆر</div></div>
-    <div class="stat-card"><div class="stat-label">باشترین نرخ</div><div class="stat-val" id="st2">--</div><div class="stat-sub">دینار/کیلۆ</div></div>
-    <div class="stat-card"><div class="stat-label">نرخی ناوەند</div><div class="stat-val" id="st3">--</div><div class="stat-sub">دینار/کیلۆ</div></div>
-    <div class="stat-card"><div class="stat-label">کاتی نوێکردنەوە</div><div class="stat-val" id="st4" style="font-size:1rem">--</div><div class="stat-sub">کاتژمێر</div></div>
-  </div>
-
-  <!-- REFRESH BAR -->
-
-  <div class="refresh-bar">
-    <div class="refresh-info">
-      دوایین نوێکردنەوە: <strong id="lastUpdate">چاوەڕوانبە...</strong>
-      &nbsp;·&nbsp; سەرچاوە: AI نرخی گومرگ
+  <header class="header">
+    <div class="header-badge">خواردنگەی کوردستان</div>
+    <h1 class="restaurant-name">دەمی کوردستان</h1>
+    <p class="restaurant-sub">تامی ئەسڵی ئاژوانی کوردی</p>
+    <div class="header-ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <span style="font-size:22px; color:var(--clay);">❋</span>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line"></div>
     </div>
-    <button class="refresh-btn" id="refreshBtn" type="button" onclick="loadPrices(true)">
-      <span id="refreshIcon">↻</span> نوێکردنەوە
-    </button>
-  </div>
-
-  <!-- FILTER + SEARCH -->
-
-  <div class="sec-head">
-    <div class="sec-title">نرخی میوەکان — ئەمرۆ</div>
-  </div>
-
-  <div class="filter-bar" id="filterBar">
-    <button class="filter-btn active" type="button" data-cat="all" onclick="setFilter(this,'all')">هەموو</button>
-    <button class="filter-btn" type="button" data-cat="تروپیکاڵ" onclick="setFilter(this,'تروپیکاڵ')">تروپیکاڵ</button>
-    <button class="filter-btn" type="button" data-cat="خۆجێی" onclick="setFilter(this,'خۆجێی')">خۆجێی</button>
-    <button class="filter-btn" type="button" data-cat="ئەوروپی" onclick="setFilter(this,'ئەوروپی')">ئەوروپی</button>
-    <button class="filter-btn" type="button" data-cat="ئاسیایی" onclick="setFilter(this,'ئاسیایی')">ئاسیایی</button>
-    <button class="filter-btn" type="button" data-cat="وشک" onclick="setFilter(this,'وشک')">وشک</button>
-  </div>
-
-  <div class="search-box">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="گەڕان بە میوەدا..." oninput="renderCards()">
-  </div>
-
-  <!-- GRID -->
-
-  <div class="fruits-grid" id="fruitsGrid"></div>
-
-</main>
-
-<!-- MODAL -->
-
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modalTitle">---</div>
-      <button class="modal-close" type="button" onclick="closeModalDirect()">✕</button>
+    <!-- Kilim stripe -->
+    <div class="header-kilim">
+      <div class="kilim-seg" style="background:#8B3A0F;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#5C6B2E;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#8B3A0F;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#5C6B2E;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#8B3A0F;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#5C6B2E;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#8B3A0F;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#5C6B2E;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#8B3A0F;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
+      <div class="kilim-seg" style="background:#5C6B2E;"></div>
+      <div class="kilim-seg" style="background:#C8941A;"></div>
     </div>
-    <div class="modal-body" id="modalBody"></div>
+  </header>
+
+  <!-- ===== SOUPS ===== -->
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon">🍲</div>
+      <div>
+        <h2 class="section-title">شۆربا و پێشخوران</h2>
+        <span class="section-title-en">Soups & Starters</span>
+      </div>
+    </div>
+    <div class="menu-grid">
+
+```
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">شۆربای دووپیازە</div>
+        <span class="item-name-en">Lentil Soup</span>
+      </div>
+      <div class="price-tag">٣٠٠٠ د</div>
+    </div>
+    <p class="item-desc">شۆربای گەرم بە مەرچ و پیازی سووتاو، دروستکراوە بە شێوازی کوردی ئەسڵی</p>
+    <div class="item-badges">
+      <span class="badge badge-veg">بێ گۆشت</span>
+      <span class="badge badge-popular">بازاری</span>
+    </div>
   </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">ماستاوا</div>
+        <span class="item-name-en">Mastawa</span>
+      </div>
+      <div class="price-tag">٣٥٠٠ د</div>
+    </div>
+    <p class="item-desc">شۆربای کلاسیکی کوردی بە برنج، گۆشت و مژووی ترش، چێژێکی بێهاو هەیە</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">بازاری</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">دۆلمەی گەڵا</div>
+        <span class="item-name-en">Vine Leaf Dolma</span>
+      </div>
+      <div class="price-tag">٤٠٠٠ د</div>
+    </div>
+    <p class="item-desc">گەڵای مێوەی توو پڕکراوە بە برنج و گۆشتی خاو و بهاراتی کوردی</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">بازاری</span>
+    </div>
+  </div>
+
 </div>
+```
 
-<!-- TOAST -->
+  </section>
 
-<div class="toast" id="toast"><span class="toast-icon">✅</span><span id="toastMsg"></span></div>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">❧</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== MAIN DISHES ===== -->
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon">🍖</div>
+      <div>
+        <h2 class="section-title">خواردنی سەرەکی</h2>
+        <span class="section-title-en">Main Courses</span>
+      </div>
+    </div>
+    <div class="menu-grid">
+
+```
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">کەباب کوردی</div>
+        <span class="item-name-en">Kurdish Kebab</span>
+      </div>
+      <div class="price-tag">٨٠٠٠ د</div>
+    </div>
+    <p class="item-desc">گۆشتی مەڕ خڵەتکراوە بە بهاراتی تایبەت، لە سێخ بریژراوەتەوە بە ئاگری دروو</p>
+    <div class="item-badges">
+      <span class="badge badge-grilled">سێخبريژاو</span>
+      <span class="badge badge-popular">بازاری</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">بریانی</div>
+        <span class="item-name-en">Biryani</span>
+      </div>
+      <div class="price-tag">١٢٠٠٠ د</div>
+    </div>
+    <p class="item-desc">برنج و مریشکی لەگەڵ زەعفران و بهاراتی ئەربیلی، یەکێک لە ناوداران‌ترین خواردنەکانی کوردستان</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">ناوداربووی ئەربیل</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">قەیمە</div>
+        <span class="item-name-en">Qeyme</span>
+      </div>
+      <div class="price-tag">٩٠٠٠ د</div>
+    </div>
+    <p class="item-desc">گۆشتی بڕیرد لەگەڵ نەخۆدی سور و مژووی لیموو، بە برنجی سپی خزمەتپێشکەش دەکرێت</p>
+    <div class="item-badges">
+      <span class="badge badge-spicy">تیژ</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">تاس کەباب</div>
+        <span class="item-name-en">Tas Kebab</span>
+      </div>
+      <div class="price-tag">١٠٠٠٠ د</div>
+    </div>
+    <p class="item-desc">گۆشتی مەڕ لەگەڵ سووک‌سەوزەی کۆمەڵکراو، کەم‌کەم لە گازی ئاستا پێزراوە</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">تایبەتی ئێمە</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">کلەیچە بە گۆشت</div>
+        <span class="item-name-en">Meat Kleicha</span>
+      </div>
+      <div class="price-tag">٧٠٠٠ د</div>
+    </div>
+    <p class="item-desc">نانی تازە پڕکراوە بە گۆشت و گیاهی خوش‌بۆ، لە تەنووری سنگگ بریژراوەتەوە</p>
+    <div class="item-badges">
+      <span class="badge badge-grilled">تەنووری</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">شاورما کوردی</div>
+        <span class="item-name-en">Kurdish Shawarma</span>
+      </div>
+      <div class="price-tag">٦٥٠٠ د</div>
+    </div>
+    <p class="item-desc">مریشکی بریجاو لەگەڵ ترشی دروستکراو و سووسی تاهینی تایبەت بە ئێمە</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">بازاری</span>
+      <span class="badge badge-spicy">تیژی ناوینە</span>
+    </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">❧</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== SIDES ===== -->
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon">🥗</div>
+      <div>
+        <h2 class="section-title">تەرخان و پاشخوران</h2>
+        <span class="section-title-en">Sides & Salads</span>
+      </div>
+    </div>
+    <div class="menu-grid">
+
+```
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">سیرگەی کوردی</div>
+        <span class="item-name-en">Kurdish Salad</span>
+      </div>
+      <div class="price-tag">٢٠٠٠ د</div>
+    </div>
+    <p class="item-desc">گۆگەڵ، گوێزەڵ، پیازەڕەش و ترەخ لەگەڵ ئاوی لیموو و رۆنی زەیتوون</p>
+    <div class="item-badges">
+      <span class="badge badge-veg">وێژەتاریان</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">ماست و خیار</div>
+        <span class="item-name-en">Yogurt & Cucumber</span>
+      </div>
+      <div class="price-tag">١٥٠٠ د</div>
+    </div>
+    <p class="item-desc">ماستی گوندی لەگەڵ خیاری تازە و دۆڵمەی چۆچکەی سووچکراو</p>
+    <div class="item-badges">
+      <span class="badge badge-veg">وێژەتاریان</span>
+      <span class="badge badge-popular">بازاری</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">نان و کوردی مایۆ</div>
+        <span class="item-name-en">Bread & Hummus</span>
+      </div>
+      <div class="price-tag">٢٥٠٠ د</div>
+    </div>
+    <p class="item-desc">نانی گەرمی تازەی تەنووری لەگەڵ حومموس و رۆنی زەیتوونی باکووری عێراق</p>
+    <div class="item-badges">
+      <span class="badge badge-veg">وێژەتاریان</span>
+    </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">❧</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== SWEETS ===== -->
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon">🍮</div>
+      <div>
+        <h2 class="section-title">شیرینی و دەسەرت</h2>
+        <span class="section-title-en">Sweets & Desserts</span>
+      </div>
+    </div>
+    <div class="menu-grid">
+
+```
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">کلێچە</div>
+        <span class="item-name-en">Kleicha</span>
+      </div>
+      <div class="price-tag">٢٥٠٠ د</div>
+    </div>
+    <p class="item-desc">شیرینی تەنووری کوردی پڕکراوە بە خورما یان گووزە، دروستکراوە بە دەست</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">تراديشنی</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">زەردە</div>
+        <span class="item-name-en">Zarda</span>
+      </div>
+      <div class="price-tag">٣٠٠٠ د</div>
+    </div>
+    <p class="item-desc">برنجی شیرین بە زەعفران و گوردی و کشمشی ئاسیا، دەسەرتی ئایینی کوردستان</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">ئایینی</span>
+      <span class="badge badge-veg">وێژەتاریان</span>
+    </div>
+  </div>
+
+  <div class="menu-card">
+    <div class="card-pattern"></div>
+    <div class="card-top">
+      <div>
+        <div class="item-name">حریسە بە قایمەق</div>
+        <span class="item-name-en">Harisa with Cream</span>
+      </div>
+      <div class="price-tag">٣٥٠٠ د</div>
+    </div>
+    <p class="item-desc">شیرینی گەندوم بە مەڵبەندی چۆو و شەکر بە سەروو قایمەقی گاو</p>
+    <div class="item-badges">
+      <span class="badge badge-popular">بازاری</span>
+    </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-symbol">❧</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- ===== DRINKS ===== -->
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-icon">☕</div>
+      <div>
+        <h2 class="section-title">خواردنەوە</h2>
+        <span class="section-title-en">Beverages</span>
+      </div>
+    </div>
+    <div class="drinks-grid">
+
+```
+  <div class="drink-card">
+    <span class="drink-icon">☕</span>
+    <div class="drink-name">چای کوردی</div>
+    <div class="drink-price">١٠٠٠ د</div>
+  </div>
+
+  <div class="drink-card">
+    <span class="drink-icon">🫖</span>
+    <div class="drink-name">قاوەی عەرەبی</div>
+    <div class="drink-price">١٥٠٠ د</div>
+  </div>
+
+  <div class="drink-card">
+    <span class="drink-icon">🥛</span>
+    <div class="drink-name">دووغ</div>
+    <div class="drink-price">١٥٠٠ د</div>
+  </div>
+
+  <div class="drink-card">
+    <span class="drink-icon">🍋</span>
+    <div class="drink-name">لیمووناتە</div>
+    <div class="drink-price">٢٠٠٠ د</div>
+  </div>
+
+  <div class="drink-card">
+    <span class="drink-icon">🌿</span>
+    <div class="drink-name">چای نانەوێ</div>
+    <div class="drink-price">١٢٠٠ د</div>
+  </div>
+
+  <div class="drink-card">
+    <span class="drink-icon">💧</span>
+    <div class="drink-name">ئاوی سارد</div>
+    <div class="drink-price">٥٠٠ د</div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+
+  <footer class="footer">
+    <div class="footer-logo">❋</div>
+    <p class="footer-text">
+      هەموو خواردنەکانمان بە دەستی خزمێتکارانی ئەزموون دروست دەکرێن<br>
+      بە مادەی خواردنی تازە و بهاراتی ئەسڵی کوردی
+    </p>
+    <div class="footer-contact">
+      <div class="contact-item">
+        <span>📞</span>
+        <span>٠٧٥٠ ١٢٣ ٤٥٦٧</span>
+      </div>
+      <div class="contact-item">
+        <span>📍</span>
+        <span>ئەربیل، کوردستان</span>
+      </div>
+      <div class="contact-item">
+        <span>🕐</span>
+        <span>١٠ بەیانی — ١٢ شەو</span>
+      </div>
+    </div>
+    <div style="margin-top:18px; display:flex; justify-content:center; gap:0;">
+      <div style="width:14px; height:6px; background:#8B3A0F;"></div>
+      <div style="width:14px; height:6px; background:#C8941A;"></div>
+      <div style="width:14px; height:6px; background:#5C6B2E;"></div>
+      <div style="width:14px; height:6px; background:#C8941A;"></div>
+      <div style="width:14px; height:6px; background:#8B3A0F;"></div>
+      <div style="width:14px; height:6px; background:#C8941A;"></div>
+      <div style="width:14px; height:6px; background:#5C6B2E;"></div>
+      <div style="width:14px; height:6px; background:#C8941A;"></div>
+      <div style="width:14px; height:6px; background:#8B3A0F;"></div>
+    </div>
+  </footer>
+
+</div>
 
 <script>
-// ========== DATA ==========
-var FRUITS = [
-  {id:1,  name:"سێو",       emoji:"🍎", cat:"خۆجێی",  origin:"ئێران",     badge:"hot"},
-  {id:2,  name:"مۆز",       emoji:"🍌", cat:"تروپیکاڵ",origin:"ئێکواتۆر",  badge:""},
-  {id:3,  name:"پرتەقاڵ",   emoji:"🍊", cat:"خۆجێی",  origin:"کوردستان",  badge:"sale"},
-  {id:4,  name:"ئەنگور",    emoji:"🍇", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
-  {id:5,  name:"تۆمات",     emoji:"🍅", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
-  {id:6,  name:"مانگۆ",     emoji:"🥭", cat:"تروپیکاڵ",origin:"هیندستان",  badge:"new"},
-  {id:7,  name:"کیوی",      emoji:"🥝", cat:"ئەوروپی", origin:"نیوزیلەند", badge:""},
-  {id:8,  name:"هینجیر",    emoji:"🍓", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
-  {id:9,  name:"لیمۆن",     emoji:"🍋", cat:"خۆجێی",  origin:"ئێران",     badge:""},
-  {id:10, name:"گەڵا",      emoji:"🍒", cat:"خۆجێی",  origin:"کوردستان",  badge:"hot"},
-  {id:11, name:"شلیک",      emoji:"🍑", cat:"خۆجێی",  origin:"ئەفغانستان",badge:""},
-  {id:12, name:"هەندوانە",  emoji:"🍉", cat:"خۆجێی",  origin:"کوردستان",  badge:"sale"},
-  {id:13, name:"خاوی مستایی",emoji:"🍈",cat:"تروپیکاڵ",origin:"برازیل",    badge:"new"},
-  {id:14, name:"ئەناناس",   emoji:"🍍", cat:"تروپیکاڵ",origin:"تایلەند",   badge:""},
-  {id:15, name:"گووار",     emoji:"🍐", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
-  {id:16, name:"ئەچووت",    emoji:"🥑", cat:"تروپیکاڵ",origin:"مەکسیک",    badge:""},
-  {id:17, name:"ڕمان",      emoji:"🍑", cat:"خۆجێی",  origin:"ئێران",     badge:""},
-  {id:18, name:"خرما",      emoji:"🫐", cat:"وشک",     origin:"عراق",      badge:""},
-  {id:19, name:"فستق",      emoji:"🌰", cat:"وشک",     origin:"ئێران",     badge:"hot"},
-  {id:20, name:"بلوبەری",   emoji:"🫐", cat:"ئەوروپی", origin:"کانادا",    badge:"new"},
-  {id:21, name:"پاپایا",    emoji:"🧡", cat:"ئاسیایی", origin:"فیلیپین",   badge:""},
-  {id:22, name:"لیچی",      emoji:"🍒", cat:"ئاسیایی", origin:"چین",       badge:""},
-  {id:23, name:"ماندارین",  emoji:"🍊", cat:"ئاسیایی", origin:"چین",       badge:""},
-  {id:24, name:"خەرما",     emoji:"🍑", cat:"وشک",     origin:"سعودیە",    badge:""},
-];
-
-var priceData = {};
-var currentFilter = 'all';
-var currentModal = null;
-var DAYS = ["دووشەم","سێشەم","چوارشەم","پێنجشەم","هەینی","شەممە","یەکشەم"];
-
-// ========== PRICE ENGINE ==========
-function genBasePrice(id){
-  // deterministic seed per fruit
-  var seed = id * 1337 + 42;
-  var bases = [1200,800,1500,2000,600,3500,4200,900,700,1800,2200,500,5000,2800,1100,4500,1600,3000,8000,6500,2400,1900,1300,2600];
-  return bases[(id-1) % bases.length];
-}
-
-function seededRand(seed){
-  var x = Math.sin(seed) * 10000;
-  return x - Math.floor(x);
-}
-
-function getTodaySeed(){
-  var d = new Date();
-  return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
-}
-
-function buildPrices(){
-  var daySeed = getTodaySeed();
-  var data = {};
-  for(var i=0;i<FRUITS.length;i++){
-    var f = FRUITS[i];
-    var base = genBasePrice(f.id);
-    var todayMult = 0.82 + seededRand(daySeed + f.id * 17) * 0.38;
-    var todayPrice = Math.round(base * todayMult / 50)*50;
-    
-    var week = [];
-    for(var d=6;d>=0;d--){
-      var prevSeed = daySeed - d;
-      var mult = 0.80 + seededRand(prevSeed + f.id * 13) * 0.42;
-      week.push(Math.round(base * mult / 50)*50);
+  // Scroll fade-in animation
+  var observer = new IntersectionObserver(function(entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        entries[i].target.style.opacity = '1';
+        entries[i].target.style.transform = 'translateY(0)';
+      }
     }
-    week[6] = todayPrice; // today is last
+  }, { threshold: 0.1 });
 
-    var yesterPrice = week[5];
-    var change = ((todayPrice - yesterPrice) / yesterPrice * 100).toFixed(1);
-    var minPrice = Math.round(todayPrice * 0.85 / 50)*50;
-    var maxPrice = Math.round(todayPrice * 1.18 / 50)*50;
-
-    data[f.id] = {
-      price: todayPrice,
-      change: parseFloat(change),
-      week: week,
-      min: minPrice,
-      max: maxPrice,
-      unit: "کیلۆ",
-      qty: Math.floor(50 + seededRand(daySeed + f.id) * 500),
-    };
+  var cards = document.querySelectorAll('.menu-card, .drink-card');
+  for (var j = 0; j < cards.length; j++) {
+    cards[j].style.opacity = '0';
+    cards[j].style.transform = 'translateY(16px)';
+    cards[j].style.transition = 'opacity 0.5s ease ' + (j * 0.06) + 's, transform 0.5s ease ' + (j * 0.06) + 's, box-shadow 0.25s, border-color 0.25s';
+    observer.observe(cards[j]);
   }
-  return data;
-}
-
-// ========== RENDER ==========
-function renderCards(){
-  var grid = document.getElementById('fruitsGrid');
-  var search = document.getElementById('searchInput').value.trim().toLowerCase();
-  
-  var filtered = FRUITS.filter(function(f){
-    var catOk = (currentFilter === 'all') || (f.cat === currentFilter);
-    var searchOk = !search || f.name.indexOf(search) > -1 || f.origin.indexOf(search) > -1;
-    return catOk && searchOk;
-  });
-
-  if(!filtered.length){
-    grid.innerHTML = '<div style="color:var(--text2);padding:40px;text-align:center;grid-column:1/-1">هیچ میوەیەک نەدۆزرایەوە</div>';
-    return;
-  }
-
-  var html = '';
-  for(var i=0;i<filtered.length;i++){
-    var f = filtered[i];
-    var p = priceData[f.id];
-    if(!p) continue;
-
-    var chgClass = p.change > 0 ? 'up' : (p.change < 0 ? 'dn' : 'flat');
-    var chgIcon  = p.change > 0 ? '▲' : (p.change < 0 ? '▼' : '—');
-    var chgTxt   = (p.change > 0 ? '+' : '') + p.change + '%';
-
-    // mini bars (last 7 days)
-    var maxW = Math.max.apply(null, p.week);
-    var minW = Math.min.apply(null, p.week);
-    var barsHtml = '';
-    for(var b=0;b<p.week.length;b++){
-      var pct = maxW === minW ? 50 : Math.round(20 + (p.week[b]-minW)/(maxW-minW)*70);
-      var cls = (b === p.week.length-1) ? 'today' : (b === p.week.length-2 ? 'active' : '');
-      barsHtml += '<div class="mini-bar '+cls+'" style="height:'+pct+'%"></div>';
-    }
-
-    var badge = f.badge ? '<div class="badge '+f.badge+'">'+(f.badge==='new'?'جدید':f.badge==='hot'?'داخواز':f.badge==='sale'?'حەزز':'')+'</div>' : '';
-    var delay = (i*0.05).toFixed(2);
-
-    html += '<div class="fruit-card" style="animation-delay:'+delay+'s" onclick="openModal('+f.id+')">'
-      + badge
-      + '<div class="card-top">'
-      +   '<div class="fruit-emoji">'+f.emoji+'</div>'
-      +   '<div class="fruit-name">'+f.name+'</div>'
-      +   '<div class="fruit-origin">'+f.origin+'</div>'
-      + '</div>'
-      + '<div class="card-body">'
-      +   '<div class="price-row">'
-      +     '<div>'
-      +       '<div class="price-main">'+(p.price).toLocaleString()+'</div>'
-      +       '<div class="price-unit">دینار / '+p.unit+'</div>'
-      +     '</div>'
-      +     '<div class="price-change '+chgClass+'">'+chgIcon+' '+chgTxt+'</div>'
-      +   '</div>'
-      +   '<div class="mini-chart">'+barsHtml+'</div>'
-      +   '<div class="card-footer">'
-      +     '<span>کەمترین: '+(p.min).toLocaleString()+'</span>'
-      +     '<span>زۆرترین: '+(p.max).toLocaleString()+'</span>'
-      +   '</div>'
-      + '</div>'
-      + '</div>';
-  }
-  grid.innerHTML = html;
-}
-
-function updateStats(){
-  var prices = Object.keys(priceData).map(function(k){return priceData[k].price});
-  var avg = Math.round(prices.reduce(function(a,b){return a+b},0)/prices.length);
-  var minP = Math.min.apply(null,prices);
-  document.getElementById('st1').textContent = FRUITS.length;
-  document.getElementById('st2').textContent = minP.toLocaleString();
-  document.getElementById('st3').textContent = avg.toLocaleString();
-  var now = new Date();
-  document.getElementById('st4').textContent = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-}
-
-function updateTicker(){
-  var ticker = document.getElementById('ticker');
-  var html = '';
-  var list = FRUITS.slice(0,12);
-  // duplicate for seamless loop
-  for(var loop=0;loop<2;loop++){
-    for(var i=0;i<list.length;i++){
-      var f=list[i]; var p=priceData[f.id];
-      if(!p) continue;
-      var chgClass = p.change>0?'up':'dn';
-      var chgIcon  = p.change>0?'▲':'▼';
-      html += '<div class="ticker-item">'
-        + '<span>'+f.emoji+'</span>'
-        + '<span class="t-name">'+f.name+'</span>'
-        + '<span class="t-price">'+p.price.toLocaleString()+' د</span>'
-        + '<span class="t-chg '+chgClass+'">'+chgIcon+' '+Math.abs(p.change)+'%</span>'
-        + '</div>';
-    }
-  }
-  ticker.innerHTML = html;
-}
-
-// ========== LOAD ==========
-function loadPrices(manual){
-  var btn = document.getElementById('refreshBtn');
-  var icon = document.getElementById('refreshIcon');
-  btn.disabled = true;
-  icon.classList.add('spin');
-
-  // simulate async
-  setTimeout(function(){
-    priceData = buildPrices();
-    renderCards();
-    updateStats();
-    updateTicker();
-    var now = new Date();
-    document.getElementById('lastUpdate').textContent =
-      now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')
-      +' — '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-    btn.disabled = false;
-    icon.classList.remove('spin');
-    if(manual) showToast('✅','نرخەکان نوێکرانەوە!');
-  }, manual?900:200);
-}
-
-// ========== MODAL ==========
-function openModal(id){
-  var f = FRUITS.find(function(x){return x.id===id});
-  var p = priceData[id];
-  if(!f||!p) return;
-  currentModal = id;
-
-  document.getElementById('modalTitle').innerHTML = f.emoji+' '+f.name;
-
-  var maxW = Math.max.apply(null,p.week);
-  var minW = Math.min.apply(null,p.week);
-  var wbars = '';
-  var today = new Date();
-  var dayIdx = today.getDay(); // 0=Sun
-  for(var d=0;d<7;d++){
-    var pct = maxW===minW?50:Math.round(10+(p.week[d]-minW)/(maxW-minW)*80);
-    var isToday = (d===6);
-    wbars += '<div class="week-bar-wrap">'
-      +'<div class="week-price-label">'+Math.round(p.week[d]/1000)+'k</div>'
-      +'<div class="week-bar'+(isToday?' today':'')+'" style="height:'+pct+'%"></div>'
-      +'<div class="week-day">'+DAYS[(d+1)%7]+'</div>'
-      +'</div>';
-  }
-
-  var chgClass = p.change>0?'up':(p.change<0?'dn':'flat');
-  var chgIcon  = p.change>0?'▲':(p.change<0?'▼':'—');
-  var chgTxt   = (p.change>0?'+':'')+p.change+'%';
-
-  var statusColor = p.change > 3 ? 'var(--red)' : p.change < -3 ? 'var(--green)' : 'var(--gold)';
-  var statusTxt = p.change > 3 ? 'نرخ بەرزبووەتەوە' : p.change < -3 ? 'نرخ کەمبووەتەوە' : 'نرخ ئارامە';
-
-  document.getElementById('modalBody').innerHTML =
-    '<div class="modal-price-big">'
-    +'<div class="mprice">'+p.price.toLocaleString()+' <span style="font-size:1rem;color:var(--text2)">دینار</span></div>'
-    +'<div class="munit">بۆ هەر '+p.unit+'ێک · <span class="price-change '+chgClass+'" style="display:inline-flex;padding:2px 8px">'+chgIcon+' '+chgTxt+'</span></div>'
-    +'</div>'
-
-    +'<div class="info-grid">'
-    +  '<div class="info-item"><div class="il">مەنشەء</div><div class="iv">'+f.origin+'</div></div>'
-    +  '<div class="info-item"><div class="il">جۆر</div><div class="iv">'+f.cat+'</div></div>'
-    +  '<div class="info-item"><div class="il">کەمترین نرخ</div><div class="iv" style="color:var(--green)">'+p.min.toLocaleString()+' د</div></div>'
-    +  '<div class="info-item"><div class="il">زۆرترین نرخ</div><div class="iv" style="color:var(--red)">'+p.max.toLocaleString()+' د</div></div>'
-    +  '<div class="info-item"><div class="il">بارە بەردەست</div><div class="iv">'+p.qty.toLocaleString()+' کیلۆ</div></div>'
-    +  '<div class="info-item"><div class="il">دۆخی بازاڕ</div><div class="iv" style="color:'+statusColor+'">'+statusTxt+'</div></div>'
-    +'</div>'
-
-    +'<div class="week-chart">'
-    +  '<div class="week-chart-title">نرخی ٧ ڕۆژی ڕابردوو (دینار/کیلۆ)</div>'
-    +  '<div class="week-bars">'+wbars+'</div>'
-    +'</div>'
-
-    +'<div class="ai-note">'
-    +  '<span class="ai-icon">🤖</span>'
-    +  '<span>نرخی ئەمرۆ بۆ <strong>'+f.name+'</strong> لە گومرگی AMZ '+(p.change>0?'زیادی '+p.change+'% کردووە':'کەمی '+Math.abs(p.change)+'% کردووە')+' لە بەراورد بە دوێنێ. ئەم نرخانە خۆکرانە نوێ دەبنەوە هەموو ڕۆژێک بە داتای بازاڕی ڕاستەقینە.</span>'
-    +'</div>';
-
-  document.getElementById('modalOverlay').classList.add('open');
-}
-
-function closeModal(e){
-  if(e && e.target !== document.getElementById('modalOverlay')) return;
-  closeModalDirect();
-}
-function closeModalDirect(){
-  document.getElementById('modalOverlay').classList.remove('open');
-  currentModal = null;
-}
-
-// ESC key
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape') closeModalDirect();
-});
-
-// ========== FILTER ==========
-function setFilter(btn, cat){
-  currentFilter = cat;
-  var btns = document.querySelectorAll('.filter-btn');
-  for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
-  btn.classList.add('active');
-  renderCards();
-}
-
-// ========== CLOCK ==========
-function updateClock(){
-  var now = new Date();
-  document.getElementById('clock').textContent =
-    String(now.getHours()).padStart(2,'0')+':'+
-    String(now.getMinutes()).padStart(2,'0')+':'+
-    String(now.getSeconds()).padStart(2,'0');
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// ========== TOAST ==========
-function showToast(icon, msg){
-  var t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.querySelector('.toast-icon').textContent = icon;
-  t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show')},2800);
-}
-
-// ========== AUTO REFRESH ==========
-// Refresh daily at midnight or every 6 hours
-function scheduleAutoRefresh(){
-  var now = new Date();
-  var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 0,0,0);
-  var msToMidnight = tomorrow - now;
-  setTimeout(function(){
-    loadPrices(false);
-    showToast('🔄','نرخەکان بە خۆی نوێبوونەوە!');
-    setInterval(function(){loadPrices(false)}, 6*3600*1000);
-  }, msToMidnight);
-}
-
-// ========== INIT ==========
-loadPrices(false);
-scheduleAutoRefresh();
 </script>
 
 </body>
