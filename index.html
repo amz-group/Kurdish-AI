@@ -3,734 +3,825 @@
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>AMZ Restaurant</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMZ گومرگ - نرخی میوەکان</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-:root {
-  --bg: #f7f3ee;
-  --surface: #ffffff;
-  --border: #e8e0d5;
-  --gold: #b8860b;
-  --gold-bg: #fdf6e3;
-  --text: #1a1209;
-  --text2: #6b5c3e;
-  --text3: #a89070;
-  --red: #c0392b;
-  --green: #27ae60;
-  --blue: #2980b9;
-  --orange: #e67e22;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
-  --radius: 14px;
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+–gold:#D4A017;
+–gold2:#F5C842;
+–dark:#0A0E1A;
+–dark2:#111827;
+–dark3:#1C2536;
+–card:#16202F;
+–border:#2A3A52;
+–text:#E8EDF5;
+–text2:#8FA3BF;
+–green:#22C97A;
+–red:#FF4D6A;
+–blue:#3B82F6;
+–shadow:0 8px 32px rgba(0,0,0,.5);
 }
-body {
-  font-family: 'Noto Naskh Arabic', serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  direction: rtl;
-  font-size: 15px;
+
+html{scroll-behavior:smooth}
+
+body{
+background:var(–dark);
+color:var(–text);
+font-family:‘Noto Naskh Arabic’,serif;
+min-height:100vh;
+direction:rtl;
+overflow-x:hidden;
 }
-.screen { display:none; flex-direction:column; min-height:100vh; }
-.screen.active { display:flex; }
-.topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky; top:0; z-index:50;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+
+/* BG GRID */
+body::before{
+content:’’;
+position:fixed;inset:0;
+background:
+linear-gradient(rgba(212,160,23,.03) 1px,transparent 1px),
+linear-gradient(90deg,rgba(212,160,23,.03) 1px,transparent 1px);
+background-size:40px 40px;
+pointer-events:none;z-index:0;
 }
-.topbar-title { font-size:18px; font-weight:700; }
-.topbar-sub { font-size:12px; color:var(--text3); }
-.topbar-logo { font-size:13px; font-weight:700; color:var(--gold); }
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0;
-  background:var(--surface);
-  border-top:1px solid var(--border);
-  display:flex; z-index:100;
-  box-shadow:0 -2px 12px rgba(0,0,0,0.08);
+
+/* HEADER */
+header{
+position:sticky;top:0;z-index:100;
+background:rgba(10,14,26,.92);
+backdrop-filter:blur(16px);
+border-bottom:1px solid var(–border);
+padding:0 24px;
+display:flex;align-items:center;justify-content:space-between;
+height:64px;
 }
-.nav-btn {
-  flex:1; display:flex; flex-direction:column; align-items:center;
-  padding:10px 4px 8px; cursor:pointer; border:none;
-  background:transparent; font-family:inherit; color:var(--text3);
-  font-size:10px; gap:3px; position:relative;
+
+.logo{
+display:flex;align-items:center;gap:10px;
+font-size:1.5rem;font-weight:700;
+color:var(–gold);
+letter-spacing:1px;
+text-shadow:0 0 20px rgba(212,160,23,.4);
 }
-.nav-btn .ni { font-size:22px; }
-.nav-btn.active { color:var(--gold); }
-.nbadge {
-  position:absolute; top:6px; left:50%; margin-left:6px;
-  background:var(--red); color:white; font-size:9px; font-weight:700;
-  width:16px; height:16px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
+.logo span{font-size:.85rem;color:var(–text2);font-weight:400}
+
+.header-right{display:flex;align-items:center;gap:16px}
+
+.live-badge{
+display:flex;align-items:center;gap:6px;
+background:rgba(34,201,122,.1);
+border:1px solid rgba(34,201,122,.3);
+border-radius:20px;padding:4px 12px;
+font-size:.78rem;color:var(–green);
 }
-.scroll-body { flex:1; overflow-y:auto; padding:14px 14px 84px; }
-.card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:14px; }
-.card-header {
-  padding:14px 16px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
+.live-dot{
+width:7px;height:7px;border-radius:50%;
+background:var(–green);
+animation:pulse 1.5s infinite;
 }
-.card-title { font-size:15px; font-weight:700; }
-.stats-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-.stat-card {
-  background:var(--surface); border-radius:var(--radius); padding:16px;
-  box-shadow:var(--shadow); border-right:4px solid transparent;
+
+#clock{font-size:.85rem;color:var(–text2)}
+
+/* TICKER */
+.ticker-wrap{
+background:var(–dark3);
+border-bottom:1px solid var(–border);
+overflow:hidden;padding:8px 0;
+position:relative;z-index:1;
 }
-.stat-card.gold{border-right-color:var(--gold);}
-.stat-card.green{border-right-color:var(--green);}
-.stat-card.red{border-right-color:var(--red);}
-.stat-card.blue{border-right-color:var(--blue);}
-.stat-label{font-size:11px;color:var(--text3);margin-bottom:6px;}
-.stat-val{font-size:24px;font-weight:700;line-height:1;}
-.stat-card.gold .stat-val{color:var(--gold);}
-.stat-card.green .stat-val{color:var(--green);}
-.stat-card.red .stat-val{color:var(--red);}
-.stat-card.blue .stat-val{color:var(--blue);}
-.stat-unit{font-size:11px;color:var(--text3);margin-top:3px;}
-.btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:6px;
-  padding:10px 18px; border-radius:10px; border:none; font-family:inherit;
-  font-size:14px; font-weight:600; cursor:pointer; transition:all 0.15s;
+.ticker-inner{
+display:flex;gap:0;
+animation:ticker 35s linear infinite;
+white-space:nowrap;
 }
-.btn:active{transform:scale(0.97);}
-.btn-gold{background:var(--gold);color:white;}
-.btn-outline{background:transparent;border:1.5px solid var(--gold);color:var(--gold);}
-.btn-red{background:var(--red);color:white;}
-.btn-green{background:var(--green);color:white;}
-.btn-gray{background:var(--border);color:var(--text2);}
-.btn-sm{padding:7px 12px;font-size:12px;border-radius:8px;}
-.pills {
-  display:flex; gap:8px; overflow-x:auto; padding:12px 16px;
-  border-bottom:1px solid var(--border); scrollbar-width:none;
+.ticker-item{
+display:inline-flex;align-items:center;gap:8px;
+padding:0 28px;font-size:.82rem;
+border-right:1px solid var(–border);
 }
-.pills::-webkit-scrollbar{display:none;}
-.pill {
-  padding:7px 16px; border-radius:20px; border:1.5px solid var(--border);
-  background:transparent; color:var(--text2); font-family:inherit;
-  font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+.ticker-item .t-name{color:var(–text2)}
+.ticker-item .t-price{color:var(–gold);font-weight:600}
+.ticker-item .t-chg.up{color:var(–green)}
+.ticker-item .t-chg.dn{color:var(–red)}
+
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* MAIN */
+main{position:relative;z-index:1;padding:28px 24px 60px;max-width:1400px;margin:0 auto}
+
+/* STATS ROW */
+.stats-row{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:16px;margin-bottom:32px;
 }
-.pill.active{background:var(--gold);color:white;border-color:var(--gold);}
-.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px 16px; }
-.menu-item-card {
-  background:var(--bg); border-radius:12px; padding:14px 10px;
-  text-align:center; cursor:pointer; border:2px solid transparent; transition:all 0.15s;
+.stat-card{
+background:var(–card);
+border:1px solid var(–border);
+border-radius:14px;
+padding:18px 20px;
+display:flex;flex-direction:column;gap:6px;
+transition:border-color .2s;
 }
-.menu-item-card:active{transform:scale(0.95);border-color:var(--gold);}
-.item-emoji{font-size:36px;margin-bottom:8px;}
-.item-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
-.item-price{font-size:13px;font-weight:700;color:var(--gold);}
-.order-list{padding:8px 0;}
-.order-row {
-  display:flex; align-items:center; gap:10px; padding:12px 16px;
-  border-bottom:1px solid var(--border);
+.stat-card:hover{border-color:var(–gold)}
+.stat-label{font-size:.75rem;color:var(–text2)}
+.stat-val{font-size:1.4rem;font-weight:700;color:var(–gold)}
+.stat-sub{font-size:.72rem;color:var(–text2)}
+
+/* SECTION TITLE */
+.sec-head{
+display:flex;align-items:center;justify-content:space-between;
+margin-bottom:20px;
 }
-.order-row:last-child{border-bottom:none;}
-.order-emoji{font-size:24px;flex-shrink:0;}
-.order-name{font-size:14px;font-weight:600;}
-.order-price-small{font-size:12px;color:var(--text3);}
-.qty-control {
-  display:flex; align-items:center; gap:8px;
-  background:var(--bg); border-radius:20px; padding:4px 8px;
+.sec-title{font-size:1.1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.sec-title::before{
+content:’’;display:inline-block;
+width:4px;height:20px;border-radius:2px;
+background:var(–gold);
 }
-.qty-btn {
-  width:28px; height:28px; border-radius:50%; border:none;
-  background:var(--surface); color:var(--text); font-size:18px; font-weight:700;
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-  box-shadow:0 1px 4px rgba(0,0,0,0.12); line-height:1;
+
+/* FILTER BAR */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.filter-btn{
+background:var(–card);
+border:1px solid var(–border);
+border-radius:20px;padding:6px 16px;
+color:var(–text2);font-size:.8rem;
+cursor:pointer;transition:.2s;
+font-family:inherit;
 }
-.qty-btn:active{transform:scale(0.9);}
-.qty-num{font-size:15px;font-weight:700;min-width:20px;text-align:center;}
-.total-section {
-  padding:14px 16px; border-top:2px solid var(--border); background:var(--gold-bg);
+.filter-btn:hover,.filter-btn.active{
+background:var(–gold);
+border-color:var(–gold);
+color:#000;font-weight:600;
 }
-.total-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;}
-.total-row.main{font-size:18px;font-weight:700;color:var(--gold);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);margin-bottom:0;}
-.total-row .lbl{color:var(--text2);}
-.table-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:14px; }
-.table-box {
-  background:var(--surface); border-radius:12px; padding:16px 8px;
-  text-align:center; cursor:pointer; border:2px solid var(--border);
-  transition:all 0.2s; box-shadow:var(--shadow);
+
+/* SEARCH */
+.search-box{
+position:relative;margin-bottom:24px;
+max-width:360px;
 }
-.table-box:active{transform:scale(0.95);}
-.table-box.empty{border-color:#c8e6c9;background:#f1f8f2;}
-.table-box.occupied{border-color:#ffe082;background:#fffde7;}
-.table-box.reserved{border-color:#bbdefb;background:#e3f2fd;}
-.table-num{font-size:26px;font-weight:700;margin-bottom:4px;}
-.table-box.empty .table-num{color:var(--green);}
-.table-box.occupied .table-num{color:var(--orange);}
-.table-box.reserved .table-num{color:var(--blue);}
-.table-stxt{font-size:11px;font-weight:600;}
-.table-box.empty .table-stxt{color:var(--green);}
-.table-box.occupied .table-stxt{color:var(--orange);}
-.table-box.reserved .table-stxt{color:var(--blue);}
-.table-amount-txt{font-size:10px;color:var(--text3);margin-top:3px;}
-.order-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;}
-.order-card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
-.order-id{font-size:15px;font-weight:700;color:var(--gold);}
-.otbadge{background:var(--gold-bg);color:var(--gold);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(184,134,11,0.2);}
-.order-card-body{padding:10px 14px;}
-.opreview{font-size:13px;color:var(--text2);margin-bottom:8px;}
-.order-card-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);gap:8px;}
-.ototal{font-size:15px;font-weight:700;}
-.bstatus{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;}
-.b-pending{background:#fff3cd;color:#856404;}
-.b-cooking{background:#ffe0cc;color:#b84c00;}
-.b-ready{background:#d4edda;color:#155724;}
-.b-paid{background:#e2e3e5;color:#383d41;}
-.menu-mgmt-list{padding:10px 14px;display:flex;flex-direction:column;gap:8px;}
-.menu-mgmt-item{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:12px;padding:12px;}
-.mme{font-size:30px;}
-.mminfo{flex:1;}
-.mmname{font-size:14px;font-weight:700;}
-.mmcat{font-size:12px;color:var(--text3);}
-.mmprice{font-size:14px;font-weight:700;color:var(--gold);margin-left:8px;}
-.delbtn{width:34px;height:34px;border-radius:8px;border:none;background:#fdecea;color:var(--red);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.staff-list{display:flex;flex-direction:column;gap:10px;padding:14px;}
-.staff-item{display:flex;align-items:center;gap:14px;background:var(--surface);border-radius:14px;padding:14px;box-shadow:var(--shadow);}
-.savatar{width:52px;height:52px;border-radius:50%;background:var(--gold-bg);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
-.sinfo{flex:1;}
-.sname{font-size:15px;font-weight:700;}
-.srole{font-size:13px;color:var(--text3);}
-.sdot{width:10px;height:10px;border-radius:50%;}
-.sdot.on{background:var(--green);}
-.sdot.off{background:var(--border);}
-.bar-item{margin-bottom:12px;}
-.bar-header{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
-.bar-track{height:10px;background:var(--border);border-radius:5px;overflow:hidden;}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#daa520);border-radius:5px;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center;}
-.modal-overlay.show{display:flex;}
-.modal-sheet{background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px 36px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp 0.25s ease;}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:20px;text-align:center;}
-.form-group{margin-bottom:14px;}
-.form-label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px;font-weight:600;}
-.form-input{width:100%;padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;outline:none;}
-.form-input:focus{border-color:var(--gold);background:white;}
-select.form-input{appearance:none;-webkit-appearance:none;}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1209;color:white;padding:11px 22px;border-radius:24px;font-size:14px;font-weight:600;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;pointer-events:none;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
-.empty-state .ei{font-size:48px;margin-bottom:12px;}
-.section-label{font-size:12px;font-weight:700;color:var(--text3);padding:4px 0 8px;letter-spacing:0.5px;}
-.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.quick-btn{background:var(--surface);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1.5px solid var(--border);font-family:inherit;font-size:14px;font-weight:600;color:var(--text);box-shadow:var(--shadow);transition:all 0.15s;}
-.quick-btn:active{transform:scale(0.97);border-color:var(--gold);}
-.qicon{font-size:28px;}
-.sel-table-bar{background:var(--gold-bg);border:1.5px solid var(--gold);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.sel-table-bar .slbl{font-size:13px;color:var(--text2);}
-.sel-table-bar .sval{font-size:15px;font-weight:700;color:var(--gold);}
+.search-box input{
+width:100%;background:var(–card);
+border:1px solid var(–border);border-radius:10px;
+padding:10px 16px 10px 40px;
+color:var(–text);font-size:.88rem;
+font-family:inherit;direction:rtl;
+transition:border-color .2s;
+outline:none;
+}
+.search-box input:focus{border-color:var(–gold)}
+.search-box input::placeholder{color:var(–text2)}
+.search-icon{
+position:absolute;left:12px;top:50%;transform:translateY(-50%);
+color:var(–text2);font-size:.9rem;pointer-events:none;
+}
+
+/* GRID */
+.fruits-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+gap:18px;
+}
+
+.fruit-card{
+background:var(–card);
+border:1px solid var(–border);
+border-radius:16px;
+overflow:hidden;
+cursor:pointer;
+transition:transform .2s,border-color .2s,box-shadow .2s;
+animation:fadeUp .4s ease both;
+position:relative;
+}
+.fruit-card:hover{
+transform:translateY(-4px);
+border-color:var(–gold);
+box-shadow:0 12px 40px rgba(212,160,23,.15);
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.card-top{
+padding:22px 18px 14px;
+display:flex;flex-direction:column;align-items:center;gap:8px;
+background:linear-gradient(160deg,rgba(212,160,23,.06),transparent);
+}
+.fruit-emoji{font-size:2.6rem;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+.fruit-name{font-size:1rem;font-weight:600}
+.fruit-origin{
+font-size:.72rem;color:var(–text2);
+background:rgba(255,255,255,.05);
+border-radius:8px;padding:2px 8px;
+}
+
+.card-body{padding:14px 18px 16px}
+
+.price-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px}
+.price-main{font-size:1.35rem;font-weight:700;color:var(–gold)}
+.price-unit{font-size:.7rem;color:var(–text2);margin-bottom:2px}
+.price-change{
+display:flex;align-items:center;gap:3px;
+font-size:.8rem;font-weight:600;padding:3px 8px;
+border-radius:8px;
+}
+.price-change.up{background:rgba(34,201,122,.12);color:var(–green)}
+.price-change.dn{background:rgba(255,77,106,.12);color:var(–red)}
+.price-change.flat{background:rgba(255,255,255,.06);color:var(–text2)}
+
+.mini-chart{
+height:38px;display:flex;align-items:flex-end;gap:3px;
+margin-bottom:10px;
+}
+.mini-bar{
+flex:1;border-radius:3px 3px 0 0;
+background:var(–border);
+transition:height .4s ease;
+position:relative;
+}
+.mini-bar.active{background:var(–gold);opacity:.7}
+.mini-bar.today{background:var(–gold);opacity:1}
+
+.card-footer{
+display:flex;justify-content:space-between;
+font-size:.72rem;color:var(–text2);
+padding-top:10px;
+border-top:1px solid var(–border);
+}
+
+/* BADGE */
+.badge{
+position:absolute;top:10px;left:10px;
+font-size:.65rem;font-weight:700;
+padding:3px 8px;border-radius:6px;
+text-transform:uppercase;letter-spacing:.5px;
+}
+.badge.new{background:rgba(59,130,246,.2);color:var(–blue);border:1px solid rgba(59,130,246,.3)}
+.badge.hot{background:rgba(255,77,106,.2);color:var(–red);border:1px solid rgba(255,77,106,.3)}
+.badge.sale{background:rgba(212,160,23,.2);color:var(–gold);border:1px solid rgba(212,160,23,.3)}
+
+/* MODAL */
+.modal-overlay{
+position:fixed;inset:0;
+background:rgba(0,0,0,.75);
+backdrop-filter:blur(6px);
+z-index:200;
+display:flex;align-items:center;justify-content:center;
+padding:20px;
+opacity:0;pointer-events:none;
+transition:opacity .25s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+
+.modal{
+background:var(–dark2);
+border:1px solid var(–border);
+border-radius:20px;
+width:100%;max-width:480px;
+max-height:90vh;overflow-y:auto;
+transform:scale(.95);
+transition:transform .25s;
+box-shadow:0 24px 80px rgba(0,0,0,.7);
+}
+.modal-overlay.open .modal{transform:scale(1)}
+
+.modal-header{
+padding:20px 24px;
+border-bottom:1px solid var(–border);
+display:flex;justify-content:space-between;align-items:center;
+}
+.modal-title{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.modal-close{
+background:rgba(255,255,255,.06);border:none;
+width:32px;height:32px;border-radius:8px;
+color:var(–text);font-size:1.1rem;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+transition:.2s;
+}
+.modal-close:hover{background:var(–red);color:#fff}
+
+.modal-body{padding:24px}
+
+.modal-price-big{
+text-align:center;margin-bottom:20px;
+}
+.modal-price-big .mprice{font-size:2.4rem;font-weight:700;color:var(–gold)}
+.modal-price-big .munit{font-size:.85rem;color:var(–text2)}
+
+.info-grid{
+display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;
+}
+.info-item{
+background:var(–card);border:1px solid var(–border);
+border-radius:10px;padding:12px 14px;
+}
+.info-item .il{font-size:.72rem;color:var(–text2);margin-bottom:4px}
+.info-item .iv{font-size:.95rem;font-weight:600}
+
+.week-chart{margin-bottom:20px}
+.week-chart-title{font-size:.8rem;color:var(–text2);margin-bottom:10px}
+.week-bars{display:flex;align-items:flex-end;gap:6px;height:80px}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.week-bar{
+width:100%;border-radius:4px 4px 0 0;
+background:var(–border);
+transition:height .5s ease;
+}
+.week-bar.today{background:var(–gold)}
+.week-day{font-size:.6rem;color:var(–text2)}
+.week-price-label{font-size:.6rem;color:var(–text2)}
+
+.ai-note{
+background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(212,160,23,.08));
+border:1px solid rgba(212,160,23,.2);
+border-radius:12px;padding:14px;
+font-size:.8rem;color:var(–text2);
+line-height:1.7;
+display:flex;gap:10px;
+}
+.ai-icon{font-size:1.2rem;flex-shrink:0}
+
+/* AI REFRESH */
+.refresh-bar{
+display:flex;align-items:center;justify-content:space-between;
+background:var(–dark3);border:1px solid var(–border);
+border-radius:12px;padding:12px 18px;
+margin-bottom:28px;
+}
+.refresh-info{font-size:.8rem;color:var(–text2)}
+.refresh-info strong{color:var(–text)}
+.refresh-btn{
+background:var(–gold);
+border:none;border-radius:8px;
+padding:8px 18px;
+color:#000;font-weight:700;font-size:.8rem;
+font-family:inherit;cursor:pointer;
+display:flex;align-items:center;gap:6px;
+transition:.2s;
+}
+.refresh-btn:hover{background:var(–gold2)}
+.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* LOADING SKELETON */
+.skeleton{
+background:linear-gradient(90deg,var(–card) 25%,var(–dark3) 50%,var(–card) 75%);
+background-size:200% 100%;
+animation:shimmer 1.4s infinite;
+border-radius:8px;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(–dark)}
+::-webkit-scrollbar-thumb{background:var(–border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(–gold)}
+
+/* TOAST */
+.toast{
+position:fixed;bottom:24px;right:24px;
+background:var(–dark3);border:1px solid var(–border);
+border-radius:12px;padding:12px 18px;
+font-size:.82rem;color:var(–text);
+display:flex;align-items:center;gap:10px;
+z-index:300;
+transform:translateY(80px);opacity:0;
+transition:.3s cubic-bezier(.34,1.56,.64,1);
+box-shadow:var(–shadow);
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{font-size:1.1rem}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+header{padding:0 14px}
+main{padding:18px 14px 50px}
+.fruits-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.stats-row{grid-template-columns:repeat(2,1fr)}
+.info-grid{grid-template-columns:1fr 1fr}
+}
 </style>
+
 </head>
 <body>
 
-<!-- HOME -->
+<!-- HEADER -->
 
-<div id="screen-home" class="screen active">
-  <div class="topbar">
-    <div><div class="topbar-title">سەرەکی</div><div class="topbar-sub" id="clk">—</div></div>
-    <div class="topbar-logo">🍽️ AMZ</div>
+<header>
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="7" fill="#D4A017" opacity=".15"/>
+      <path d="M6 20L10 8L14 16L18 10L22 20" stroke="#D4A017" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    AMZ <span>گومرگ</span>
   </div>
-  <div class="scroll-body">
-    <div class="stats-row">
-      <div class="stat-card gold"><div class="stat-label">داهاتی ئەمڕۆ</div><div class="stat-val" id="s-rev">٠</div><div class="stat-unit">دینار</div></div>
-      <div class="stat-card green"><div class="stat-label">تەواوبووەکان</div><div class="stat-val" id="s-done">٠</div><div class="stat-unit">داواکاری</div></div>
-      <div class="stat-card red"><div class="stat-label">میزی چالاک</div><div class="stat-val" id="s-tb">٠</div><div class="stat-unit">لە ١٥ میز</div></div>
-      <div class="stat-card blue"><div class="stat-label">چاوەڕوان</div><div class="stat-val" id="s-pend">٠</div><div class="stat-unit">داواکاری</div></div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div> زیندوو</div>
+    <div id="clock">--:--:--</div>
+  </div>
+</header>
+
+<!-- TICKER -->
+
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
+
+<main>
+
+  <!-- STATS -->
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-label">کۆی میوەکان</div><div class="stat-val" id="st1">--</div><div class="stat-sub">جۆر</div></div>
+    <div class="stat-card"><div class="stat-label">باشترین نرخ</div><div class="stat-val" id="st2">--</div><div class="stat-sub">دینار/کیلۆ</div></div>
+    <div class="stat-card"><div class="stat-label">نرخی ناوەند</div><div class="stat-val" id="st3">--</div><div class="stat-sub">دینار/کیلۆ</div></div>
+    <div class="stat-card"><div class="stat-label">کاتی نوێکردنەوە</div><div class="stat-val" id="st4" style="font-size:1rem">--</div><div class="stat-sub">کاتژمێر</div></div>
+  </div>
+
+  <!-- REFRESH BAR -->
+
+  <div class="refresh-bar">
+    <div class="refresh-info">
+      دوایین نوێکردنەوە: <strong id="lastUpdate">چاوەڕوانبە...</strong>
+      &nbsp;·&nbsp; سەرچاوە: AI نرخی گومرگ
     </div>
-    <div class="section-label">کردارە خێراکان</div>
-    <div class="quick-actions">
-      <button class="quick-btn" onclick="goOrder()"><span class="qicon">➕</span>داواکاری نوێ</button>
-      <button class="quick-btn" onclick="nav('orders')"><span class="qicon">📋</span>داواکاریەکان</button>
-      <button class="quick-btn" onclick="nav('tables')"><span class="qicon">🪑</span>میزەکان</button>
-      <button class="quick-btn" onclick="nav('reports')"><span class="qicon">📊</span>ڕاپۆرت</button>
+    <button class="refresh-btn" id="refreshBtn" type="button" onclick="loadPrices(true)">
+      <span id="refreshIcon">↻</span> نوێکردنەوە
+    </button>
+  </div>
+
+  <!-- FILTER + SEARCH -->
+
+  <div class="sec-head">
+    <div class="sec-title">نرخی میوەکان — ئەمرۆ</div>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" type="button" data-cat="all" onclick="setFilter(this,'all')">هەموو</button>
+    <button class="filter-btn" type="button" data-cat="تروپیکاڵ" onclick="setFilter(this,'تروپیکاڵ')">تروپیکاڵ</button>
+    <button class="filter-btn" type="button" data-cat="خۆجێی" onclick="setFilter(this,'خۆجێی')">خۆجێی</button>
+    <button class="filter-btn" type="button" data-cat="ئەوروپی" onclick="setFilter(this,'ئەوروپی')">ئەوروپی</button>
+    <button class="filter-btn" type="button" data-cat="ئاسیایی" onclick="setFilter(this,'ئاسیایی')">ئاسیایی</button>
+    <button class="filter-btn" type="button" data-cat="وشک" onclick="setFilter(this,'وشک')">وشک</button>
+  </div>
+
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="گەڕان بە میوەدا..." oninput="renderCards()">
+  </div>
+
+  <!-- GRID -->
+
+  <div class="fruits-grid" id="fruitsGrid"></div>
+
+</main>
+
+<!-- MODAL -->
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">---</div>
+      <button class="modal-close" type="button" onclick="closeModalDirect()">✕</button>
     </div>
-    <div class="section-label">داواکارییە دواخراوەکان</div>
-    <div id="home-orders"></div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
-<!-- ORDER -->
+<!-- TOAST -->
 
-<div id="screen-order" class="screen">
-  <div class="topbar">
-    <div class="topbar-title">داواکاری نوێ</div>
-    <button class="btn btn-sm btn-outline" onclick="nav('home')">← گەڕانەوە</button>
-  </div>
-  <div class="scroll-body">
-    <div id="tbar-sel" class="sel-table-bar" style="display:none;">
-      <div><div class="slbl">میزی هەڵبژێردراو</div><div class="sval" id="tbar-val">—</div></div>
-      <button class="btn btn-sm btn-outline" onclick="openTableModal()">گۆڕین</button>
-    </div>
-    <div id="tbar-none" class="card" style="margin-bottom:14px;">
-      <div style="padding:20px;text-align:center;">
-        <div style="font-size:36px;margin-bottom:8px;">🪑</div>
-        <div style="font-size:14px;color:var(--text2);margin-bottom:14px;">سەرەتا میزێک هەڵبژێرە</div>
-        <button class="btn btn-gold" onclick="openTableModal()">میز هەڵبژێرە</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header" style="padding-bottom:0;border:none;"><div class="card-title">مێنیو</div></div>
-      <div class="pills" id="cpills">
-        <button class="pill active" onclick="fmenu('all',this)">هەموو</button>
-        <button class="pill" onclick="fmenu('خواردن',this)">خواردن</button>
-        <button class="pill" onclick="fmenu('نووشتن',this)">نووشتن</button>
-        <button class="pill" onclick="fmenu('گرێ',this)">گرێ</button>
-        <button class="pill" onclick="fmenu('شیرینی',this)">شیرینی</button>
-      </div>
-      <div class="menu-grid" id="mgrid"></div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">🛒 داواکاری ئێستا</div>
-        <button class="btn btn-sm btn-gray" onclick="clearOrder()">پاکردنەوە</button>
-      </div>
-      <div class="order-list" id="orows"><div class="empty-state"><div class="ei">🛒</div><p>هیچ مادەیەک نەزیادکراوە</p></div></div>
-      <div class="total-section" id="ototals" style="display:none;">
-        <div class="total-row"><span class="lbl">کۆی بنەیی</span><span id="t-sub">٠</span></div>
-        <div class="total-row"><span class="lbl">خزمەتگوزاری ١٠٪</span><span id="t-svc">٠</span></div>
-        <div class="total-row main"><span>کۆی گشتی</span><span id="t-grand">٠</span></div>
-        <div style="display:flex;gap:10px;margin-top:14px;">
-          <button class="btn btn-outline" style="flex:1;" onclick="toast2('🖨️ چاپکردن...')">🖨️ چاپ</button>
-          <button class="btn btn-gold" style="flex:2;" onclick="confirmOrder()">✅ پشتڕاستکردنەوە</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ORDERS -->
-
-<div id="screen-orders" class="screen">
-  <div class="topbar"><div class="topbar-title">داواکاریەکان</div><button class="btn btn-sm btn-gold" onclick="goOrder()">+ نوێ</button></div>
-  <div class="scroll-body">
-    <div class="pills" style="padding:12px 0 8px;border:none;">
-      <button class="pill active" onclick="ford('all',this)">هەموو</button>
-      <button class="pill" onclick="ford('pending',this)">⏳ چاوەڕوان</button>
-      <button class="pill" onclick="ford('cooking',this)">🔥 ئامادەکردن</button>
-      <button class="pill" onclick="ford('ready',this)">✅ ئامادەیە</button>
-      <button class="pill" onclick="ford('paid',this)">💳 پارەدراو</button>
-    </div>
-    <div id="olist"></div>
-  </div>
-</div>
-
-<!-- TABLES -->
-
-<div id="screen-tables" class="screen">
-  <div class="topbar">
-    <div class="topbar-title">میزەکان</div>
-    <div style="display:flex;gap:10px;font-size:11px;align-items:center;">
-      <span style="color:var(--green);">●بەتاڵ</span>
-      <span style="color:var(--orange);">●چالاک</span>
-      <span style="color:var(--blue);">●بژاردراو</span>
-    </div>
-  </div>
-  <div class="scroll-body"><div class="table-grid" id="tgrid"></div></div>
-</div>
-
-<!-- MENU -->
-
-<div id="screen-menu" class="screen">
-  <div class="topbar"><div class="topbar-title">مێنیو</div><button class="btn btn-sm btn-gold" onclick="openAddMenu()">+ زیادکردن</button></div>
-  <div class="scroll-body"><div class="menu-mgmt-list" id="mmlist"></div></div>
-</div>
-
-<!-- STAFF -->
-
-<div id="screen-staff" class="screen">
-  <div class="topbar"><div class="topbar-title">ستاف</div><button class="btn btn-sm btn-gold" onclick="openAddStaff()">+ زیادکردن</button></div>
-  <div class="scroll-body"><div class="staff-list" id="slist"></div></div>
-</div>
-
-<!-- REPORTS -->
-
-<div id="screen-reports" class="screen">
-  <div class="topbar"><div class="topbar-title">ڕاپۆرتەکان</div></div>
-  <div class="scroll-body">
-    <div class="stats-row">
-      <div class="stat-card gold"><div class="stat-label">داهاتی مانگ</div><div class="stat-val">٣.٨م</div><div class="stat-unit">دینار</div></div>
-      <div class="stat-card green"><div class="stat-label">کۆی داواکاری</div><div class="stat-val">١٢٤٣</div><div class="stat-unit">داواکاری</div></div>
-      <div class="stat-card blue"><div class="stat-label">ناوەنجی</div><div class="stat-val">٣١K</div><div class="stat-unit">دینار</div></div>
-      <div class="stat-card red"><div class="stat-label">کاتی بارگران</div><div class="stat-val">١٢-٢</div><div class="stat-unit">نیوەڕۆ</div></div>
-    </div>
-    <div class="card"><div class="card-header"><div class="card-title">📅 داهاتی هەفتەیە</div></div><div style="padding:16px;" id="wbars"></div></div>
-    <div class="card"><div class="card-header"><div class="card-title">🏆 باشترین خواردنەکان</div></div><div style="padding:12px 16px;" id="tfoods"></div></div>
-    <div class="card"><div class="card-header"><div class="card-title">💳 شێوەی پارەدانەکان</div></div><div style="padding:16px;" id="pbars"></div></div>
-  </div>
-</div>
-
-<!-- BOTTOM NAV -->
-
-<nav class="bottom-nav">
-  <button class="nav-btn active" id="nb-home" onclick="nav('home')"><span class="ni">🏠</span>سەرەکی</button>
-  <button class="nav-btn" id="nb-orders" onclick="nav('orders')"><span class="ni">📋</span>داواکاری<span class="nbadge" id="pbadge" style="display:none;"></span></button>
-  <button class="nav-btn" id="nb-tables" onclick="nav('tables')"><span class="ni">🪑</span>میز</button>
-  <button class="nav-btn" id="nb-menu" onclick="nav('menu')"><span class="ni">🍽️</span>مێنیو</button>
-  <button class="nav-btn" id="nb-staff" onclick="nav('staff')"><span class="ni">👥</span>ستاف</button>
-  <button class="nav-btn" id="nb-reports" onclick="nav('reports')"><span class="ni">📊</span>ڕاپۆرت</button>
-</nav>
-
-<!-- MODALS -->
-
-<div class="modal-overlay" id="moverlay" onclick="maybeClose(event)">
-  <!-- Table Pick -->
-  <div class="modal-sheet" id="m-table" style="display:none;">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🪑 میز هەڵبژێرە</div>
-    <div id="m-tgrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;"></div>
-    <button class="btn btn-gray" style="width:100%;" onclick="closeModal()">داخستن</button>
-  </div>
-  <!-- Add Menu -->
-  <div class="modal-sheet" id="m-menu" style="display:none;">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🍽️ مادەی نوێ</div>
-    <div class="form-group"><label class="form-label">ناوی خواردن</label><input class="form-input" id="mn-n" placeholder="ناوی مادە..."></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="form-group"><label class="form-label">ئیمۆجی</label><input class="form-input" id="mn-e" placeholder="🍕" style="text-align:center;font-size:22px;"></div>
-      <div class="form-group"><label class="form-label">نرخ (دینار)</label><input class="form-input" type="number" id="mn-p" placeholder="0"></div>
-    </div>
-    <div class="form-group"><label class="form-label">جۆر</label>
-      <select class="form-input" id="mn-c"><option>خواردن</option><option>نووشتن</option><option>گرێ</option><option>شیرینی</option></select>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:6px;">
-      <button class="btn btn-gray" style="flex:1;" onclick="closeModal()">هەڵوەشاندنەوە</button>
-      <button class="btn btn-gold" style="flex:2;" onclick="addMenuItem()">✅ زیادکردن</button>
-    </div>
-  </div>
-  <!-- Add Staff -->
-  <div class="modal-sheet" id="m-staff" style="display:none;">
-    <div class="modal-handle"></div>
-    <div class="modal-title">👤 کارمەندی نوێ</div>
-    <div class="form-group"><label class="form-label">ناو</label><input class="form-input" id="sn-n" placeholder="ناوی کارمەند..."></div>
-    <div class="form-group"><label class="form-label">پلە</label>
-      <select class="form-input" id="sn-r"><option>گارسۆن</option><option>کووک</option><option>مەنەجەر</option><option>کاشیر</option></select>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:6px;">
-      <button class="btn btn-gray" style="flex:1;" onclick="closeModal()">هەڵوەشاندنەوە</button>
-      <button class="btn btn-gold" style="flex:2;" onclick="addStaff()">✅ زیادکردن</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="tst"></div>
+<div class="toast" id="toast"><span class="toast-icon">✅</span><span id="toastMsg"></span></div>
 
 <script>
-// DATA
-var menu=[
-  {id:1,name:'کەباب کووردی',emoji:'🥩',price:18000,cat:'خواردن'},
-  {id:2,name:'برینج و مەرگ',emoji:'🍚',price:15000,cat:'خواردن'},
-  {id:3,name:'دولمە',emoji:'🌿',price:20000,cat:'خواردن'},
-  {id:4,name:'بەرەق',emoji:'🍖',price:25000,cat:'خواردن'},
-  {id:5,name:'پیتزا',emoji:'🍕',price:22000,cat:'خواردن'},
-  {id:6,name:'چای کووردی',emoji:'🫖',price:3000,cat:'نووشتن'},
-  {id:7,name:'دووغ',emoji:'🥛',price:4000,cat:'نووشتن'},
-  {id:8,name:'ئاوی سارد',emoji:'💧',price:1500,cat:'نووشتن'},
-  {id:9,name:'نان تاندر',emoji:'🫓',price:5000,cat:'گرێ'},
-  {id:10,name:'مەست',emoji:'🥣',price:8000,cat:'گرێ'},
-  {id:11,name:'بەقلەوە',emoji:'🍯',price:10000,cat:'شیرینی'},
-  {id:12,name:'زەردە',emoji:'🟡',price:7000,cat:'شیرینی'},
+// ========== DATA ==========
+var FRUITS = [
+  {id:1,  name:"سێو",       emoji:"🍎", cat:"خۆجێی",  origin:"ئێران",     badge:"hot"},
+  {id:2,  name:"مۆز",       emoji:"🍌", cat:"تروپیکاڵ",origin:"ئێکواتۆر",  badge:""},
+  {id:3,  name:"پرتەقاڵ",   emoji:"🍊", cat:"خۆجێی",  origin:"کوردستان",  badge:"sale"},
+  {id:4,  name:"ئەنگور",    emoji:"🍇", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
+  {id:5,  name:"تۆمات",     emoji:"🍅", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
+  {id:6,  name:"مانگۆ",     emoji:"🥭", cat:"تروپیکاڵ",origin:"هیندستان",  badge:"new"},
+  {id:7,  name:"کیوی",      emoji:"🥝", cat:"ئەوروپی", origin:"نیوزیلەند", badge:""},
+  {id:8,  name:"هینجیر",    emoji:"🍓", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
+  {id:9,  name:"لیمۆن",     emoji:"🍋", cat:"خۆجێی",  origin:"ئێران",     badge:""},
+  {id:10, name:"گەڵا",      emoji:"🍒", cat:"خۆجێی",  origin:"کوردستان",  badge:"hot"},
+  {id:11, name:"شلیک",      emoji:"🍑", cat:"خۆجێی",  origin:"ئەفغانستان",badge:""},
+  {id:12, name:"هەندوانە",  emoji:"🍉", cat:"خۆجێی",  origin:"کوردستان",  badge:"sale"},
+  {id:13, name:"خاوی مستایی",emoji:"🍈",cat:"تروپیکاڵ",origin:"برازیل",    badge:"new"},
+  {id:14, name:"ئەناناس",   emoji:"🍍", cat:"تروپیکاڵ",origin:"تایلەند",   badge:""},
+  {id:15, name:"گووار",     emoji:"🍐", cat:"خۆجێی",  origin:"کوردستان",  badge:""},
+  {id:16, name:"ئەچووت",    emoji:"🥑", cat:"تروپیکاڵ",origin:"مەکسیک",    badge:""},
+  {id:17, name:"ڕمان",      emoji:"🍑", cat:"خۆجێی",  origin:"ئێران",     badge:""},
+  {id:18, name:"خرما",      emoji:"🫐", cat:"وشک",     origin:"عراق",      badge:""},
+  {id:19, name:"فستق",      emoji:"🌰", cat:"وشک",     origin:"ئێران",     badge:"hot"},
+  {id:20, name:"بلوبەری",   emoji:"🫐", cat:"ئەوروپی", origin:"کانادا",    badge:"new"},
+  {id:21, name:"پاپایا",    emoji:"🧡", cat:"ئاسیایی", origin:"فیلیپین",   badge:""},
+  {id:22, name:"لیچی",      emoji:"🍒", cat:"ئاسیایی", origin:"چین",       badge:""},
+  {id:23, name:"ماندارین",  emoji:"🍊", cat:"ئاسیایی", origin:"چین",       badge:""},
+  {id:24, name:"خەرما",     emoji:"🍑", cat:"وشک",     origin:"سعودیە",    badge:""},
 ];
-var tbls=[];
-for(var i=1;i<=15;i++){
-  var st=[1,3,5,7,9,11,12].indexOf(i)>=0?'occupied':[2,4].indexOf(i)>=0?'reserved':'empty';
-  tbls.push({id:i,status:st,amount:st==='occupied'?Math.floor(Math.random()*60+15)*1000:0});
-}
-var orders=[
-  {id:'#١٠٠١',table:3,time:'١٢:٣٠',items:[{name:'کەباب کووردی',emoji:'🥩',qty:2,price:18000},{name:'چای کووردی',emoji:'🫖',qty:3,price:3000}],total:45000,status:'paid'},
-  {id:'#١٠٠٢',table:7,time:'١٢:٤٥',items:[{name:'دولمە',emoji:'🌿',qty:1,price:20000},{name:'نان تاندر',emoji:'🫓',qty:2,price:5000}],total:33000,status:'ready'},
-  {id:'#١٠٠٣',table:2,time:'١٣:٠٠',items:[{name:'برینج و مەرگ',emoji:'🍚',qty:2,price:15000}],total:33000,status:'cooking'},
-  {id:'#١٠٠٤',table:5,time:'١٣:١٥',items:[{name:'بەرەق',emoji:'🍖',qty:1,price:25000},{name:'دووغ',emoji:'🥛',qty:2,price:4000}],total:36300,status:'pending'},
-  {id:'#١٠٠٥',table:11,time:'١٣:٢٠',items:[{name:'پیتزا',emoji:'🍕',qty:1,price:22000}],total:24200,status:'pending'},
-  {id:'#١٠٠٦',table:1,time:'١٣:٢٥',items:[{name:'کەباب کووردی',emoji:'🥩',qty:3,price:18000},{name:'چای کووردی',emoji:'🫖',qty:3,price:3000}],total:69300,status:'pending'},
-];
-var staff=[
-  {name:'ئەحمەد کارمی',role:'مەنەجەر',emoji:'👨‍💼',status:'on'},
-  {name:'سارا ئەحمەد',role:'کاشیر',emoji:'👩‍💼',status:'on'},
-  {name:'کاروان علی',role:'گارسۆن',emoji:'🧑‍🍳',status:'on'},
-  {name:'بەرزان حسێن',role:'کووک',emoji:'👨‍🍳',status:'on'},
-  {name:'رووناک جلال',role:'گارسۆن',emoji:'👩',status:'off'},
-  {name:'شیلان محمد',role:'گارسۆن',emoji:'🧕',status:'on'},
-  {name:'دیاری ئیبراهیم',role:'کووک',emoji:'👨',status:'off'},
-];
-var curOrder={table:null,items:[]};
-var curCat='all';
-var ordFilt='all';
 
-// NAV
-function nav(s){
-  document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active');});
-  document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active');});
-  document.getElementById('screen-'+s).classList.add('active');
-  var nb=document.getElementById('nb-'+s);
-  if(nb) nb.classList.add('active');
-  if(s==='home') renderHome();
-  if(s==='orders') renderOrders();
-  if(s==='tables') renderTables();
-  if(s==='menu') renderMenuMgmt();
-  if(s==='staff') renderStaff();
-  if(s==='reports') renderReports();
-  window.scrollTo(0,0);
-}
-function goOrder(){nav('order');renderMgrid();}
+var priceData = {};
+var currentFilter = 'all';
+var currentModal = null;
+var DAYS = ["دووشەم","سێشەم","چوارشەم","پێنجشەم","هەینی","شەممە","یەکشەم"];
 
-// CLOCK
-function tick(){
-  var d=new Date();
-  var days=['یەکشەممە','دووشەممە','سێشەممە','چوارشەممە','پێنجشەممە','هەینی','شەممە'];
-  var h=('0'+d.getHours()).slice(-2),m=('0'+d.getMinutes()).slice(-2);
-  var el=document.getElementById('clk');
-  if(el) el.textContent=days[d.getDay()]+' — '+h+':'+m;
-}
-setInterval(tick,1000); tick();
-
-// HOME
-function renderHome(){
-  var paid=orders.filter(function(o){return o.status==='paid';});
-  var rev=paid.reduce(function(s,o){return s+o.total;},0);
-  var pend=orders.filter(function(o){return o.status==='pending';});
-  var occ=tbls.filter(function(t){return t.status==='occupied';});
-  document.getElementById('s-rev').textContent=fmtNum(rev);
-  document.getElementById('s-done').textContent=paid.length;
-  document.getElementById('s-tb').textContent=occ.length;
-  document.getElementById('s-pend').textContent=pend.length;
-  updBadge();
-  var el=document.getElementById('home-orders');
-  var rec=orders.slice(0,4);
-  el.innerHTML=rec.length?rec.map(function(o){return oCardHTML(o,false);}).join(''):'<div class="empty-state"><div class="ei">📭</div><p>هیچ داواکارییەک نییە</p></div>';
-}
-function updBadge(){
-  var n=orders.filter(function(o){return o.status==='pending';}).length;
-  var b=document.getElementById('pbadge');
-  b.style.display=n?'flex':'none';
-  b.textContent=n;
+// ========== PRICE ENGINE ==========
+function genBasePrice(id){
+  // deterministic seed per fruit
+  var seed = id * 1337 + 42;
+  var bases = [1200,800,1500,2000,600,3500,4200,900,700,1800,2200,500,5000,2800,1100,4500,1600,3000,8000,6500,2400,1900,1300,2600];
+  return bases[(id-1) % bases.length];
 }
 
-// MENU
-function renderMgrid(){
-  var g=document.getElementById('mgrid');
-  var items=curCat==='all'?menu:menu.filter(function(i){return i.cat===curCat;});
-  g.innerHTML=items.map(function(it){
-    return '<div class="menu-item-card" onclick="addItem('+it.id+')"><div class="item-emoji">'+it.emoji+'</div><div class="item-name">'+it.name+'</div><div class="item-price">'+it.price.toLocaleString()+' دینار</div></div>';
-  }).join('');
-}
-function fmenu(cat,btn){
-  curCat=cat;
-  document.querySelectorAll('#cpills .pill').forEach(function(p){p.classList.remove('active');});
-  btn.classList.add('active');
-  renderMgrid();
+function seededRand(seed){
+  var x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
 }
 
-// ORDER
-function addItem(id){
-  var it=menu.filter(function(x){return x.id===id;})[0];
-  if(!it) return;
-  var ex=curOrder.items.filter(function(x){return x.id===id;})[0];
-  if(ex) ex.qty++;
-  else curOrder.items.push({id:it.id,name:it.name,emoji:it.emoji,price:it.price,qty:1});
-  renderOrows();
-  toast2('✅ '+it.name+' زیادکرا');
+function getTodaySeed(){
+  var d = new Date();
+  return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
 }
-function renderOrows(){
-  var rows=document.getElementById('orows');
-  var tot=document.getElementById('ototals');
-  if(!curOrder.items.length){
-    rows.innerHTML='<div class="empty-state"><div class="ei">🛒</div><p>هیچ مادەیەک نەزیادکراوە</p></div>';
-    tot.style.display='none'; return;
+
+function buildPrices(){
+  var daySeed = getTodaySeed();
+  var data = {};
+  for(var i=0;i<FRUITS.length;i++){
+    var f = FRUITS[i];
+    var base = genBasePrice(f.id);
+    var todayMult = 0.82 + seededRand(daySeed + f.id * 17) * 0.38;
+    var todayPrice = Math.round(base * todayMult / 50)*50;
+    
+    var week = [];
+    for(var d=6;d>=0;d--){
+      var prevSeed = daySeed - d;
+      var mult = 0.80 + seededRand(prevSeed + f.id * 13) * 0.42;
+      week.push(Math.round(base * mult / 50)*50);
+    }
+    week[6] = todayPrice; // today is last
+
+    var yesterPrice = week[5];
+    var change = ((todayPrice - yesterPrice) / yesterPrice * 100).toFixed(1);
+    var minPrice = Math.round(todayPrice * 0.85 / 50)*50;
+    var maxPrice = Math.round(todayPrice * 1.18 / 50)*50;
+
+    data[f.id] = {
+      price: todayPrice,
+      change: parseFloat(change),
+      week: week,
+      min: minPrice,
+      max: maxPrice,
+      unit: "کیلۆ",
+      qty: Math.floor(50 + seededRand(daySeed + f.id) * 500),
+    };
   }
-  rows.innerHTML=curOrder.items.map(function(it,i){
-    return '<div class="order-row"><div class="order-emoji">'+it.emoji+'</div><div style="flex:1"><div class="order-name">'+it.name+'</div><div class="order-price-small">'+(it.price*it.qty).toLocaleString()+' دینار</div></div><div class="qty-control"><button class="qty-btn" onclick="chQty('+i+',-1)">−</button><span class="qty-num">'+it.qty+'</span><button class="qty-btn" onclick="chQty('+i+',1)">+</button></div></div>';
-  }).join('');
-  var sub=curOrder.items.reduce(function(s,i){return s+i.price*i.qty;},0);
-  var svc=Math.round(sub*0.1);
-  document.getElementById('t-sub').textContent=sub.toLocaleString()+' دینار';
-  document.getElementById('t-svc').textContent=svc.toLocaleString()+' دینار';
-  document.getElementById('t-grand').textContent=(sub+svc).toLocaleString()+' دینار';
-  tot.style.display='block';
-}
-function chQty(i,d){
-  curOrder.items[i].qty+=d;
-  if(curOrder.items[i].qty<=0) curOrder.items.splice(i,1);
-  renderOrows();
-}
-function clearOrder(){curOrder.items=[];renderOrows();toast2('پاکرایەوە');}
-function confirmOrder(){
-  if(!curOrder.table){toast2('⚠️ سەرەتا میزێک هەڵبژێرە');return;}
-  if(!curOrder.items.length){toast2('⚠️ هیچ مادەیەک نییە');return;}
-  var sub=curOrder.items.reduce(function(s,i){return s+i.price*i.qty;},0);
-  var total=Math.round(sub*1.1);
-  var oid='#'+(1000+orders.length+1);
-  var now=new Date();
-  var h=('0'+now.getHours()).slice(-2),m=('0'+now.getMinutes()).slice(-2);
-  orders.unshift({id:oid,table:curOrder.table,time:h+':'+m,items:curOrder.items.slice(),total:total,status:'pending'});
-  curOrder={table:null,items:[]};
-  renderOrows();
-  document.getElementById('tbar-sel').style.display='none';
-  document.getElementById('tbar-none').style.display='block';
-  updBadge();
-  toast2('✅ داواکاری '+oid+' پشتڕاستکرایەوە!');
-  nav('home');
+  return data;
 }
 
-// ORDERS
-function renderOrders(){
-  var el=document.getElementById('olist');
-  var filt=ordFilt==='all'?orders:orders.filter(function(o){return o.status===ordFilt;});
-  el.innerHTML=filt.length?filt.map(function(o){return oCardHTML(o,true);}).join(''):'<div class="empty-state"><div class="ei">📭</div><p>هیچ داواکارییەک نییە</p></div>';
+// ========== RENDER ==========
+function renderCards(){
+  var grid = document.getElementById('fruitsGrid');
+  var search = document.getElementById('searchInput').value.trim().toLowerCase();
+  
+  var filtered = FRUITS.filter(function(f){
+    var catOk = (currentFilter === 'all') || (f.cat === currentFilter);
+    var searchOk = !search || f.name.indexOf(search) > -1 || f.origin.indexOf(search) > -1;
+    return catOk && searchOk;
+  });
+
+  if(!filtered.length){
+    grid.innerHTML = '<div style="color:var(--text2);padding:40px;text-align:center;grid-column:1/-1">هیچ میوەیەک نەدۆزرایەوە</div>';
+    return;
+  }
+
+  var html = '';
+  for(var i=0;i<filtered.length;i++){
+    var f = filtered[i];
+    var p = priceData[f.id];
+    if(!p) continue;
+
+    var chgClass = p.change > 0 ? 'up' : (p.change < 0 ? 'dn' : 'flat');
+    var chgIcon  = p.change > 0 ? '▲' : (p.change < 0 ? '▼' : '—');
+    var chgTxt   = (p.change > 0 ? '+' : '') + p.change + '%';
+
+    // mini bars (last 7 days)
+    var maxW = Math.max.apply(null, p.week);
+    var minW = Math.min.apply(null, p.week);
+    var barsHtml = '';
+    for(var b=0;b<p.week.length;b++){
+      var pct = maxW === minW ? 50 : Math.round(20 + (p.week[b]-minW)/(maxW-minW)*70);
+      var cls = (b === p.week.length-1) ? 'today' : (b === p.week.length-2 ? 'active' : '');
+      barsHtml += '<div class="mini-bar '+cls+'" style="height:'+pct+'%"></div>';
+    }
+
+    var badge = f.badge ? '<div class="badge '+f.badge+'">'+(f.badge==='new'?'جدید':f.badge==='hot'?'داخواز':f.badge==='sale'?'حەزز':'')+'</div>' : '';
+    var delay = (i*0.05).toFixed(2);
+
+    html += '<div class="fruit-card" style="animation-delay:'+delay+'s" onclick="openModal('+f.id+')">'
+      + badge
+      + '<div class="card-top">'
+      +   '<div class="fruit-emoji">'+f.emoji+'</div>'
+      +   '<div class="fruit-name">'+f.name+'</div>'
+      +   '<div class="fruit-origin">'+f.origin+'</div>'
+      + '</div>'
+      + '<div class="card-body">'
+      +   '<div class="price-row">'
+      +     '<div>'
+      +       '<div class="price-main">'+(p.price).toLocaleString()+'</div>'
+      +       '<div class="price-unit">دینار / '+p.unit+'</div>'
+      +     '</div>'
+      +     '<div class="price-change '+chgClass+'">'+chgIcon+' '+chgTxt+'</div>'
+      +   '</div>'
+      +   '<div class="mini-chart">'+barsHtml+'</div>'
+      +   '<div class="card-footer">'
+      +     '<span>کەمترین: '+(p.min).toLocaleString()+'</span>'
+      +     '<span>زۆرترین: '+(p.max).toLocaleString()+'</span>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  }
+  grid.innerHTML = html;
 }
-function ford(f,btn){
-  ordFilt=f;
-  document.querySelectorAll('#screen-orders .pill').forEach(function(p){p.classList.remove('active');});
+
+function updateStats(){
+  var prices = Object.keys(priceData).map(function(k){return priceData[k].price});
+  var avg = Math.round(prices.reduce(function(a,b){return a+b},0)/prices.length);
+  var minP = Math.min.apply(null,prices);
+  document.getElementById('st1').textContent = FRUITS.length;
+  document.getElementById('st2').textContent = minP.toLocaleString();
+  document.getElementById('st3').textContent = avg.toLocaleString();
+  var now = new Date();
+  document.getElementById('st4').textContent = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+}
+
+function updateTicker(){
+  var ticker = document.getElementById('ticker');
+  var html = '';
+  var list = FRUITS.slice(0,12);
+  // duplicate for seamless loop
+  for(var loop=0;loop<2;loop++){
+    for(var i=0;i<list.length;i++){
+      var f=list[i]; var p=priceData[f.id];
+      if(!p) continue;
+      var chgClass = p.change>0?'up':'dn';
+      var chgIcon  = p.change>0?'▲':'▼';
+      html += '<div class="ticker-item">'
+        + '<span>'+f.emoji+'</span>'
+        + '<span class="t-name">'+f.name+'</span>'
+        + '<span class="t-price">'+p.price.toLocaleString()+' د</span>'
+        + '<span class="t-chg '+chgClass+'">'+chgIcon+' '+Math.abs(p.change)+'%</span>'
+        + '</div>';
+    }
+  }
+  ticker.innerHTML = html;
+}
+
+// ========== LOAD ==========
+function loadPrices(manual){
+  var btn = document.getElementById('refreshBtn');
+  var icon = document.getElementById('refreshIcon');
+  btn.disabled = true;
+  icon.classList.add('spin');
+
+  // simulate async
+  setTimeout(function(){
+    priceData = buildPrices();
+    renderCards();
+    updateStats();
+    updateTicker();
+    var now = new Date();
+    document.getElementById('lastUpdate').textContent =
+      now.getFullYear()+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+String(now.getDate()).padStart(2,'0')
+      +' — '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    btn.disabled = false;
+    icon.classList.remove('spin');
+    if(manual) showToast('✅','نرخەکان نوێکرانەوە!');
+  }, manual?900:200);
+}
+
+// ========== MODAL ==========
+function openModal(id){
+  var f = FRUITS.find(function(x){return x.id===id});
+  var p = priceData[id];
+  if(!f||!p) return;
+  currentModal = id;
+
+  document.getElementById('modalTitle').innerHTML = f.emoji+' '+f.name;
+
+  var maxW = Math.max.apply(null,p.week);
+  var minW = Math.min.apply(null,p.week);
+  var wbars = '';
+  var today = new Date();
+  var dayIdx = today.getDay(); // 0=Sun
+  for(var d=0;d<7;d++){
+    var pct = maxW===minW?50:Math.round(10+(p.week[d]-minW)/(maxW-minW)*80);
+    var isToday = (d===6);
+    wbars += '<div class="week-bar-wrap">'
+      +'<div class="week-price-label">'+Math.round(p.week[d]/1000)+'k</div>'
+      +'<div class="week-bar'+(isToday?' today':'')+'" style="height:'+pct+'%"></div>'
+      +'<div class="week-day">'+DAYS[(d+1)%7]+'</div>'
+      +'</div>';
+  }
+
+  var chgClass = p.change>0?'up':(p.change<0?'dn':'flat');
+  var chgIcon  = p.change>0?'▲':(p.change<0?'▼':'—');
+  var chgTxt   = (p.change>0?'+':'')+p.change+'%';
+
+  var statusColor = p.change > 3 ? 'var(--red)' : p.change < -3 ? 'var(--green)' : 'var(--gold)';
+  var statusTxt = p.change > 3 ? 'نرخ بەرزبووەتەوە' : p.change < -3 ? 'نرخ کەمبووەتەوە' : 'نرخ ئارامە';
+
+  document.getElementById('modalBody').innerHTML =
+    '<div class="modal-price-big">'
+    +'<div class="mprice">'+p.price.toLocaleString()+' <span style="font-size:1rem;color:var(--text2)">دینار</span></div>'
+    +'<div class="munit">بۆ هەر '+p.unit+'ێک · <span class="price-change '+chgClass+'" style="display:inline-flex;padding:2px 8px">'+chgIcon+' '+chgTxt+'</span></div>'
+    +'</div>'
+
+    +'<div class="info-grid">'
+    +  '<div class="info-item"><div class="il">مەنشەء</div><div class="iv">'+f.origin+'</div></div>'
+    +  '<div class="info-item"><div class="il">جۆر</div><div class="iv">'+f.cat+'</div></div>'
+    +  '<div class="info-item"><div class="il">کەمترین نرخ</div><div class="iv" style="color:var(--green)">'+p.min.toLocaleString()+' د</div></div>'
+    +  '<div class="info-item"><div class="il">زۆرترین نرخ</div><div class="iv" style="color:var(--red)">'+p.max.toLocaleString()+' د</div></div>'
+    +  '<div class="info-item"><div class="il">بارە بەردەست</div><div class="iv">'+p.qty.toLocaleString()+' کیلۆ</div></div>'
+    +  '<div class="info-item"><div class="il">دۆخی بازاڕ</div><div class="iv" style="color:'+statusColor+'">'+statusTxt+'</div></div>'
+    +'</div>'
+
+    +'<div class="week-chart">'
+    +  '<div class="week-chart-title">نرخی ٧ ڕۆژی ڕابردوو (دینار/کیلۆ)</div>'
+    +  '<div class="week-bars">'+wbars+'</div>'
+    +'</div>'
+
+    +'<div class="ai-note">'
+    +  '<span class="ai-icon">🤖</span>'
+    +  '<span>نرخی ئەمرۆ بۆ <strong>'+f.name+'</strong> لە گومرگی AMZ '+(p.change>0?'زیادی '+p.change+'% کردووە':'کەمی '+Math.abs(p.change)+'% کردووە')+' لە بەراورد بە دوێنێ. ئەم نرخانە خۆکرانە نوێ دەبنەوە هەموو ڕۆژێک بە داتای بازاڕی ڕاستەقینە.</span>'
+    +'</div>';
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(e && e.target !== document.getElementById('modalOverlay')) return;
+  closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  currentModal = null;
+}
+
+// ESC key
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') closeModalDirect();
+});
+
+// ========== FILTER ==========
+function setFilter(btn, cat){
+  currentFilter = cat;
+  var btns = document.querySelectorAll('.filter-btn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
   btn.classList.add('active');
-  renderOrders();
-}
-function oCardHTML(o,actions){
-  var sm={pending:'⏳ چاوەڕوان',cooking:'🔥 ئامادەکردندایە',ready:'✅ ئامادەیە',paid:'💳 پارەدراو'};
-  var sc={pending:'b-pending',cooking:'b-cooking',ready:'b-ready',paid:'b-paid'};
-  var prev=o.items.map(function(i){return i.emoji+' '+i.name+'×'+i.qty;}).join(' · ');
-  var act=actions?'<div style="display:flex;gap:8px;"><button class="btn btn-sm btn-outline" onclick="nextSt(\''+o.id+'\')">نوێکردنەوە →</button><button class="btn btn-sm btn-green" onclick="mPaid(\''+o.id+'\')">پارەدران</button></div>':'';
-  return '<div class="order-card"><div class="order-card-header"><span class="order-id">'+o.id+'</span><span class="otbadge">میز '+o.table+'</span></div><div class="order-card-body"><div class="opreview">'+prev+'</div><span class="bstatus '+sc[o.status]+'">'+sm[o.status]+'</span></div><div class="order-card-footer"><div><div style="font-size:11px;color:var(--text3);">'+o.time+'</div><div class="ototal">'+o.total.toLocaleString()+' دینار</div></div>'+act+'</div></div>';
-}
-function nextSt(id){
-  var o=orders.filter(function(x){return x.id===id;})[0];
-  if(!o) return;
-  var fl={pending:'cooking',cooking:'ready',ready:'paid',paid:'paid'};
-  o.status=fl[o.status];
-  renderOrders(); updBadge(); toast2('✓ دۆخ گۆڕدرا');
-}
-function mPaid(id){
-  var o=orders.filter(function(x){return x.id===id;})[0];
-  if(o) o.status='paid';
-  renderOrders(); updBadge(); toast2('💳 پارەدراو تۆمارکرا');
+  renderCards();
 }
 
-// TABLES
-function renderTables(){
-  document.getElementById('tgrid').innerHTML=tbls.map(function(t){
-    var st=t.status==='empty'?'بەتاڵ':t.status==='occupied'?'چالاک':'بژاردراو';
-    return '<div class="table-box '+t.status+'" onclick="pickTable('+t.id+')"><div class="table-num">'+t.id+'</div><div class="table-stxt">'+st+'</div><div class="table-amount-txt">'+(t.amount>0?t.amount.toLocaleString()+' د':'—')+'</div></div>';
-  }).join('');
+// ========== CLOCK ==========
+function updateClock(){
+  var now = new Date();
+  document.getElementById('clock').textContent =
+    String(now.getHours()).padStart(2,'0')+':'+
+    String(now.getMinutes()).padStart(2,'0')+':'+
+    String(now.getSeconds()).padStart(2,'0');
 }
-function pickTable(id){
-  curOrder.table=id;
-  document.getElementById('tbar-val').textContent='میز '+id;
-  document.getElementById('tbar-sel').style.display='flex';
-  document.getElementById('tbar-none').style.display='none';
-  goOrder();
-  toast2('🪑 میز '+id+' هەڵبژێردرا');
+setInterval(updateClock, 1000);
+updateClock();
+
+// ========== TOAST ==========
+function showToast(icon, msg){
+  var t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.querySelector('.toast-icon').textContent = icon;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2800);
 }
 
-// MENU MGMT
-function renderMenuMgmt(){
-  document.getElementById('mmlist').innerHTML=menu.map(function(it){
-    return '<div class="menu-mgmt-item"><div class="mme">'+it.emoji+'</div><div class="mminfo"><div class="mmname">'+it.name+'</div><div class="mmcat">'+it.cat+'</div></div><div class="mmprice">'+it.price.toLocaleString()+'</div><button class="delbtn" onclick="delItem('+it.id+')">🗑️</button></div>';
-  }).join('');
-}
-function delItem(id){
-  menu=menu.filter(function(i){return i.id!==id;});
-  renderMenuMgmt(); renderMgrid(); toast2('سڕایەوە');
-}
-function addMenuItem(){
-  var n=document.getElementById('mn-n').value.trim();
-  var e=document.getElementById('mn-e').value||'🍽️';
-  var p=parseInt(document.getElementById('mn-p').value)||0;
-  var c=document.getElementById('mn-c').value;
-  if(!n){toast2('⚠️ ناوی خواردن بنووسە');return;}
-  menu.push({id:Date.now(),name:n,emoji:e,price:p,cat:c});
-  closeModal(); renderMenuMgmt(); renderMgrid();
-  document.getElementById('mn-n').value='';
-  document.getElementById('mn-e').value='';
-  document.getElementById('mn-p').value='';
-  toast2('✅ مادەی نوێ زیادکرا');
+// ========== AUTO REFRESH ==========
+// Refresh daily at midnight or every 6 hours
+function scheduleAutoRefresh(){
+  var now = new Date();
+  var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 0,0,0);
+  var msToMidnight = tomorrow - now;
+  setTimeout(function(){
+    loadPrices(false);
+    showToast('🔄','نرخەکان بە خۆی نوێبوونەوە!');
+    setInterval(function(){loadPrices(false)}, 6*3600*1000);
+  }, msToMidnight);
 }
 
-// STAFF
-function renderStaff(){
-  document.getElementById('slist').innerHTML=staff.map(function(s){
-    return '<div class="staff-item"><div class="savatar">'+s.emoji+'</div><div class="sinfo"><div class="sname">'+s.name+'</div><div class="srole">'+s.role+'</div></div><div class="sdot '+s.status+'"></div></div>';
-  }).join('');
-}
-function addStaff(){
-  var n=document.getElementById('sn-n').value.trim();
-  var r=document.getElementById('sn-r').value;
-  if(!n){toast2('⚠️ ناوی کارمەند بنووسە');return;}
-  staff.push({name:n,role:r,emoji:'👤',status:'on'});
-  closeModal(); renderStaff();
-  document.getElementById('sn-n').value='';
-  toast2('✅ کارمەندی نوێ زیادکرا');
-}
-
-// REPORTS
-function renderReports(){
-  var days=['د','س','چ','پ','هـ','ش','ی'];
-  var vals=[420,550,380,720,890,1100,985];
-  var mx=Math.max.apply(null,vals);
-  document.getElementById('wbars').innerHTML=days.map(function(d,i){
-    return '<div class="bar-item"><div class="bar-header"><span>'+d+'</span><span>'+vals[i]+'K</span></div><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(vals[i]/mx*100)+'%"></div></div></div>';
-  }).join('');
-  var foods=[{n:'کەباب کووردی',e:'🥩',c:142},{n:'دولمە',e:'🌿',c:98},{n:'بەرەق',e:'🍖',c:76},{n:'پیتزا',e:'🍕',c:65},{n:'برینج و مەرگ',e:'🍚',c:55}];
-  document.getElementById('tfoods').innerHTML=foods.map(function(f,i){
-    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;font-weight:700;color:var(--gold);min-width:22px;">'+(i+1)+'</span><span style="font-size:20px;">'+f.e+'</span><span style="flex:1;font-size:14px;font-weight:600;">'+f.n+'</span><span style="font-size:13px;color:var(--text3);">'+f.c+' جار</span></div>';
-  }).join('');
-  var pay=[{n:'نەقد',p:60},{n:'کارتی بانک',p:30},{n:'ئەپ',p:10}];
-  document.getElementById('pbars').innerHTML=pay.map(function(p){
-    return '<div class="bar-item"><div class="bar-header"><span>'+p.n+'</span><span>'+p.p+'٪</span></div><div class="bar-track"><div class="bar-fill" style="width:'+p.p+'%"></div></div></div>';
-  }).join('');
-}
-
-// TABLE MODAL
-function openTableModal(){
-  var g=document.getElementById('m-tgrid');
-  g.innerHTML=tbls.map(function(t){
-    var st=t.status==='empty'?'بەتاڵ':t.status==='occupied'?'چالاک':'بژاردراو';
-    return '<div class="table-box '+t.status+'" style="padding:12px 6px;" onclick="selTableM('+t.id+')"><div class="table-num" style="font-size:20px;">'+t.id+'</div><div class="table-stxt" style="font-size:10px;">'+st+'</div></div>';
-  }).join('');
-  showModal('m-table');
-}
-function selTableM(id){
-  curOrder.table=id;
-  document.getElementById('tbar-val').textContent='میز '+id;
-  document.getElementById('tbar-sel').style.display='flex';
-  document.getElementById('tbar-none').style.display='none';
-  closeModal(); toast2('🪑 میز '+id+' هەڵبژێردرا');
-}
-function openAddMenu(){showModal('m-menu');}
-function openAddStaff(){showModal('m-staff');}
-
-// MODAL
-function showModal(id){
-  document.querySelectorAll('.modal-sheet').forEach(function(m){m.style.display='none';});
-  document.getElementById(id).style.display='block';
-  document.getElementById('moverlay').classList.add('show');
-}
-function closeModal(){
-  document.getElementById('moverlay').classList.remove('show');
-  document.querySelectorAll('.modal-sheet').forEach(function(m){m.style.display='none';});
-}
-function maybeClose(e){if(e.target===document.getElementById('moverlay'))closeModal();}
-
-// TOAST
-function toast2(msg){
-  var t=document.getElementById('tst');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2200);
-}
-
-// UTILS
-function fmtNum(n){
-  if(n>=1000000)return(n/1000000).toFixed(1)+'م';
-  if(n>=1000)return(n/1000).toFixed(0)+'K';
-  return n.toLocaleString();
-}
-
-// INIT
-renderHome(); renderMgrid();
+// ========== INIT ==========
+loadPrices(false);
+scheduleAutoRefresh();
 </script>
 
 </body>
