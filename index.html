@@ -1,1186 +1,411 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://base44.com/logo_v2.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KRD GROUP</title>
-
-    <!-- Tailwind CSS via CDN (JIT in the browser) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: ["class"],
-        theme: {
-          extend: {
-            opacity: Object.fromEntries(Array.from({ length: 101 }, (_, i) => [i, `${i / 100}`])),
-            borderRadius: {
-              lg: 'var(--radius)',
-              md: 'calc(var(--radius) - 2px)',
-              sm: 'calc(var(--radius) - 4px)'
-            },
-            colors: {
-              background: 'hsl(var(--background))',
-              foreground: 'hsl(var(--foreground))',
-              card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
-              popover: { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
-              primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
-              secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
-              muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
-              accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
-              destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
-              border: 'hsl(var(--border))',
-              input: 'hsl(var(--input))',
-              ring: 'hsl(var(--ring))',
-              chart: {
-                '1': 'hsl(var(--chart-1))', '2': 'hsl(var(--chart-2))', '3': 'hsl(var(--chart-3))',
-                '4': 'hsl(var(--chart-4))', '5': 'hsl(var(--chart-5))'
-              },
-              sidebar: {
-                DEFAULT: 'hsl(var(--sidebar-background))', foreground: 'hsl(var(--sidebar-foreground))',
-                primary: 'hsl(var(--sidebar-primary))', 'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-                accent: 'hsl(var(--sidebar-accent))', 'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-                border: 'hsl(var(--sidebar-border))', ring: 'hsl(var(--sidebar-ring))'
-              }
-            },
-            fontFamily: {
-              heading: ['var(--font-heading)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-              body: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-              display: ['var(--font-display)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-              mono: ['var(--font-mono)', 'ui-monospace', 'monospace']
-            },
-            keyframes: {
-              'accordion-down': { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
-              'accordion-up': { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } }
-            },
-            animation: {
-              'accordion-down': 'accordion-down 0.2s ease-out',
-              'accordion-up': 'accordion-up 0.2s ease-out'
-            }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolverX — Standalone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      content: ["standalone.html"],
+      theme: {
+        extend: {
+          opacity: Object.fromEntries(Array.from({ length: 101 }, (_, i) => [i, `${i / 100}`])),
+          borderRadius: { lg: "var(--radius)", md: "calc(var(--radius) - 2px)", sm: "calc(var(--radius) - 4px)" },
+          colors: {
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+            popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
+            primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
+            secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
+            muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
+            accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
+            destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
+            border: "hsl(var(--border))",
+            input: "hsl(var(--input))",
+            ring: "hsl(var(--ring))"
+          },
+          fontFamily: {
+            heading: ["var(--font-heading)", "ui-sans-serif", "system-ui", "sans-serif"],
+            body: ["var(--font-body)", "ui-sans-serif", "system-ui", "sans-serif"],
+            display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
+            mono: ["var(--font-mono)", "ui-monospace", "monospace"]
+          },
+          boxShadow: {
+            clinical: "0 1px 2px rgba(15,23,42,0.04), 0 8px 30px rgba(15,23,42,0.06)",
+            glow: "0 0 0 1px rgba(250,204,21,0.08), 0 12px 40px rgba(250,204,21,0.12)"
+          },
+          keyframes: {
+            "fade-up": { from: { opacity: 0, transform: "translateY(16px)" }, to: { opacity: 1, transform: "translateY(0)" } },
+            "step-in": { from: { opacity: 0, transform: "translateX(-12px)" }, to: { opacity: 1, transform: "translateX(0)" } }
+          },
+          animation: {
+            "fade-up": "fade-up 0.5s cubic-bezier(0.16,1,0.3,1) both",
+            "step-in": "step-in 0.4s ease both"
           }
-        },
-        plugins: []
-      };
-    </script>
-
-    <style type="text/tailwindcss">
-      @layer base {
-        :root {
-          --background: 0 0% 100%;
-          --foreground: 0 0% 3.9%;
-          --card: 0 0% 100%;
-          --card-foreground: 0 0% 3.9%;
-          --popover: 0 0% 100%;
-          --popover-foreground: 0 0% 3.9%;
-          --primary: 0 0% 9%;
-          --primary-foreground: 0 0% 98%;
-          --secondary: 0 0% 96.1%;
-          --secondary-foreground: 0 0% 9%;
-          --muted: 0 0% 96.1%;
-          --muted-foreground: 0 0% 45.1%;
-          --accent: 0 0% 96.1%;
-          --accent-foreground: 0 0% 9%;
-          --destructive: 0 84.2% 60.2%;
-          --destructive-foreground: 0 0% 98%;
-          --border: 0 0% 89.8%;
-          --input: 0 0% 89.8%;
-          --ring: 0 0% 3.9%;
-          --chart-1: 12 76% 61%;
-          --chart-2: 173 58% 39%;
-          --chart-3: 197 37% 24%;
-          --chart-4: 43 74% 66%;
-          --chart-5: 27 87% 67%;
-          --radius: 0.5rem;
-          --font-heading: ui-sans-serif, system-ui, sans-serif;
-          --font-body: ui-sans-serif, system-ui, sans-serif;
-          --font-display: ui-sans-serif, system-ui, sans-serif;
-          --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-          --sidebar-background: 0 0% 98%;
-          --sidebar-foreground: 240 5.3% 26.1%;
-          --sidebar-primary: 240 5.9% 10%;
-          --sidebar-primary-foreground: 0 0% 98%;
-          --sidebar-accent: 240 4.8% 95.9%;
-          --sidebar-accent-foreground: 240 5.9% 10%;
-          --sidebar-border: 220 13% 91%;
-          --sidebar-ring: 217.2 91.2% 59.8%;
-        }
-        .dark {
-          --background: 0 0% 3.9%;
-          --foreground: 0 0% 98%;
-          --card: 0 0% 3.9%;
-          --card-foreground: 0 0% 98%;
-          --popover: 0 0% 3.9%;
-          --popover-foreground: 0 0% 98%;
-          --primary: 0 0% 98%;
-          --primary-foreground: 0 0% 9%;
-          --secondary: 0 0% 14.9%;
-          --secondary-foreground: 0 0% 98%;
-          --muted: 0 0% 14.9%;
-          --muted-foreground: 0 0% 63.9%;
-          --accent: 0 0% 14.9%;
-          --accent-foreground: 0 0% 98%;
-          --destructive: 0 62.8% 30.6%;
-          --destructive-foreground: 0 0% 98%;
-          --border: 0 0% 14.9%;
-          --input: 0 0% 14.9%;
-          --ring: 0 0% 83.1%;
-          --chart-1: 220 70% 50%;
-          --chart-2: 160 60% 45%;
-          --chart-3: 30 80% 55%;
-          --chart-4: 280 65% 60%;
-          --chart-5: 340 75% 55%;
-          --sidebar-background: 240 5.9% 10%;
-          --sidebar-foreground: 240 4.8% 95.9%;
-          --sidebar-primary: 224.3 76.3% 48%;
-          --sidebar-primary-foreground: 0 0% 100%;
-          --sidebar-accent: 240 3.7% 15.9%;
-          --sidebar-accent-foreground: 240 4.8% 95.9%;
-          --sidebar-border: 240 3.7% 15.9%;
-          --sidebar-ring: 217.2 91.2% 59.8%;
         }
       }
-    </style>
-
-    <style>
-      * { border-color: hsl(var(--border)); outline-color: hsl(var(--ring) / 0.5); }
-      html, body { margin: 0; padding: 0; }
-      body {
-        background: #000000;
-        color: hsl(var(--foreground));
-        font-family: var(--font-body);
-        -webkit-font-smoothing: antialiased;
-      }
-    </style>
-
-    <!-- Babel standalone to transpile JSX in the browser -->
-    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
-
-    <!-- ESM import map for React, ReactDOM, framer-motion, lucide-react -->
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@18.2.0",
-        "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
-        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-        "framer-motion": "https://esm.sh/framer-motion@11.16.4?deps=react@18.2.0",
-        "lucide-react": "https://esm.sh/lucide-react@0.475.0?deps=react@18.2.0"
-      }
+    };
+  </script>
+  <style>
+    :root {
+      --background: 40 8% 5%; --foreground: 45 40% 94%;
+      --card: 40 7% 9%; --card-foreground: 45 40% 94%;
+      --popover: 40 7% 9%; --popover-foreground: 45 40% 94%;
+      --primary: 48 96% 55%; --primary-foreground: 40 10% 8%;
+      --secondary: 42 8% 14%; --secondary-foreground: 45 40% 94%;
+      --muted: 42 8% 14%; --muted-foreground: 44 12% 66%;
+      --accent: 38 92% 50%; --accent-foreground: 40 10% 8%;
+      --destructive: 0 70% 58%; --destructive-foreground: 0 0% 100%;
+      --border: 42 8% 18%; --input: 42 8% 18%; --ring: 48 96% 55%;
+      --radius: 0.875rem;
+      --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+      --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
     }
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
+    * { border-color: hsl(var(--border)); outline-color: hsl(var(--ring) / 0.4); }
+    body { background: hsl(var(--background)); color: hsl(var(--foreground)); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+    ::selection { background: rgba(250, 204, 21, 0.28); }
+    .glass { background: rgba(16, 14, 9, 0.62); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); }
+    .serum-line { background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.7), rgba(245, 158, 11, 0.6), transparent); }
+    .text-gradient { background: linear-gradient(120deg, #facc15 0%, #f59e0b 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .grid-noise { background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0); background-size: 28px 28px; }
+    .step-body { font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.85; color: hsl(var(--foreground)); }
+    .step-body .hl { color: #facc15; font-weight: 600; }
+    .step-body .op { color: #fca5a5; }
+    .step-body .rv { color: #fde68a; font-weight: 700; }
+    .scrollbar-thin::-webkit-scrollbar { height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(250, 204, 21, 0.3); border-radius: 999px; }
+    #root { min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/framer-motion@11.16.4/dist/framer-motion.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext, Children } = React;
+    const { motion, AnimatePresence } = window.Motion;
 
-    <script type="text/babel" data-type="module" data-presets="react">
-      import React, { useState, useEffect, useMemo, useRef } from 'react';
-      import { createRoot } from 'react-dom/client';
-      import { motion, AnimatePresence } from 'framer-motion';
-      import {
-        Menu, X, Globe, ArrowRight, Sparkles, ExternalLink, Lock,
-        Mail, Send, Github, Crown, Award, Shield
-      } from 'lucide-react';
-
-      /* ===================== Translations ===================== */
-      const translations = {
-        ku: {
-          homeTitle: "KRD GROUP بۆ گەشەپێدانی گشتی",
-          homeDesc:
-            "KRD Group تیمێکی پرۆفیشناڵە لە پەرەپێدانی وێبسایت، سۆفتوێر، بەرنامە و یاریەکان. ئێمە ئامەدەین بۆ چارەسەر کردنی هەموو کێشەکان بە شێوەیەکی مۆدێرن و داهێنەرانە بە کوالیتی بەرز و ستانداردی نێودەوڵەتی دابین دەکەین. ئێرە شوێنێکە بۆ بنیاتنانی بیرۆکەکانت و داهێنان.",
-          contactBtn: "بۆ پەیوەندی کردن",
-          projectBtn: "پرۆژەکانمان",
-          aboutTeam: "دەربارەی تیم",
-          aboutDesc:
-            "ئەم تیمە پێکهاتووە لەلایەن محمد بارزان، ژاڵە کاروان، ئەنەس موحسین. ئێمە تیمێکین کاردەکەین بۆ دروستکردنی وێبسایت، سۆفتوێر، بەرنامە، وەهەروەها چارەسەر کردنیان بە شێوەیەکی پێشکەوتوو و ستانداردی جیهانی.",
-          moreinfo: "زانیاری زیاتر",
-          skill: "تواناکان و بەرژەوەندییەکان",
-          skill2: "ئامانجەکانی تیم",
-          skillDesc:
-            "تەکنەلۆژیای نوێ • داهێنان و نوێکردنەوە. • پەرەپێدانی سیستەمی دیجیتاڵ. • فێربوونی بەردەوام. • دروستکردنی پڕۆژەی گەورە و کاری پیشەیی.",
-          aboutDev: "دەربارەی گەشەپێدەر",
-          devinfo: "زانیاری دەربارەی تیم",
-          Mabout:
-            "دامەزێنەر و سەرۆکی تیم، محمد بارزان قوتابی بەشی IT سەرپەرشتی و دەستپێکەری پرۆژەکانە، شارەزا لە بواری دروستکردنی وێبسایت، دیزاین، پرۆگرامینگ، بەشێوەیەکی تەواو پێشکەوتوو و ستانداردانە.",
-          Zabout:
-            "بەڕێوبەری کار و باری تیم، ژاڵە کاروان قوتابی بەشی IT، وەرگر و دەسپێکەر و ڕێکخستن و دانانی بیرۆکەی پرۆژەکان بەر لە دەستپێکردنیان، شارەزای تەواوی هەیە لە پرۆگرامینگ و بەڕێوەبردنی وێبسایت.",
-          Aabout:
-            "بەڕێوبەری تیم و پرۆژەکان، ئەنەس موحسین قوتابی بەشی IT، ئەو دانانی بیرۆکەکانی پرۆژەکانە و سەرپەرشتیاری تیمەکەیە لە کاتی بوونی هەر کێشەیەک ئامادە دەبێت بۆ چارەسەرکردنی بە شێوەیەکی تەواو پرۆفیشناڵانە، پشتگیری تیمەکەیە.",
-          lfu: "بە شانازییەوە تیمەکەمان لەلایەن زانکۆی لوبنانی فەرەنسییەوە پشتگیری و چاودێری و سەرپەرشتی دەکرێت. تیمەکەمان قوتابی زانکۆی لوبنانی فەرەنسین لە بەشی تەکنەلۆژیای زانیاری، زانکۆی لوبنانی فەرەنسی تیمەکەی پێکهێناوە بەشێوەیەکی دڵسۆزانە و پرۆفیشناڵانە.",
-          mathSolver:
-            "ئەم پرۆژەیە ئامادە کراوە بۆ قوتابیان، پێکهاتووە لە چەند بابەتێکی شیکارکردنی وانەکانی بیرکاری بە شێوەیەکی زۆر خێرا و وردەکاری.",
-          wifi: "ئەم پرۆژەیە داندراوە بۆ خزمەتگوزاری سودوەرگرتن لە تێستکردنی تۆری وایفای بە شێوەیەکی پێشکەوتوو.",
-          qr: "ئەم پرۆژەیە دروست کراوە بۆ خزمەتگوزاری QR Code & Scan، بەرهەمەکە پێکهاتووە لە دروستکردنی QR Code، دانانی وێنە و دانانی text، وە Scan کردن.",
-          snake:
-            "یارییەکی کلاسیکییە تیایدا یاریزانان کۆنتڕۆڵی مارێکی گەورە دەکەن کە سێو دەخوات بۆ زیادکردنی درێژی. بەرەنگارییەکە ئەوەیە کە خۆت لە بەرکەوتن بە دیوارەکان یان لەشی مارەکە دوور بخەیتەوە کاتێک بە تێپەڕبوونی کات خێراتر دەجوڵێت.",
-          flappy:
-            "Flappy Bird یارییەکی ئالودەکەرە کە یاریزانان کلیک دەکەن بۆ فڕاندنی باڵندەکە بە شێوەیەکی بێکۆتای زۆر سەخت کە بە تێپەڕبوونی کات خێرای و سەختی زیاد دەکات.",
-          conAbout:
-            "گەر دەتەوێت زانیاری زیاتر یاخود پەیوەندیمان پێوە بکەیت ئەوە تکایە یەکێک لە هەڵبژاردەکانی خوارەوە هەڵبژێرە.",
-          weather:
-            "ویبسایتی Kurdistan Weather ویبسایتێکە بۆ پیشاندانی کەش و هەوای شارەکانی کوردستان. لەم ویبسایتەدا بەکارهێنەر دەتوانێت زانیاری وەک پلەی گەرمی، دۆخی کەش و هەوا و زانیارییەکانی تر ببینێت. ویبسایتەکە بە زمانی کوردی دروستکراوە و دیزاینێکی سادە و خێرا هەیە بۆ ئەوەی بەکارهێنانی بۆ هەموو کەس ئاسان بێت.",
-          restmenu:
-            "ئەم ویبسایتە بۆ پیشاندانی مێنیوی خواردنگەکان بە شێوەیەکی ئاسان و جوان دروستکراوە. بەکارهێنەران دەتوانن بە ئاسانی خواردنەکان ببینن، نرخەکان بزانن و زانیاری زیاتر دەربارەی هەر خواردنێک وەرگرن. دیزاینەکە مۆدێرن و گونجاوە بۆ بەکارهێنان لەسەر مۆبایل و کۆمپیوتەر.",
-          shoppingweb:
-            "ئەم ویبسایتە پلاتفۆرمێکی ئۆنلاینە بۆ یارمەتیدانی فرۆشیارەکان بۆ پیشاندانی بەرهەمەکان و فرۆشتنیان بە شێوەیەکی ئاسان و پرۆفیشناڵ. فرۆشیارەکان دەتوانن بەرهەمەکان زیاد بکەن، نرخ و وێنە دابنێن و داواکاریی کڕیاران بەڕێوە ببڕن. دیزاینەکە مۆدێرن و خێراکارە و گونجاوە بۆ مۆبایل و کۆمپیوتەر.",
-          navHome: "سەرەکی",
-          navAbout: "دەربارەی ئێمە",
-          navProject: "پرۆژەکانمان",
-          navService: "خزمەتگوزارییەکانمان",
-          navContact: "پەیوەندی",
-          contactTitle: "پەیوەندی بکە",
-          founder: "دامەزێنەر و سەرۆک",
-          manager: "بەڕێوبەری تیم",
-          projectManager: "بەڕێوبەری پرۆژە",
-          openProject: "کردنەوەی پرۆژە",
-          privateProject: "🔒 پرۆژەی تایبەت",
-          ourProjects: "پرۆژەکانمان",
-          ourServices: "خزمەتگوزارییەکانمان",
-          email: "ئیمەیڵ",
-          rights: "جموجورای مافەکان پارێزراون.",
-        },
-      };
-
-      const defaultEnglish = {
-        homeTitle: "KRD GROUP for general development",
-        homeDesc:
-          "KRD Group is a professional team in the development of websites, software, applications and games. We provide modern and innovative solutions with high quality and international standards. It's a place to build your ideas of growth and innovation.",
-        contactBtn: "Contact Us",
-        projectBtn: "View our projects",
-        aboutTeam: "About Team",
-        aboutDesc:
-          "This team consists of Mohammed Barzan, Zhala Karwan, Anas Mohsen. We are a team working to create websites, software, applications, and solutions in an advanced and world-class standard.",
-        moreinfo: "More Info",
-        skill: "Skills & Interests",
-        skill2: "The goals of the team",
-        skillDesc:
-          "• New Technologies\n• Innovation and Update.\n• Digital system development.\n• Continuous learning.\n• Creating large projects and professional work.",
-        aboutDev: "About Developer",
-        devinfo: "Information About a Team",
-        Mabout:
-          "Founder and Team Leader, Mohammad Barzan is a student in the IT department and a project initiator who is an expert in the field of website building, design, and programming, in a fully advanced and standardized manner.",
-        Zabout:
-          "The team manager, Zhalla Karwan, a student of the IT department, the recipient and initiator, and the organization and conceptualization of projects before they start, has extensive experience in programming and website management.",
-        Aabout:
-          "The Team Project Manager, Anas Mohsen, a student in the IT department, is the one who brainstorms the projects and leads the team when any problem arises and is ready to solve it in a professional manner, and supports the team.",
-        lfu: "Our team is proudly supported, supervised by the Lebanese French University, and our team is a student of the Lebanese French University in the Department of Information Technology, the Lebanese French University we are committed to building this team in a dedicated and professional way.",
-        mathSolver:
-          "This project solves mathematical equations quickly and accurately, providing clear step-by-step solutions to help students understand and learn better.",
-        wifi: "A smart WiFi speed testing website designed to measure download speed, upload speed, and ping in real-time, helping users monitor their internet performance easily.",
-        qr: "Modern QR Code Generator & Scanner Web App with Camera Support, Image Scan, Download Option, Multi-Language, Login System, QR History & PWA Installable Design.",
-        snake:
-          "Snake is a classic arcade game where players control a growing snake that eats apples to increase its length. The challenge is to avoid hitting the walls or the snake's own body as it moves faster over time.",
-        flappy:
-          "Flappy Bird is a highly addictive arcade game where players tap to guide a bird through endless obstacles, testing their timing and precision in a simple yet challenging experience.",
-        conAbout:
-          "If you would like more information or to contact us, please select one of the options below.",
-        weather:
-          "Kurdistan Weather is a website that shows the weather conditions of cities in Kurdistan. Users can easily check information such as temperature, weather status, and other related details. The website is designed in Kurdish language with a simple and fast interface to make it easy for everyone to use.",
-        restmenu:
-          "This website is designed to display restaurant menus in a simple and attractive way. Users can easily browse food items, check prices, and view detailed information about each dish. The design is modern and fully responsive, making it suitable for both mobile and desktop use.",
-        shoppingweb:
-          "This website is an online platform designed to help sellers showcase and sell their products easily and professionally. Sellers can add products, set prices, upload images, and manage customer orders efficiently. The website features a modern, fast, and fully responsive design that works smoothly on both mobile devices and desktops.",
-        navHome: "Home",
-        navAbout: "About Us",
-        navProject: "Our Project",
-        navService: "Our Service",
-        navContact: "Contact Us",
-        contactTitle: "Contact us",
-        founder: "Founder & Leader",
-        manager: "Team Manager",
-        projectManager: "Team Manager",
-        openProject: "Open Project",
-        privateProject: "🔒 Private Project",
-        ourProjects: "Our Projects",
-        ourServices: "Our Services",
-        email: "Email",
-        rights: "All rights reserved.",
-      };
-
-      /* ===================== StarField ===================== */
-      function StarField() {
-        const canvasRef = useRef(null);
-        const mouse = useRef({ x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 });
-
-        useEffect(() => {
-          const canvas = canvasRef.current;
-          const ctx = canvas.getContext('2d');
-          let raf;
-          let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-          let stars = [];
-          let meteors = [];
-          let lastMeteor = 0;
-
-          const palette = ['#f5b942', '#fbbf24', '#fde68a', '#ffffff', '#fcd34d', '#fff7d6'];
-
-          const init = () => {
-            w = canvas.clientWidth;
-            h = canvas.clientHeight;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            const count = Math.min(380, Math.floor((w * h) / 4200));
-            stars = Array.from({ length: count }, () => ({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              z: Math.random() * 0.8 + 0.2,
-              r: Math.random() * 1.4 + 0.3,
-              tw: Math.random() * Math.PI * 2,
-              tws: Math.random() * 0.02 + 0.005,
-              vx: (Math.random() - 0.5) * 0.04 * (Math.random() * 0.5 + 0.5),
-              vy: (Math.random() - 0.5) * 0.04 * (Math.random() * 0.5 + 0.5),
-              c: palette[Math.floor(Math.random() * palette.length)],
-            }));
-          };
-
-          const spawnMeteor = () => {
-            const fromLeft = Math.random() > 0.5;
-            meteors.push({
-              x: fromLeft ? -50 : w + 50,
-              y: Math.random() * h * 0.5,
-              vx: (fromLeft ? 1 : -1) * (Math.random() * 4 + 6),
-              vy: Math.random() * 3 + 2,
-              life: 1,
-              len: Math.random() * 80 + 80,
-              c: palette[Math.floor(Math.random() * 3)],
-            });
-          };
-
-          const onResize = () => init();
-          const onMove = (e) => {
-            mouse.current.tx = e.clientX / window.innerWidth;
-            mouse.current.ty = e.clientY / window.innerHeight;
-          };
-          const onLeave = () => {
-            mouse.current.tx = 0.5;
-            mouse.current.ty = 0.5;
-          };
-
-          const render = (ts) => {
-            mouse.current.x += (mouse.current.tx - mouse.current.x) * 0.06;
-            mouse.current.y += (mouse.current.ty - mouse.current.y) * 0.06;
-            const mx = (mouse.current.x - 0.5) * 2;
-            const my = (mouse.current.y - 0.5) * 2;
-
-            ctx.clearRect(0, 0, w, h);
-
-            for (let i = 0; i < stars.length; i++) {
-              const s = stars[i];
-              s.tw += s.tws;
-              s.x += s.vx;
-              s.y += s.vy;
-              if (s.x < 0) s.x = w;
-              if (s.x > w) s.x = 0;
-              if (s.y < 0) s.y = h;
-              if (s.y > h) s.y = 0;
-
-              const tw = (Math.sin(s.tw) + 1) * 0.5;
-              const ox = -mx * 40 * s.z;
-              const oy = -my * 40 * s.z;
-              const x = s.x + ox;
-              const y = s.y + oy;
-              const alpha = (0.35 + tw * 0.65) * s.z;
-              const radius = s.r * (0.7 + tw * 0.6) * s.z;
-
-              ctx.globalAlpha = alpha;
-              ctx.fillStyle = s.c;
-              ctx.beginPath();
-              ctx.arc(x, y, radius, 0, Math.PI * 2);
-              ctx.fill();
-
-              if (s.r > 1) {
-                ctx.globalAlpha = alpha * 0.16;
-                ctx.beginPath();
-                ctx.arc(x, y, radius * 4.5, 0, Math.PI * 2);
-                ctx.fill();
-              }
-            }
-
-            ctx.globalAlpha = 1;
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < stars.length; i++) {
-              const a = stars[i];
-              if (a.r < 1) continue;
-              const ax = a.x + -mx * 40 * a.z;
-              const ay = a.y + -my * 40 * a.z;
-              for (let j = i + 1; j < stars.length; j++) {
-                const b = stars[j];
-                if (b.r < 1) continue;
-                const bx = b.x + -mx * 40 * b.z;
-                const by = b.y + -my * 40 * b.z;
-                const dx = ax - bx;
-                const dy = ay - by;
-                const d2 = dx * dx + dy * dy;
-                if (d2 < 14000) {
-                  ctx.globalAlpha = (1 - d2 / 14000) * 0.22;
-                  ctx.strokeStyle = '#fbbf24';
-                  ctx.beginPath();
-                  ctx.moveTo(ax, ay);
-                  ctx.lineTo(bx, by);
-                  ctx.stroke();
-                }
-              }
-            }
-
-            if (ts - lastMeteor > 2600 && meteors.length < 2) {
-              spawnMeteor();
-              lastMeteor = ts;
-            }
-            for (let i = meteors.length - 1; i >= 0; i--) {
-              const m = meteors[i];
-              m.x += m.vx;
-              m.y += m.vy;
-              m.life -= 0.006;
-              const tailX = m.x - (m.vx / Math.hypot(m.vx, m.vy)) * m.len;
-              const tailY = m.y - (m.vy / Math.hypot(m.vx, m.vy)) * m.len;
-              const grad = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
-              grad.addColorStop(0, `rgba(255,247,214,${m.life})`);
-              grad.addColorStop(0.4, `rgba(251,191,36,${m.life * 0.6})`);
-              grad.addColorStop(1, 'rgba(245,185,66,0)');
-              ctx.globalAlpha = 1;
-              ctx.strokeStyle = grad;
-              ctx.lineWidth = 2;
-              ctx.lineCap = 'round';
-              ctx.beginPath();
-              ctx.moveTo(m.x, m.y);
-              ctx.lineTo(tailX, tailY);
-              ctx.stroke();
-              ctx.globalAlpha = m.life;
-              ctx.fillStyle = '#fff7d6';
-              ctx.beginPath();
-              ctx.arc(m.x, m.y, 1.8, 0, Math.PI * 2);
-              ctx.fill();
-
-              if (m.life <= 0 || m.x < -120 || m.x > w + 120 || m.y > h + 120) {
-                meteors.splice(i, 1);
-              }
-            }
-
-            ctx.globalAlpha = 1;
-            raf = requestAnimationFrame(render);
-          };
-
-          init();
-          raf = requestAnimationFrame(render);
-          window.addEventListener('resize', onResize);
-          window.addEventListener('mousemove', onMove);
-          window.addEventListener('mouseleave', onLeave);
-          return () => {
-            cancelAnimationFrame(raf);
-            window.removeEventListener('resize', onResize);
-            window.removeEventListener('mousemove', onMove);
-            window.removeEventListener('mouseleave', onLeave);
-          };
-        }, []);
-
-        return (
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none"
-          />
-        );
+    /* ════════════ ROUTER SHIM ════════════ */
+    const RouterContext = createContext({ location: { pathname: "/", hash: "" }, navigate: () => {} });
+    const getHashPath = () => (window.location.hash.replace(/^#/, "") || "/");
+    function Router({ children }) {
+      const [location, setLocation] = useState(() => ({ pathname: getHashPath() }));
+      useEffect(() => {
+        const onHash = () => setLocation({ pathname: getHashPath() });
+        window.addEventListener("hashchange", onHash);
+        return () => window.removeEventListener("hashchange", onHash);
+      }, []);
+      const navigate = useCallback((to, opts = {}) => {
+        if (opts.replace) { history.replaceState(null, "", "#" + to); setLocation({ pathname: getHashPath() }); }
+        else { window.location.hash = to; window.scrollTo({ top: 0, left: 0 }); }
+      }, []);
+      return <RouterContext.Provider value={{ location, navigate }}>{children}</RouterContext.Provider>;
+    }
+    const useRouter = () => useContext(RouterContext);
+    const useLocation = () => useRouter().location;
+    const useNavigate = () => useRouter().navigate;
+    const ParamsContext = createContext({});
+    const useParams = () => useContext(ParamsContext);
+    const OutletContext = createContext(null);
+    function Outlet() { return useContext(OutletContext); }
+    function matchPath(pattern, pathname) {
+      if (pattern === "*") return {};
+      const pSeg = pattern.split("/").filter(Boolean);
+      const aSeg = pathname.split("/").filter(Boolean);
+      const params = {};
+      for (let i = 0; i < pSeg.length; i++) {
+        if (pSeg[i].startsWith(":")) { params[pSeg[i].slice(1)] = decodeURIComponent(aSeg[i] || ""); }
+        else if (pSeg[i] !== aSeg[i]) return null;
       }
-
-      /* ===================== SunRays ===================== */
-      function SunRays({ children, size = 260 }) {
-        const rays = 21;
-        return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotate: -8 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="relative grid place-items-center"
-            style={{ width: size, height: size }}
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0"
-            >
-              {Array.from({ length: rays }).map((_, i) => {
-                const angle = (360 / rays) * i;
-                return (
-                  <div
-                    key={i}
-                    className="absolute left-1/2 top-1/2 origin-bottom"
-                    style={{
-                      width: 0,
-                      height: 0,
-                      transform: `translate(-50%, -100%) rotate(${angle}deg) translateY(-${size / 2 - 6}px)`,
-                    }}
-                  >
-                    <div
-                      className="w-[3px] rounded-full bg-gradient-to-t from-[#f5b942] via-[#fbbf24] to-transparent shadow-[0_0_10px_rgba(245,185,66,0.7)]"
-                      style={{ height: 46 }}
-                    />
-                  </div>
-                );
-              })}
-            </motion.div>
-
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0"
-            >
-              {Array.from({ length: rays }).map((_, i) => {
-                const angle = (360 / rays) * i + (360 / rays / 2);
-                return (
-                  <div
-                    key={i}
-                    className="absolute left-1/2 top-1/2 origin-bottom"
-                    style={{
-                      width: 0,
-                      height: 0,
-                      transform: `translate(-50%, -100%) rotate(${angle}deg) translateY(-${size / 2 - 10}px)`,
-                    }}
-                  >
-                    <div
-                      className="w-[1.5px] rounded-full bg-gradient-to-t from-[#fbbf24]/60 to-transparent"
-                      style={{ height: 28 }}
-                    />
-                  </div>
-                );
-              })}
-            </motion.div>
-
-            <div
-              className="absolute rounded-full blur-[40px] bg-[#f5b942]/25"
-              style={{ width: size * 0.7, height: size * 0.7 }}
-            />
-
-            <div
-              className="relative rounded-full p-[3px] bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#f5b942] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.55)] overflow-hidden"
-              style={{ width: size * 0.62, height: size * 0.62 }}
-            >
-              <div className="w-full h-full rounded-full overflow-hidden bg-[#0a0d18] grid place-items-center">
-                {children ?? (
-                  <span className="font-extrabold text-white text-3xl tracking-tight">A</span>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        );
+      if (pSeg.length !== aSeg.length) return null;
+      return params;
+    }
+    function Route() { return null; }
+    function Routes({ children }) {
+      const { location } = useRouter();
+      const pathname = location.pathname;
+      const childArr = Children.toArray(children).filter((c) => c.type === Route);
+      for (const route of childArr) {
+        const { path, element } = route.props;
+        if (path === undefined) {
+          const nested = Children.toArray(route.props.children).filter((c) => c.type === Route);
+          for (const n of nested) {
+            const params = matchPath(n.props.path || "/", pathname);
+            if (params) return <ParamsContext.Provider value={params}><OutletContext.Provider value={n.props.element}>{element}</OutletContext.Provider></ParamsContext.Provider>;
+          }
+        } else {
+          const params = matchPath(path, pathname);
+          if (params) return <ParamsContext.Provider value={params}>{element}</ParamsContext.Provider>;
+        }
       }
+      return null;
+    }
+    function Navigate({ to, replace }) { const navigate = useNavigate(); useEffect(() => { navigate(to, { replace }); }, []); return null; }
+    function Link({ to, children, ...rest }) { const navigate = useNavigate(); return <a href={"#" + to} onClick={(e) => { e.preventDefault(); navigate(to); }} {...rest}>{children}</a>; }
+    function NavLink({ to, end, children, className, ...rest }) {
+      const { location } = useRouter();
+      const active = end ? location.pathname === to : location.pathname === to || location.pathname.startsWith(to + "/");
+      const cls = typeof className === "function" ? className({ isActive: active }) : className;
+      return <a href={"#" + to} onClick={(e) => { e.preventDefault(); navigate(to); }} className={cls} {...rest}>{typeof children === "function" ? children({ isActive: active }) : children}</a>;
+    }
+    function ScrollToTop() {
+      const { pathname } = useLocation();
+      useEffect(() => { window.scrollTo({ top: 0, left: 0 }); }, [pathname]);
+      return null;
+    }
 
-      /* ===================== FacetFrame ===================== */
-      function FacetFrame({ children, size = 96, glow = true, fluid = false }) {
-        const clip =
-          'polygon(50% 0%, 72% 6%, 94% 22%, 100% 50%, 94% 78%, 72% 94%, 50% 100%, 28% 94%, 6% 78%, 0% 50%, 6% 22%, 28% 6%)';
+    /* ════════════ MATH LOGIC ════════════ */
+    const ok = (steps, finalAnswer) => ({ steps, finalAnswer });
+    const err = (msg) => ({ error: msg });
+    const parseSet = (str) => str.split(",").map((s) => s.trim()).filter((s) => s !== "");
+    const makeUnique = (arr) => { const seen = {}, out = []; for (const x of arr) if (!seen[x]) { seen[x] = true; out.push(x); } return out; };
+    const fmtSet = (arr) => "{" + arr.join(", ") + "}";
+    const solveSetUnion = (aStr, bStr) => { const a = parseSet(aStr), b = parseSet(bStr); if (!a.length || !b.length) return err("Enter values for both sets."); const u = makeUnique(a.concat(b)); return ok([{ title: "Define Sets", body: `A = <span class="hl">${fmtSet(a)}</span><br>B = <span class="hl">${fmtSet(b)}</span>` }, { title: "Combine all elements from A and B", body: a.concat(b).join(", ") }, { title: "Remove duplicates — each element appears once", body: u.map((x) => `<span class="hl">${x}</span>`).join(", ") }, { title: "Final Union", body: `A &#8746; B = <span class="rv">${fmtSet(u)}</span>` }], `A &#8746; B = ${fmtSet(u)}`); };
+    const solveSetInter = (aStr, bStr) => { const a = parseSet(aStr), b = parseSet(bStr); if (!a.length || !b.length) return err("Enter values for both sets."); const inter = a.filter((x) => b.indexOf(x) !== -1); const log = a.map((x) => `<span class="hl">${x}</span> in B? <span class="${b.indexOf(x) !== -1 ? "rv" : "op"}">${b.indexOf(x) !== -1 ? "Yes &#10003;" : "No &#10007;"}</span>`).join("<br>"); return ok([{ title: "Define Sets", body: `A = <span class="hl">${fmtSet(a)}</span><br>B = <span class="hl">${fmtSet(b)}</span>` }, { title: "Check each element of A — is it also in B?", body: log }, { title: "Collect matching elements", body: inter.length ? inter.map((x) => `<span class="rv">${x}</span>`).join(", ") : '<span class="op">No common elements — A &#8745; B = &#8709;</span>' }], `A &#8745; B = ${fmtSet(inter)}`); };
+    const solveSetDiff = (aStr, bStr) => { const a = parseSet(aStr), b = parseSet(bStr); if (!a.length || !b.length) return err("Enter values for both sets."); const diff = a.filter((x) => b.indexOf(x) === -1); const log = a.map((x) => { const nin = b.indexOf(x) === -1; return `<span class="hl">${x}</span> in B? <span class="${nin ? "rv" : "op"}">${nin ? "No &#10003; Keep" : "Yes &#10007; Remove"}</span>`; }).join("<br>"); return ok([{ title: "Define Sets", body: `A = <span class="hl">${fmtSet(a)}</span><br>B = <span class="hl">${fmtSet(b)}</span>` }, { title: "A &#8722; B = elements in A that are NOT in B", body: log }, { title: "Result", body: diff.length ? diff.map((x) => `<span class="rv">${x}</span>`).join(", ") : '<span class="op">&#8709; (empty set)</span>' }], `A &#8722; B = ${fmtSet(diff)}`); };
+    const solveSetComp = (uStr, aStr) => { const u = parseSet(uStr), a = parseSet(aStr); if (!u.length || !a.length) return err("Enter both sets."); const notInU = a.filter((x) => u.indexOf(x) === -1); if (notInU.length) return err("A must be a subset of U. Not in U: " + notInU.join(", ")); const comp = u.filter((x) => a.indexOf(x) === -1); const log = u.map((x) => { const nin = a.indexOf(x) === -1; return `<span class="hl">${x}</span> in A? <span class="${nin ? "rv" : "op"}">${nin ? "No &#10003; Include" : "Yes &#10007; Exclude"}</span>`; }).join("<br>"); return ok([{ title: "Universal Set U", body: `U = <span class="hl">${fmtSet(u)}</span>` }, { title: "Set A", body: `A = <span class="hl">${fmtSet(a)}</span>` }, { title: "A' = elements in U NOT in A", body: log }, { title: "Result", body: `A' = <span class="rv">${fmtSet(comp)}</span>` }], `A' = ${fmtSet(comp)}`); };
+    const solveSubset = (aStr, bStr) => { const a = parseSet(aStr), b = parseSet(bStr); if (!a.length || !b.length) return err("Enter values for both sets."); const isSub = a.every((x) => b.indexOf(x) !== -1); const log = a.map((x) => { const inB = b.indexOf(x) !== -1; return `<span class="hl">${x}</span> in B? <span class="${inB ? "rv" : "op"}">${inB ? "Yes &#10003;" : "No &#10007; — NOT a subset"}</span>`; }).join("<br>"); return ok([{ title: "Define Sets", body: `A = <span class="hl">${fmtSet(a)}</span><br>B = <span class="hl">${fmtSet(b)}</span>` }, { title: "A &#8838; B means every element of A must be in B", body: log }, { title: "Conclusion", body: isSub ? '<span class="rv">A &#8838; B is TRUE &#10003;</span>' : '<span class="op">A &#8838; B is FALSE &#10007;</span>' }], isSub ? "TRUE — A &#8838; B" : "FALSE — A &#8838; B does not hold"); };
 
-        const sizing = fluid
-          ? { width: '100%', aspectRatio: '1 / 1' }
-          : { width: size, height: size };
+    const evalLogic = (expr, p, q) => { let e = expr.toUpperCase(); e = e.replace(/\(([^)]+)\)\s*IMPLIES\s*\(([^)]+)\)/g, (m, a, b) => "(!(" + a + ")||(" + b + "))"); e = e.replace(/([A-Z0-9]+)\s*IMPLIES\s*([A-Z0-9]+)/g, (m, a, b) => "(!(" + a + ")||(" + b + "))"); e = e.replace(/\bXOR\b/g, "!=="); e = e.replace(/\bAND\b/g, "&&"); e = e.replace(/\bOR\b/g, "||"); e = e.replace(/\bNOT\b/g, "!"); e = e.replace(/\bP\b/g, p ? "true" : "false"); e = e.replace(/\bQ\b/g, q ? "true" : "false"); try { return eval(e); } catch { return null; } };
+    const solveLogicEval = (p, q, expr) => { expr = expr.trim(); if (!expr) return err("Enter an expression."); const result = evalLogic(expr, p, q); if (result === null) return err("Invalid expression. Use P, Q, AND, OR, NOT, IMPLIES, XOR."); const sub = expr.toUpperCase().replace(/\bP\b/g, `<span class="op">${p ? "T" : "F"}</span>`).replace(/\bQ\b/g, `<span class="op">${q ? "T" : "F"}</span>`); return ok([{ title: "Assigned Values", body: `P = <span class="hl">${p ? "True" : "False"}</span> &nbsp;&nbsp; Q = <span class="hl">${q ? "True" : "False"}</span>` }, { title: "Expression", body: `<span class="hl">${expr}</span>` }, { title: "Substitute values", body: sub }, { title: "Evaluate", body: `Result = <span class="rv">${result ? "True" : "False"}</span>` }], result ? "TRUE" : "FALSE"); };
+    const solveTruthTable = (expr) => { expr = expr.trim(); if (!expr) return err("Enter an expression."); const combos = [[true, true], [true, false], [false, true], [false, false]]; const rows = combos.map((c) => ({ p: c[0], q: c[1], r: evalLogic(expr, c[0], c[1]) })); let tbl = '<table style="border-collapse:collapse;font-family:JetBrains Mono,monospace;font-size:0.88rem;width:100%;"><thead><tr style="background:rgba(0,82,255,0.06);">'; tbl += '<th style="padding:10px 16px;text-align:center;border:1px solid #e2e8f0;color:#0052ff;">P</th><th style="padding:10px 16px;text-align:center;border:1px solid #e2e8f0;color:#0052ff;">Q</th>'; tbl += `<th style="padding:10px 16px;text-align:center;border:1px solid #e2e8f0;color:#0052ff;">${expr}</th></tr></thead><tbody>`; rows.forEach((row, i) => { tbl += `<tr style="background:${i % 2 === 0 ? "rgba(15,23,42,0.02)" : "transparent"}">`; tbl += `<td style="padding:9px 16px;text-align:center;border:1px solid #e2e8f0;color:${row.p ? "#00b89c" : "#ef4444"}">${row.p ? "T" : "F"}</td>`; tbl += `<td style="padding:9px 16px;text-align:center;border:1px solid #e2e8f0;color:${row.q ? "#00b89c" : "#ef4444"}">${row.q ? "T" : "F"}</td>`; tbl += `<td style="padding:9px 16px;text-align:center;border:1px solid #e2e8f0;color:${row.r ? "#00b89c" : "#ef4444"};font-weight:700;">${row.r === null ? "ERR" : row.r ? "T" : "F"}</td></tr>`; }); tbl += "</tbody></table>"; return { tableHtml: tbl }; };
 
-        return (
-          <motion.div
-            initial={{ opacity: 0, rotate: -6, scale: 0.9 }}
-            whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="relative mx-auto w-full"
-            style={sizing}
-          >
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#f5b942] shadow-[0_8px_24px_-6px_rgba(245,185,66,0.5)]"
-              style={{ clipPath: clip }}
-            />
-            <div
-              className="absolute bg-[#0a0d18] overflow-hidden"
-              style={{ inset: 3, clipPath: clip }}
-            >
-              {children}
-            </div>
-            <div
-              className="absolute pointer-events-none border border-[#fbbf24]/40"
-              style={{ inset: 7, clipPath: clip }}
-            />
-            {glow && (
-              <div className="absolute -inset-3 -z-10 rounded-full bg-[#f5b942]/15 blur-[28px] pointer-events-none" />
-            )}
-          </motion.div>
-        );
-      }
+    const isBin = (s) => /^[01]+$/.test(s.trim());
+    const solveBinAdd = (a, b) => { a = a.trim(); b = b.trim(); if (!isBin(a) || !isBin(b)) return err("Enter valid binary numbers (0s and 1s only)."); const da = parseInt(a, 2), db = parseInt(b, 2), dr = da + db; const rb = dr.toString(2); const maxl = Math.max(a.length, b.length) + 1; const ap = a.padStart(maxl, "0"), bp = b.padStart(maxl, "0"); let carry = 0, colLog = ""; for (let i = maxl - 1; i >= 0; i--) { const ba = parseInt(ap[i]), bb = parseInt(bp[i]); const s = ba + bb + carry; const bit = s % 2, nc = Math.floor(s / 2); colLog += `Column ${maxl - i}: <span class="hl">${ba}</span> + <span class="hl">${bb}</span> + carry(<span class="op">${carry}</span>) = ${s} &#8594; bit=<span class="rv">${bit}</span>, next carry=<span class="op">${nc}</span><br>`; carry = nc; } return ok([{ title: "Given binary numbers", body: `A = <span class="hl">${a}</span>&#8322; = ${da}&#8321;&#8320;<br>B = <span class="hl">${b}</span>&#8322; = ${db}&#8321;&#8320;` }, { title: "Pad to equal length", body: `A = <span class="hl">${ap}</span><br>B = <span class="hl">${bp}</span>` }, { title: "Add column by column right to left (track carry)", body: colLog }, { title: "Result", body: `Sum = <span class="rv">${rb}</span>&#8322;` }, { title: "Decimal verification", body: `${da} + ${db} = <span class="rv">${dr}</span>&#8321;&#8320; &#10003;` }], `${rb}&#8322; = ${dr}&#8321;&#8320;`); };
+    const solveBinSub = (a, b) => { a = a.trim(); b = b.trim(); if (!isBin(a) || !isBin(b)) return err("Enter valid binary numbers."); const da = parseInt(a, 2), db = parseInt(b, 2); if (db > da) return err("A must be >= B for this method."); const dr = da - db, rb = dr.toString(2); const len = Math.max(a.length, b.length) + 1; const oc = b.padStart(len, "0").split("").map((x) => (x === "0" ? "1" : "0")).join(""); const tc = (parseInt(oc, 2) + 1).toString(2).padStart(len, "0"); return ok([{ title: "Given", body: `A = <span class="hl">${a}</span>&#8322; (${da}&#8321;&#8320;) &nbsp; B = <span class="hl">${b}</span>&#8322; (${db}&#8321;&#8320;)` }, { title: "Step 1 — Find 1's complement of B (flip all bits)", body: `B padded = <span class="hl">${b.padStart(len, "0")}</span><br>1's complement = <span class="hl">${oc}</span>` }, { title: "Step 2 — Find 2's complement (add 1)", body: `1's complement + 1 = <span class="hl">${oc}</span> + 1 = <span class="rv">${tc}</span>` }, { title: "Step 3 — Add A and 2's complement of B", body: `<span class="hl">${a.padStart(len, "0")}</span><br>+ <span class="hl">${tc}</span><br>= <span class="rv">${(da + parseInt(tc, 2)).toString(2)}</span>` }, { title: "Step 4 — Drop overflow carry bit", body: `Result = <span class="rv">${rb}</span>&#8322;` }, { title: "Decimal verification", body: `${da} &#8722; ${db} = <span class="rv">${dr}</span>&#8321;&#8320; &#10003;` }], `${rb}&#8322; = ${dr}&#8321;&#8320;`); };
+    const solveBinMul = (a, b) => { a = a.trim(); b = b.trim(); if (!isBin(a) || !isBin(b)) return err("Enter valid binary numbers."); const da = parseInt(a, 2), db = parseInt(b, 2), dr = da * db, rb = dr.toString(2); const totalLen = a.length + b.length; let partLog = ""; for (let i = b.length - 1; i >= 0; i--) { const shift = b.length - 1 - i; const pval = b[i] === "1" ? (parseInt(a, 2) * Math.pow(2, shift)).toString(2) : "0"; partLog += `Bit b[${i}]=${b[i]}, shift=${shift} &#8594; partial = <span class="hl">${pval.padStart(totalLen, "0")}</span><br>`; } return ok([{ title: "Given", body: `A = <span class="hl">${a}</span>&#8322; (${da}) &times; B = <span class="hl">${b}</span>&#8322; (${db})` }, { title: "Method: multiply A by each bit of B, shift left", body: partLog }, { title: "Sum all partial products", body: `Total = <span class="rv">${rb}</span>&#8322;` }, { title: "Decimal verification", body: `${da} &times; ${db} = <span class="rv">${dr}</span>&#8321;&#8320; &#10003;` }], `${rb}&#8322; = ${dr}&#8321;&#8320;`); };
+    const solveBinDiv = (a, b) => { a = a.trim(); b = b.trim(); if (!isBin(a) || !isBin(b)) return err("Enter valid binary numbers."); const da = parseInt(a, 2), db = parseInt(b, 2); if (db === 0) return err("Cannot divide by zero."); const dq = Math.floor(da / db), dr = da % db; return ok([{ title: "Given", body: `Dividend A = <span class="hl">${a}</span>&#8322; (${da}&#8321;&#8320;)<br>Divisor B = <span class="hl">${b}</span>&#8322; (${db}&#8321;&#8320;)` }, { title: "Step 1 — Perform decimal division", body: `${da} &divide; ${db} = <span class="hl">${dq}</span> remainder <span class="op">${dr}</span>` }, { title: "Step 2 — Convert quotient to binary", body: `Quotient ${dq} = <span class="rv">${dq.toString(2)}</span>&#8322;` }, { title: "Step 3 — Convert remainder to binary", body: `Remainder ${dr} = <span class="op">${dr.toString(2)}</span>&#8322;` }, { title: "Final answer", body: `<span class="hl">${a}</span>&#8322; &divide; <span class="hl">${b}</span>&#8322; = <span class="rv">${dq.toString(2)}</span>&#8322; remainder <span class="op">${dr.toString(2)}</span>&#8322;` }], `${dq.toString(2)}&#8322; rem ${dr.toString(2)}&#8322;`); };
+    const solveDec2Bin = (n) => { n = parseInt(n); if (isNaN(n) || n < 0) return err("Enter a non-negative integer."); if (n === 0) return ok([{ title: "Special case", body: "0 in binary = <span class=\"rv\">0</span>&#8322;" }], "0&#8322;"); const bits = [], steps = []; steps.push({ title: "Method: repeatedly divide by 2, record remainders", body: "We read the remainders from <strong>bottom to top</strong>" }); let x = n; while (x > 0) { const rem = x % 2; steps.push({ title: `Divide ${x} by 2`, body: `${x} &#247; 2 = <span class="hl">${Math.floor(x / 2)}</span> &nbsp; remainder = <span class="rv">${rem}</span>` }); bits.push(rem); x = Math.floor(x / 2); } const bin = bits.slice().reverse().join(""); steps.push({ title: "Read remainders from bottom to top", body: `Bits: <span class="rv">${bin}</span>&#8322;` }); steps.push({ title: "Verification", body: `<span class="rv">${bin}</span>&#8322; = ${parseInt(bin, 2)}&#8321;&#8320; &#10003;` }); return ok(steps, `${bin}&#8322;`); };
+    const solveBin2Dec = (b) => { b = b.trim(); if (!isBin(b)) return err("Enter a valid binary number (0s and 1s only)."); let log = "", total = 0; for (let i = 0; i < b.length; i++) { const pos = b.length - 1 - i; const bit = parseInt(b[i]); const val = bit * Math.pow(2, pos); total += val; log += `${b[i]} &times; 2<sup>${pos}</sup> = <span class="hl">${val}</span><br>`; } return ok([{ title: "Binary number", body: `<span class="hl">${b}</span>&#8322; has ${b.length} bits` }, { title: "Expand each bit by its positional value (rightmost = 2⁰)", body: log }, { title: "Sum all values", body: `Total = <span class="rv">${total}</span>&#8321;&#8320;` }], `${total}&#8321;&#8320;`); };
 
-      /* ===================== Header ===================== */
-      function Header({ lang, setLang, t, activeSection, onNavigate, brandImage }) {
-        const [scrolled, setScrolled] = useState(false);
-        const [mobileOpen, setMobileOpen] = useState(false);
+    const fmtMat = (m) => { let html = '<div style="display:inline-grid;gap:4px;background:#f0f4f8;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-family:JetBrains Mono,monospace;font-size:0.88rem;margin:4px;">'; for (let i = 0; i < m.length; i++) { html += '<div style="display:flex;gap:12px;">'; for (let j = 0; j < m[i].length; j++) html += `<span style="min-width:36px;text-align:right;color:#0052ff;">${m[i][j]}</span>`; html += "</div>"; } return html + "</div>"; };
+    const solveMatAdd = (A, B) => { const r = A.length, c = A[0].length; const C = []; let log = ""; for (let i = 0; i < r; i++) { C.push([]); for (let j = 0; j < c; j++) { const v = A[i][j] + B[i][j]; C[i].push(v); log += `C[${i}][${j}] = ${A[i][j]} + ${B[i][j]} = <span class="rv">${v}</span><br>`; } } return ok([{ title: "Matrix A", body: fmtMat(A) }, { title: "Matrix B", body: fmtMat(B) }, { title: "Add corresponding elements", body: log }, { title: "Result C = A + B", body: fmtMat(C) }], "See result matrix above"); };
+    const solveMatSub = (A, B) => { const r = A.length, c = A[0].length; const C = []; let log = ""; for (let i = 0; i < r; i++) { C.push([]); for (let j = 0; j < c; j++) { const v = A[i][j] - B[i][j]; C[i].push(v); log += `C[${i}][${j}] = ${A[i][j]} &#8722; ${B[i][j]} = <span class="rv">${v}</span><br>`; } } return ok([{ title: "Matrix A", body: fmtMat(A) }, { title: "Matrix B", body: fmtMat(B) }, { title: "Subtract corresponding elements", body: log }, { title: "Result C = A &#8722; B", body: fmtMat(C) }], "See result matrix above"); };
+    const solveMatMul = (A, B) => { const m = A.length, n = A[0].length, p = B[0].length; const C = []; let log = ""; for (let i = 0; i < m; i++) { C.push([]); for (let j = 0; j < p; j++) { let sum = 0, parts = []; for (let k = 0; k < n; k++) { parts.push(`${A[i][k]}&#215;${B[k][j]}`); sum += A[i][k] * B[k][j]; } C[i].push(sum); log += `C[${i}][${j}] = ${parts.join(" + ")} = <span class="rv">${sum}</span><br>`; } } return ok([{ title: `Matrix A (${m}&#215;${n})`, body: fmtMat(A) }, { title: `Matrix B (${n}&#215;${p})`, body: fmtMat(B) }, { title: "Dot product for each cell", body: log }, { title: `Result C = A &#215; B (${m}&#215;${p})`, body: fmtMat(C) }], "See result matrix above"); };
+    const solveMatDet = (A, s) => { if (s === 2) { const d = A[0][0] * A[1][1] - A[0][1] * A[1][0]; return ok([{ title: "Matrix A (2&#215;2)", body: fmtMat(A) }, { title: "Formula: det(A) = ad &#8722; bc", body: `a=${A[0][0]}, b=${A[0][1]}, c=${A[1][0]}, d=${A[1][1]}` }, { title: "Calculate", body: `${A[0][0]}&#215;${A[1][1]} &#8722; ${A[0][1]}&#215;${A[1][0]} = ${A[0][0] * A[1][1]} &#8722; ${A[0][1] * A[1][0]} = <span class="rv">${d}</span>` }], `det(A) = ${d}`); } const a = A; const m00 = a[1][1] * a[2][2] - a[1][2] * a[2][1]; const m01 = a[1][0] * a[2][2] - a[1][2] * a[2][0]; const m02 = a[1][0] * a[2][1] - a[1][1] * a[2][0]; const det = a[0][0] * m00 - a[0][1] * m01 + a[0][2] * m02; return ok([{ title: "Matrix A (3&#215;3)", body: fmtMat(A) }, { title: "Cofactor expansion along Row 1", body: "det = a&#8320;&#8320;&#183;M&#8320;&#8320; &#8722; a&#8320;&#8321;&#183;M&#8320;&#8321; + a&#8320;&#8322;&#183;M&#8320;&#8322;" }, { title: "Minor M&#8320;&#8320; (remove row 0, col 0)", body: `${a[1][1]}&#215;${a[2][2]} &#8722; ${a[1][2]}&#215;${a[2][1]} = <span class="hl">${m00}</span>` }, { title: "Minor M&#8320;&#8321; (remove row 0, col 1)", body: `${a[1][0]}&#215;${a[2][2]} &#8722; ${a[1][2]}&#215;${a[2][0]} = <span class="hl">${m01}</span>` }, { title: "Minor M&#8320;&#8322; (remove row 0, col 2)", body: `${a[1][0]}&#215;${a[2][1]} &#8722; ${a[1][1]}&#215;${a[2][0]} = <span class="hl">${m02}</span>` }, { title: "Final calculation", body: `${a[0][0]}&#215;${m00} &#8722; ${a[0][1]}&#215;${m01} + ${a[0][2]}&#215;${m02} = <span class="rv">${det}</span>` }], `det(A) = ${det}`); };
+    const solveMatTrans = (A) => { const r = A.length, c = A[0].length; const T = []; for (let j = 0; j < c; j++) { T.push([]); for (let i = 0; i < r; i++) T[j].push(A[i][j]); } let log = ""; for (let i = 0; i < r; i++) for (let j = 0; j < c; j++) log += `A[${i}][${j}] &#8594; T[${j}][${i}] = <span class="rv">${A[i][j]}</span><br>`; return ok([{ title: `Original Matrix A (${r}&#215;${c})`, body: fmtMat(A) }, { title: "Transpose: swap row and column indices", body: log }, { title: `Transposed A&#7488; (${c}&#215;${r})`, body: fmtMat(T) }], "See transposed matrix above"); };
 
-        useEffect(() => {
-          const onScroll = () => setScrolled(window.scrollY > 20);
-          window.addEventListener('scroll', onScroll);
-          return () => window.removeEventListener('scroll', onScroll);
-        }, []);
+    const isPrime = (n) => { if (n < 2) return false; if (n === 2) return true; if (n % 2 === 0) return false; for (let i = 3; i <= Math.sqrt(n); i += 2) if (n % i === 0) return false; return true; };
+    const solvePrimeTest = (n) => { n = parseInt(n); if (isNaN(n) || n < 2) return err("Enter an integer >= 2."); const sq = Math.floor(Math.sqrt(n)); const prime = isPrime(n); let checkLog = "", foundDiv = 0; for (let i = 2; i <= sq; i++) { if (n % i === 0) { foundDiv = i; checkLog += `${n} &#247; ${i} = ${n / i} &#8594; remainder <span class="op">0</span> &#8592; divisor found!<br>`; break; } checkLog += `${n} &#247; ${i} = ${(n / i).toFixed(2)} &#8594; remainder <span class="hl">${n % i}</span><br>`; } if (!checkLog) checkLog = "n = 2 or 3, no divisors to test beyond itself."; return ok([{ title: "Number to test", body: `n = <span class="hl">${n}</span>` }, { title: "Rule: A prime has no divisors except 1 and itself", body: `Only check up to &#8730;${n} = <span class="hl">${sq}</span>` }, { title: `Test divisibility for each i from 2 to ${sq}`, body: checkLog }, { title: "Conclusion", body: prime ? `<span class="rv">${n} IS a prime number &#10003;</span>` : `<span class="op">${n} is NOT prime &#8212; divisible by ${foundDiv}</span>` }], prime ? `${n} is PRIME` : `${n} is NOT prime`); };
+    const solvePrimeList = (from, to) => { from = parseInt(from) || 1; to = parseInt(to) || 50; if (to < from) return err('"To" must be greater than "From".'); if (to - from > 500) return err("Range too large (max 500)."); const primes = []; for (let i = from; i <= to; i++) if (isPrime(i)) primes.push(i); return { primes, from, to }; };
+    const solvePrimeFact = (n) => { n = parseInt(n); if (isNaN(n) || n < 2) return err("Enter an integer >= 2."); const orig = n, factors = []; let log = ""; let d = 2; while (n > 1) { while (n % d === 0) { log += `${n} &#247; ${d} = <span class="hl">${n / d}</span> &nbsp; (prime factor: <span class="rv">${d}</span>)<br>`; factors.push(d); n = n / d; } d++; } return ok([{ title: "Number", body: `n = <span class="hl">${orig}</span>` }, { title: "Divide by smallest prime factor repeatedly", body: log }, { title: "Prime Factorization", body: `<span class="rv">${orig}</span> = <span class="hl">${factors.join(" &#215; ")}</span>` }], `${orig} = ${factors.join(" &#215; ")}`); };
 
-        const navItems = [
-          { id: 'home', label: t.navHome },
-          { id: 'about', label: t.navAbout },
-          { id: 'project', label: t.navProject },
-          { id: 'ourservice', label: t.navService },
-          { id: 'contact', label: t.navContact },
-        ];
+    const parsePoly = (str) => { const terms = []; str = str.replace(/\s+/g, "").replace(/-/g, "+-"); const parts = str.split("+").filter((s) => s !== ""); for (const p of parts) { if (p === "") continue; let coef, power; if (p.indexOf("x") === -1) { coef = parseFloat(p); power = 0; } else { const xIdx = p.indexOf("x"); const cStr = p.substring(0, xIdx); coef = cStr === "" || cStr === "+" ? 1 : cStr === "-" ? -1 : parseFloat(cStr); power = p.indexOf("^") !== -1 ? parseFloat(p.substring(p.indexOf("^") + 1)) : 1; } if (!isNaN(coef) && !isNaN(power)) terms.push({ coef, power }); } return terms; };
+    const fmtTerm = (coef, power, isFirst) => { if (coef === 0) return null; const sign = coef < 0 ? "&#8722;" : isFirst ? "" : "+"; const abs = Math.abs(coef); const cStr = abs === 1 && power !== 0 ? "" : Number.isInteger(abs) ? abs.toString() : abs.toFixed(3); if (power === 0) return sign + (abs === 1 ? "1" : cStr); if (power === 1) return sign + cStr + "x"; return sign + cStr + "x<sup>" + power + "</sup>"; };
+    const polyToStr = (terms) => { if (terms.length === 0) return "0"; let out = ""; for (let i = 0; i < terms.length; i++) { const t = fmtTerm(terms[i].coef, terms[i].power, i === 0); if (t !== null) out += t; } return out || "0"; };
+    const solvePowerRule = (fx) => { fx = fx.trim(); if (!fx) return err("Enter a polynomial."); const terms = parsePoly(fx); if (terms.length === 0) return err("Could not parse polynomial. Use format: 3x^4 + 2x^2 - 5x + 7"); const derivTerms = []; let stepLog = ""; for (const t of terms) { if (t.power === 0) { stepLog += `Term <span class="hl">${fmtTerm(t.coef, t.power, true)}</span>: constant &#8594; derivative = <span class="op">0</span><br>`; } else { const nc = t.coef * t.power, np = t.power - 1; stepLog += `Term <span class="hl">${fmtTerm(t.coef, t.power, true)}</span>: bring down power ${t.power}, multiply &#8594; <span class="rv">${fmtTerm(nc, np, true)}</span><br>`; derivTerms.push({ coef: nc, power: np }); } } const dStr = polyToStr(derivTerms); return ok([{ title: "Function f(x)", body: `f(x) = <span class="hl">${fx}</span>` }, { title: "Power Rule: d/dx[ax&#8319;] = n&#183;a&#183;x&#8319;&#8315;&#185;", body: "Apply to each term:" }, { title: "Apply to each term", body: stepLog }, { title: "f'(x)", body: `f'(x) = <span class="rv">${dStr}</span>` }], `f'(x) = ${dStr}`); };
+    const solveChainRule = (outer, p, a, n) => { p = parseFloat(p) || 3; a = parseFloat(a) || 1; n = parseFloat(n) || 1; const gStr = fmtTerm(a, n, true); const gpC = a * n, gpN = n - 1; const gpStr = fmtTerm(gpC, gpN, true) || "0"; let fStr, fpStr, result; if (outer === "pow") { fStr = `(${gStr})^${p}`; fpStr = `${p}&#183;(${gStr})<sup>${p - 1}</sup>`; result = `${p}&#183;(${gStr})<sup>${p - 1}</sup> &#183; <span class="rv">(${gpStr})</span>`; } else if (outer === "sin") { fStr = `sin(${gStr})`; fpStr = `cos(${gStr})`; result = `cos(${gStr}) &#183; <span class="rv">(${gpStr})</span>`; } else if (outer === "cos") { fStr = `cos(${gStr})`; fpStr = `&#8722;sin(${gStr})`; result = `&#8722;sin(${gStr}) &#183; <span class="rv">(${gpStr})</span>`; } else if (outer === "exp") { fStr = `e^(${gStr})`; fpStr = `e^(${gStr})`; result = `e^(${gStr}) &#183; <span class="rv">(${gpStr})</span>`; } else { fStr = `ln(${gStr})`; fpStr = `1 / (${gStr})`; result = `1/(${gStr}) &#183; <span class="rv">(${gpStr})</span>`; } return ok([{ title: "Composite function", body: `f(x) = <span class="hl">${fStr}</span>` }, { title: "Identify outer f and inner g(x)", body: `Outer f: differentiate the outer function type<br>Inner g(x) = <span class="hl">${gStr}</span>` }, { title: "g'(x) — differentiate the inner function (power rule)", body: `g'(x) = <span class="rv">${gpStr}</span>` }, { title: "f'(g(x)) — differentiate outer, keep inner unchanged", body: `f'(g) = <span class="rv">${fpStr}</span>` }, { title: "Chain Rule: f'(g(x)) &#183; g'(x)", body: `Result = ${fpStr} &#183; (${gpStr})` }, { title: "Final Answer", body: `f'(x) = <span class="rv">${result}</span>` }], result); };
+    const solveTrigDeriv = (type, a) => { a = parseFloat(a) || 2; let steps, ans; if (type === "sin") { steps = [{ title: "Function", body: 'f(x) = <span class="hl">sin(x)</span>' }, { title: "Standard derivative rule", body: 'd/dx[sin x] = <span class="rv">cos x</span>' }]; ans = "cos x"; } else if (type === "cos") { steps = [{ title: "Function", body: 'f(x) = <span class="hl">cos(x)</span>' }, { title: "Standard derivative rule", body: 'd/dx[cos x] = <span class="rv">&#8722;sin x</span>' }]; ans = "&#8722;sin x"; } else if (type === "tan") { steps = [{ title: "Function", body: 'f(x) = <span class="hl">tan(x)</span>' }, { title: "Recall: tan x = sin x / cos x", body: "Use Quotient Rule" }, { title: "Result", body: 'd/dx[tan x] = sec&#178;x = 1/cos&#178;x = <span class="rv">sec&#178;(x)</span>' }]; ans = "sec&#178;(x)"; } else if (type === "ex") { steps = [{ title: "Function", body: 'f(x) = <span class="hl">e&#739;</span>' }, { title: "Special property", body: "e&#739; is its own derivative" }, { title: "Result", body: 'd/dx[e&#739;] = <span class="rv">e&#739;</span>' }]; ans = "e&#739;"; } else if (type === "ax") { steps = [{ title: "Function", body: `f(x) = <span class="hl">${a}&#739;</span>` }, { title: "Formula", body: "d/dx[a&#739;] = a&#739; &#183; ln(a)" }, { title: `Substitute a = ${a}`, body: `${a}&#739; &#183; ln(${a}) = <span class="rv">${a}&#739; &#183; ln(${a})</span>` }]; ans = `${a}&#739; &#183; ln(${a})`; } else if (type === "lnx") { steps = [{ title: "Function", body: 'f(x) = <span class="hl">ln(x)</span>' }, { title: "Standard rule", body: 'd/dx[ln x] = <span class="rv">1/x</span>' }]; ans = "1/x"; } else { steps = [{ title: "Function", body: `f(x) = <span class="hl">log&#x2090;(x)</span> where a = ${a}` }, { title: "Formula", body: "d/dx[log&#x2090; x] = 1 / (x &#183; ln(a))" }, { title: `Substitute a = ${a}`, body: `= 1 / (x &#183; ln(${a})) = <span class="rv">1/(x&#183;ln(${a}))</span>` }]; ans = `1/(x&#183;ln(${a}))`; } return ok(steps, ans); };
 
-        const handleNav = (id) => {
-          onNavigate(id);
-          setMobileOpen(false);
-        };
+    const solveIndef = (fx) => { fx = fx.trim(); if (!fx) return err("Enter a polynomial."); const terms = parsePoly(fx); if (terms.length === 0) return err("Could not parse. Use format: 4x^3 + 2x - 6"); const intTerms = []; let stepLog = ""; for (const t of terms) { const newPow = t.power + 1; const newCoef = t.coef / newPow; const newCoefStr = Number.isInteger(newCoef) ? newCoef : `(${t.coef}/${newPow})`; stepLog += `Term <span class="hl">${fmtTerm(t.coef, t.power, true)}</span>: increase power by 1 &#8594; ${t.coef}/(${newPow}) &#183; x<sup>${newPow}</sup> = <span class="rv">${newCoefStr}x<sup>${newPow}</sup></span><br>`; intTerms.push({ coef: newCoef, power: newPow }); } const intStr = polyToStr(intTerms) + " + C"; return ok([{ title: "Integrand f(x)", body: `f(x) = <span class="hl">${fx}</span>` }, { title: "Power Rule of Integration: &#8747;ax&#8319;dx = (a/(n+1))x&#8319;&#8314;&#185; + C", body: "Apply to each term:" }, { title: "Integrate each term", body: stepLog }, { title: "Result", body: `&#8747;f(x)dx = <span class="rv">${intStr}</span>` }], intStr); };
+    const evalPolyAt = (terms, x) => terms.reduce((s, t) => s + t.coef * Math.pow(x, t.power), 0);
+    const getAntiDerivTerms = (terms) => terms.map((t) => ({ coef: t.coef / (t.power + 1), power: t.power + 1 }));
+    const solveDefin = (fx, a, b) => { fx = fx.trim(); if (!fx) return err("Enter a polynomial."); a = parseFloat(a); b = parseFloat(b); if (isNaN(a) || isNaN(b)) return err("Enter valid limits a and b."); const terms = parsePoly(fx); if (terms.length === 0) return err("Could not parse polynomial."); const anti = getAntiDerivTerms(terms); const antiStr = polyToStr(anti); const Fb = evalPolyAt(anti, b), Fa = evalPolyAt(anti, a); const result = Fb - Fa; const FbStr = evalPolyAt(anti, b).toFixed(4).replace(/\.?0+$/, ""); const FaStr = evalPolyAt(anti, a).toFixed(4).replace(/\.?0+$/, ""); return ok([{ title: "Integrand f(x)", body: `f(x) = <span class="hl">${fx}</span> &nbsp; from a=${a} to b=${b}` }, { title: "Step 1 — Find antiderivative F(x)", body: `F(x) = <span class="hl">${antiStr}</span>` }, { title: `Step 2 — Evaluate F(b) = F(${b})`, body: `F(${b}) = <span class="hl">${FbStr}</span>` }, { title: `Step 3 — Evaluate F(a) = F(${a})`, body: `F(${a}) = <span class="hl">${FaStr}</span>` }, { title: "Step 4 — Compute F(b) &#8722; F(a)", body: `${FbStr} &#8722; ${FaStr} = <span class="rv">${parseFloat(result.toFixed(6))}</span>` }], parseFloat(result.toFixed(6)).toString()); };
+    const solveTrigInteg = (type, a) => { a = parseFloat(a) || 2; let steps, ans; if (type === "sinx") { steps = [{ title: "Integrand", body: "&#8747; sin(x) dx" }, { title: "Standard integral rule", body: "&#8747; sin(x) dx = <span class=\"rv\">&#8722;cos(x) + C</span>" }]; ans = "&#8722;cos(x) + C"; } else if (type === "cosx") { steps = [{ title: "Integrand", body: "&#8747; cos(x) dx" }, { title: "Standard integral rule", body: "&#8747; cos(x) dx = <span class=\"rv\">sin(x) + C</span>" }]; ans = "sin(x) + C"; } else if (type === "ex") { steps = [{ title: "Integrand", body: "&#8747; e&#739; dx" }, { title: "Special property", body: "e&#739; is its own antiderivative" }, { title: "Result", body: "&#8747; e&#739; dx = <span class=\"rv\">e&#739; + C</span>" }]; ans = "e&#739; + C"; } else if (type === "invx") { steps = [{ title: "Integrand", body: "&#8747; (1/x) dx" }, { title: "This is the special case n = &#8722;1", body: "Power rule does NOT apply when n = &#8722;1" }, { title: "Standard rule", body: "&#8747; (1/x) dx = <span class=\"rv\">ln|x| + C</span>" }]; ans = "ln|x| + C"; } else if (type === "ax") { steps = [{ title: "Integrand", body: `&#8747; ${a}&#739; dx` }, { title: "Formula", body: "&#8747; a&#739; dx = a&#739; / ln(a) + C" }, { title: `Substitute a = ${a}`, body: `= <span class="rv">${a}&#739; / ln(${a}) + C</span>` }]; ans = `${a}&#739; / ln(${a}) + C`; } else { steps = [{ title: "Integrand", body: "&#8747; tan(x) dx" }, { title: "Recall: tan x = sin x / cos x", body: "Use substitution u = cos x" }, { title: "Result", body: "&#8747; tan(x) dx = <span class=\"rv\">&#8722;ln|cos(x)| + C = ln|sec(x)| + C</span>" }]; ans = "&#8722;ln|cos(x)| + C"; } return ok(steps, ans); };
 
-        return (
-          <header
-            dir={lang === 'ku' ? 'rtl' : 'ltr'}
-            className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 ${
-              scrolled
-                ? 'bg-[#060810]/80 backdrop-blur-xl border-b border-white/[0.08]'
-                : 'bg-transparent border-b border-transparent'
-            }`}
-          >
-            <div className="max-w-[1140px] mx-auto px-6 py-3.5 flex items-center justify-between">
-              <button onClick={() => handleNav('home')} className="flex items-center gap-3 group">
-                <div className="relative w-10 h-10 rounded-xl overflow-hidden p-[2px] bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#fbbf24] shadow-[0_6px_20px_-4px_rgba(109,94,252,0.55)]">
-                  <div className="w-full h-full rounded-[10px] overflow-hidden bg-[#0a0d18] grid place-items-center">
-                    {brandImage ? (
-                      <img src={brandImage} alt="KRD Group logo" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="font-extrabold text-white text-sm tracking-tight">A</span>
-                    )}
-                  </div>
-                </div>
-                <span className="font-extrabold text-[15px] tracking-tight text-white">KRD GROUP</span>
-              </button>
+    const solveArithSeq = (a1, d, n) => { a1 = parseFloat(a1); d = parseFloat(d); n = parseInt(n); if (isNaN(a1) || isNaN(d) || isNaN(n) || n < 1) return err("Enter valid numbers. n must be >= 1."); const an = a1 + (n - 1) * d; const sn = (n / 2) * (2 * a1 + (n - 1) * d); const firstTerms = []; for (let i = 1; i <= Math.min(n, 8); i++) firstTerms.push(a1 + (i - 1) * d); const seqStr = firstTerms.join(", ") + (n > 8 ? ", ..." : ""); return ok([{ title: "Arithmetic Sequence Parameters", body: `a&#8321; = <span class="hl">${a1}</span> &nbsp; d = <span class="hl">${d}</span> &nbsp; n = <span class="hl">${n}</span>` }, { title: "First terms of the sequence", body: `<span class="hl">${seqStr}</span>` }, { title: "Formula for nth term: a&#8345; = a&#8321; + (n&#8722;1)d", body: `a&#8345; = ${a1} + (${n}&#8722;1)&#183;${d}<br>a&#8345; = ${a1} + ${(n - 1) * d} = <span class="rv">${an}</span>` }, { title: "Formula for partial sum: S&#8345; = n/2 &#183; (2a&#8321; + (n&#8722;1)d)", body: `S&#8345; = ${n}/2 &#183; (2&#183;${a1} + (${n}&#8722;1)&#183;${d})<br>= ${n / 2} &#183; (${2 * a1} + ${(n - 1) * d})<br>= ${n / 2} &#183; ${2 * a1 + (n - 1) * d} = <span class="rv">${sn}</span>` }], `a&#8345; = ${an} &nbsp;|&nbsp; S&#8345; = ${sn}`); };
+    const solveGeoSeq = (a1, r, n) => { a1 = parseFloat(a1); r = parseFloat(r); n = parseInt(n); if (isNaN(a1) || isNaN(r) || isNaN(n) || n < 1) return err("Enter valid numbers. n must be >= 1."); const an = a1 * Math.pow(r, n - 1); const sn = r === 1 ? n * a1 : (a1 * (1 - Math.pow(r, n))) / (1 - r); const firstTerms = []; for (let i = 1; i <= Math.min(n, 8); i++) firstTerms.push(parseFloat((a1 * Math.pow(r, i - 1)).toFixed(4))); const seqStr = firstTerms.join(", ") + (n > 8 ? ", ..." : ""); return ok([{ title: "Geometric Sequence Parameters", body: `a&#8321; = <span class="hl">${a1}</span> &nbsp; r = <span class="hl">${r}</span> &nbsp; n = <span class="hl">${n}</span>` }, { title: "First terms of the sequence", body: `<span class="hl">${seqStr}</span>` }, { title: "Formula for nth term: a&#8345; = a&#8321; &#183; r&#8319;&#8315;&#185;", body: `a&#8345; = ${a1} &#183; ${r}<sup>${n - 1}</sup><br>= ${a1} &#183; ${parseFloat(Math.pow(r, n - 1).toFixed(6))} = <span class="rv">${parseFloat(an.toFixed(6))}</span>` }, { title: "Formula for partial sum: S&#8345; = a&#8321;(1&#8722;r&#8319;)/(1&#8722;r)", body: r === 1 ? `r=1: S&#8345; = n&#183;a&#8321; = ${n}&#183;${a1} = <span class="rv">${sn}</span>` : `S&#8345; = ${a1}&#183;(1&#8722;${r}<sup>${n}</sup>)/(1&#8722;${r})<br>= <span class="rv">${parseFloat(sn.toFixed(6))}</span>` }], `a&#8345; = ${parseFloat(an.toFixed(6))} &nbsp;|&nbsp; S&#8345; = ${parseFloat(sn.toFixed(6))}`); };
+    const solveArithSeries = (a1, d, n) => { a1 = parseFloat(a1); d = parseFloat(d); n = parseInt(n); if (isNaN(a1) || isNaN(d) || isNaN(n) || n < 1) return err("Enter valid numbers."); const an = a1 + (n - 1) * d; const sn1 = (n / 2) * (a1 + an); const sn2 = (n / 2) * (2 * a1 + (n - 1) * d); return ok([{ title: "Series Parameters", body: `a&#8321; = <span class="hl">${a1}</span> &nbsp; d = <span class="hl">${d}</span> &nbsp; n = <span class="hl">${n}</span>` }, { title: "Step 1 — Find the last term a&#8345;", body: `a&#8345; = a&#8321; + (n&#8722;1)d = ${a1} + (${n}&#8722;1)&#183;${d} = <span class="hl">${an}</span>` }, { title: "Step 2 — Apply Sum Formula 1: S&#8345; = n/2 &#183; (a&#8321; + a&#8345;)", body: `S&#8345; = ${n}/2 &#183; (${a1} + ${an}) = ${n / 2} &#183; ${a1 + an} = <span class="rv">${sn1}</span>` }, { title: "Verify with Formula 2: S&#8345; = n/2 &#183; (2a&#8321; + (n&#8722;1)d)", body: `S&#8345; = ${n}/2 &#183; (${2 * a1} + ${(n - 1) * d}) = <span class="rv">${sn2}</span> &#10003;` }], `S&#8345; = ${sn1}`); };
+    const solveGeoSeries = (a1, r, n) => { a1 = parseFloat(a1); r = parseFloat(r); n = parseInt(n); if (isNaN(a1) || isNaN(r) || isNaN(n) || n < 1) return err("Enter valid numbers."); const sn = r === 1 ? n * a1 : (a1 * (1 - Math.pow(r, n))) / (1 - r); const rn = parseFloat(Math.pow(r, n).toFixed(6)); return ok([{ title: "Series Parameters", body: `a&#8321; = <span class="hl">${a1}</span> &nbsp; r = <span class="hl">${r}</span> &nbsp; n = <span class="hl">${n}</span>` }, r === 1 ? { title: "Special Case: r = 1", body: `All terms equal a&#8321; = ${a1}<br>S&#8345; = n &#183; a&#8321; = ${n} &#183; ${a1} = <span class="rv">${sn}</span>` } : { title: "Step 1 — Calculate r&#8319;", body: `r&#8319; = ${r}<sup>${n}</sup> = <span class="hl">${rn}</span>` }, r === 1 ? { title: "Done", body: `S&#8345; = <span class="rv">${sn}</span>` } : { title: "Step 2 — Apply Formula: S&#8345; = a&#8321; &#183; (1 &#8722; r&#8319;) / (1 &#8722; r)", body: `S&#8345; = ${a1} &#183; (1 &#8722; ${rn}) / (1 &#8722; ${r})<br>= ${a1} &#183; ${parseFloat((1 - rn).toFixed(6))} / ${1 - r}<br>= <span class="rv">${parseFloat(sn.toFixed(6))}</span>` }], `S&#8345; = ${parseFloat(sn.toFixed(6))}`); };
+    const solveInfSeries = (a1, r) => { a1 = parseFloat(a1); r = parseFloat(r); if (isNaN(a1) || isNaN(r)) return err("Enter valid numbers."); const absR = Math.abs(r); if (absR >= 1) { return ok([{ title: "Series Parameters", body: `a&#8321; = <span class="hl">${a1}</span> &nbsp; r = <span class="hl">${r}</span>` }, { title: "Convergence Test: |r| must be < 1", body: `|r| = |${r}| = <span class="op">${absR}</span> &#8805; 1` }, { title: "Conclusion", body: '<span class="op">The series DIVERGES &#8212; no finite sum exists</span>' }], "DIVERGES (|r| >= 1)"); } const sinf = a1 / (1 - r); return ok([{ title: "Series Parameters", body: `a&#8321; = <span class="hl">${a1}</span> &nbsp; r = <span class="hl">${r}</span>` }, { title: "Convergence Test: |r| must be < 1", body: `|r| = |${r}| = <span class="hl">${absR}</span> &lt; 1 &#8594; <span class="rv">CONVERGES &#10003;</span>` }, { title: "Formula: S&#8734; = a&#8321; / (1 &#8722; r)", body: `S&#8734; = ${a1} / (1 &#8722; ${r}) = ${a1} / ${1 - r}` }, { title: "Calculate", body: `S&#8734; = <span class="rv">${parseFloat(sinf.toFixed(6))}</span>` }], `S&#8734; = ${parseFloat(sinf.toFixed(6))}`); };
 
-              <nav className="hidden md:flex items-center gap-1">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleNav(item.id)}
-                    className={`px-4 py-2 rounded-full text-[14px] font-semibold transition-all duration-300 ${
-                      activeSection === item.id
-                        ? 'text-white bg-gradient-to-br from-[#f5b942]/20 to-[#fbbf24]/12 shadow-[inset_0_0_0_1px_rgba(109,94,252,0.35)]'
-                        : 'text-[#8992a9] hover:text-white hover:bg-white/[0.04]'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
+    const LD_INFO = { binary: { base: 2, name: "Binary", digits: "0 and 1" }, decimal: { base: 10, name: "Decimal", digits: "0 to 9" }, octal: { base: 8, name: "Octal", digits: "0 to 7" }, hex: { base: 16, name: "Hexadecimal", digits: "0-9 and A-F" } };
+    const ldIsValid = (str, base) => { if (!str) return false; if (base === 2) return /^[01]+$/.test(str); if (base === 8) return /^[0-7]+$/.test(str); if (base === 10) return /^[0-9]+$/.test(str); return /^[0-9A-Fa-f]+$/.test(str); };
+    const ldDecToBase = (n, base) => { if (n === 0) return { str: "0", log: `0 &#247; ${base} &#8594; the value is already <span class="rv">0</span><br>` }; let x = n, digitsArr = [], log = ""; while (x > 0) { const rem = x % base; const remCh = rem.toString(base).toUpperCase(); const q = Math.floor(x / base); log += `${x} &#247; ${base} = <span class="hl">${q}</span> &nbsp; remainder = <span class="rv">${remCh}</span><br>`; digitsArr.push(remCh); x = q; } return { str: digitsArr.reverse().join(""), log }; };
+    const ldConvert = (topic, raw) => { const info = LD_INFO[topic]; const base = info.base; raw = raw.trim(); if (!ldIsValid(raw, base)) return err(`Enter a valid ${info.name} number (allowed Digits: ${info.digits}).`); const clean = raw.toUpperCase(); const steps = []; steps.push({ title: "Input number", body: `<span class="hl">${clean}</span> &nbsp; (base ${base} — ${info.name})` }); let total; if (base === 10) { total = parseInt(clean, 10); steps.push({ title: "Already in decimal", body: `Decimal value = <span class="rv">${total}</span>` }); } else { let expLog = "", sum = 0; for (let i = 0; i < clean.length; i++) { const pos = clean.length - 1 - i; const digitVal = parseInt(clean[i], base); const val = digitVal * Math.pow(base, pos); sum += val; expLog += `${clean[i]} &times; ${base}<sup>${pos}</sup> = ${digitVal} &times; ${Math.pow(base, pos)} = <span class="hl">${val}</span><br>`; } total = sum; steps.push({ title: `Step 1 — Expand each digit by its positional value (base ${base})`, body: expLog }); steps.push({ title: "Step 2 — Sum all values to get the decimal equivalent", body: `Decimal value = <span class="rv">${total}</span>` }); } const results = {}; results[base] = clean; results[10] = String(total); ["binary", "octal", "hex"].forEach((key) => { const tb = LD_INFO[key].base; if (tb === base) return; const r = ldDecToBase(total, tb); results[tb] = r.str; steps.push({ title: `Convert decimal ${total} to ${LD_INFO[key].name} (divide by ${tb}, read remainders bottom to top)`, body: r.log + `Result = <span class="rv">${r.str}</span>` }); }); const finalText = `Binary = ${results[2]} &nbsp;|&nbsp; Octal = ${results[8]} &nbsp;|&nbsp; Decimal = ${results[10]} &nbsp;|&nbsp; Hex = ${results[16]}`; return ok(steps, finalText); };
 
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#8992a9] pointer-events-none" />
-                  <select
-                    value={lang}
-                    onChange={(e) => setLang(e.target.value)}
-                    className="appearance-none pl-8 pr-3 py-2 rounded-full bg-white/[0.035] border border-white/[0.09] text-[13px] font-semibold text-white cursor-pointer hover:border-white/[0.16] hover:bg-white/[0.06] transition-all duration-300"
-                  >
-                    <option value="en" className="bg-[#0a0d18] text-white">English</option>
-                    <option value="ku" className="bg-[#0a0d18] text-white">کوردی</option>
-                  </select>
-                </div>
+    /* ════════════ SHARED UI PARTS ════════════ */
+    function InfoBox({ children }) { return <div className="mb-5 rounded-xl border border-primary/15 bg-primary/[0.04] px-5 py-4 font-mono text-sm leading-relaxed text-muted-foreground">{children}</div>; }
+    function InputSection({ heading, children }) { return <div className="rounded-2xl border border-input bg-card p-6 shadow-clinical md:p-7"><h4 className="mb-5 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">{heading}</h4>{children}</div>; }
+    function Field({ label, children, className = "" }) { return <div className={`flex flex-1 flex-col gap-1.5 ${className}`}><label className="font-mono text-xs font-semibold tracking-wide text-muted-foreground">{label}</label>{children}</div>; }
+    const inputClass = "w-full rounded-lg border border-input bg-secondary/50 px-3.5 py-2.5 font-mono text-sm text-foreground outline-none transition focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/15";
+    function SolveButton({ onClick, children = "Solve →" }) { return <button onClick={onClick} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-heading text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0">{children}</button>; }
+    function TabBar({ tabs, active, onChange }) { return <div className="flex flex-wrap gap-1.5 border-b border-input bg-card/60 px-6 py-4 md:px-10">{tabs.map((t) => <button key={t.id} onClick={() => onChange(t.id)} className={`rounded-lg px-4 py-2 font-heading text-sm font-semibold transition ${active === t.id ? "bg-primary text-white shadow-glow" : "text-muted-foreground hover:bg-secondary hover:text-foreground"}`}>{t.label}</button>)}</div>; }
+    function BackButton({ to = "/", label = "← Back" }) { const navigate = useNavigate(); return <a href={"#" + to} onClick={(e) => { e.preventDefault(); navigate(to); }} className="mb-5 inline-flex items-center gap-2 rounded-lg border border-input bg-card px-4 py-2 font-heading text-sm font-semibold text-muted-foreground transition hover:border-primary hover:text-primary">{label}</a>; }
 
-                <button
-                  onClick={() => setMobileOpen(!mobileOpen)}
-                  className="md:hidden w-10 h-10 grid place-items-center rounded-full bg-white/[0.035] border border-white/[0.09] text-white"
-                >
-                  {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
+    function ResultPanel({ result }) {
+      if (!result) return null;
+      if (result.error) { return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-5 flex items-start gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4"><span className="mt-0.5 flex-shrink-0 text-red-400">&#9888;</span><p className="font-mono text-sm text-red-400">{result.error}</p></motion.div>; }
+      if (result.tableHtml) { return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mt-5 overflow-hidden rounded-2xl border border-border bg-card shadow-clinical"><div className="flex items-center gap-2.5 border-b border-border/60 bg-primary/[0.03] px-5 py-3.5"><span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_8px_rgba(0,209,193,0.6)]" /><span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">Truth Table</span></div><div className="overflow-x-auto p-5" dangerouslySetInnerHTML={{ __html: result.tableHtml }} /></motion.div>; }
+      if (result.primes) { return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mt-5 overflow-hidden rounded-2xl border border-border bg-card shadow-clinical"><div className="flex items-center gap-2.5 border-b border-border/60 bg-primary/[0.03] px-5 py-3.5"><span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_8px_rgba(0,209,193,0.6)]" /><span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">Primes from {result.from} to {result.to}</span></div><div className="p-5"><p className="mb-3 text-sm font-medium text-muted-foreground">Found {result.primes.length} prime number(s)</p><div className="flex flex-wrap gap-2">{result.primes.map((p) => <span key={p} className="rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 font-mono text-sm font-semibold text-primary">{p}</span>)}</div></div></motion.div>; }
+      return <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mt-5 overflow-hidden rounded-2xl border border-border bg-card shadow-clinical"><div className="flex items-center gap-2.5 border-b border-border/60 bg-primary/[0.03] px-5 py-3.5"><span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_8px_rgba(0,209,193,0.6)]" /><span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">Solution</span></div><div className="p-5"><div className="space-y-4"><AnimatePresence>{result.steps.map((step, i) => <motion.div key={i} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07, duration: 0.4 }} className="flex gap-4"><div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary font-mono text-sm font-bold text-white">{i + 1}</div><div className="flex-1 rounded-xl border border-border bg-secondary/40 px-5 py-4"><p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{step.title}</p><div className="step-body" dangerouslySetInnerHTML={{ __html: step.body }} /></div></motion.div>)}</AnimatePresence></div>{result.finalAnswer && <motion.div initial={{ opacity: 0, scale: 0.96, y: 6 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: result.steps.length * 0.07 + 0.1, type: "spring", stiffness: 220, damping: 20 }} className="relative mt-6 overflow-hidden rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 via-accent/10 to-transparent px-6 py-5 text-center shadow-glow"><div className="pointer-events-none absolute -top-1/2 left-1/2 h-full w-2/3 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" /><div className="relative flex items-center justify-center gap-3"><span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow">&#10003;</span><span className="font-heading text-xs font-bold uppercase tracking-[0.18em] text-primary">Answer</span><span className="border-l border-primary/30 pl-3 font-mono text-lg font-bold text-accent-foreground" dangerouslySetInnerHTML={{ __html: result.finalAnswer }} /></div></motion.div>}</div></motion.div>;
+    }
 
-            <AnimatePresence>
-              {mobileOpen && (
-                <motion.nav
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25 }}
-                  className="md:hidden mx-4 mb-4 p-3 rounded-2xl bg-[#0a0d18]/92 backdrop-blur-xl border border-white/[0.09] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] flex flex-col gap-1"
-                >
-                  {navItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleNav(item.id)}
-                      className={`px-4 py-3 rounded-xl text-[15px] font-semibold text-center transition-all duration-300 ${
-                        activeSection === item.id
-                          ? 'text-white bg-gradient-to-br from-[#f5b942]/20 to-[#fbbf24]/12'
-                          : 'text-[#8992a9] hover:text-white hover:bg-white/[0.04]'
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </motion.nav>
-              )}
-            </AnimatePresence>
-          </header>
-        );
-      }
+    function SubjectCard({ icon, title, description, topics, color = "#0052ff", onClick, index = 0 }) {
+      return <motion.button initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }} onClick={onClick} className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 text-left shadow-clinical transition hover:-translate-y-1.5 hover:border-[color] hover:shadow-glow" style={{ ["--color"]: color }}><span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(circle at 0% 0%, ${color}14, transparent 60%)` }} /><span className="pointer-events-none absolute right-5 top-5 text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[color] group-hover:opacity-100">&#8599;</span><div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl text-xl font-bold" style={{ background: `${color}18`, color }}>{icon}</div><h3 className="mb-2 font-heading text-lg font-bold text-foreground">{title}</h3><p className="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground">{description}</p><div className="flex flex-wrap gap-1.5">{topics.map((t) => <span key={t} className="rounded-full border border-border bg-secondary/60 px-2.5 py-1 font-mono text-[0.7rem] font-medium text-muted-foreground">{t}</span>)}</div></motion.button>;
+    }
 
-      /* ===================== Hero ===================== */
-      function Hero({ t, lang, onNavigate, brandImage }) {
-        const rtl = lang === 'ku';
-        return (
-          <section className="pt-32 pb-12 px-6">
-            <div className="max-w-[1140px] mx-auto grid md:grid-cols-[1.3fr_0.7fr] gap-10 items-center">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="relative rounded-[26px] p-8 md:p-10 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.55)] overflow-hidden"
-              >
-                <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-[#f5b942]/20 blur-[80px] pointer-events-none" />
-                <div className="relative">
-                  <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/[0.035] text-[12.5px] font-semibold tracking-wide text-[#8992a9]">
-                    <Sparkles className="w-3.5 h-3.5 text-[#fbbf24]" />
-                    {rtl ? 'بەخێرهاتن' : 'Welcome to'}
-                  </span>
+    /* ════════════ MATH BACKGROUND ════════════ */
+    const SYMBOLS = ["Σ", "∫", "π", "√", "∞", "∂", "Δ", "θ", "λ", "φ", "Ω", "α", "β", "γ", "μ", "ω", "1", "2", "3", "7", "0", "9", "5", "8", "e", "≈", "≠", "≤", "≥", "±", "×", "÷", "∑", "lim", "log", "sin", "cos", "tan", "f(x)", "x²", "xⁿ", "dx", "n!", "∮", "∇", "∝", "∈", "∪", "∩"];
+    const COLORS = ["#facc15", "#fde047", "#f59e0b", "#eab308", "#fbbf24", "#d9a13a"];
+    function MathBackground() {
+      const rain = useMemo(() => Array.from({ length: 56 }, (_, i) => { const seed = (i + 1) * 73.612; return { id: i, symbol: SYMBOLS[Math.floor(seed) % SYMBOLS.length], left: ((seed * 53.7) % 100), size: 14 + Math.floor((seed * 7) % 38), fall: 90 + ((seed * 13) % 70), duration: 11 + ((seed * 3) % 16), delay: -((seed * 5) % 22), drift: (((seed * 11) % 70) - 35), rotate: (((seed * 13) % 80) - 40), opacity: 0.06 + ((seed * 5) % 14) / 100, colorIdx: Math.floor(seed * 17) % COLORS.length }; }), []);
+      const orbs = useMemo(() => [{ color: "rgba(250,204,21,0.22)", size: 560, x: "6%", y: "10%", dur: 26 }, { color: "rgba(245,158,11,0.16)", size: 480, x: "74%", y: "6%", dur: 30 }, { color: "rgba(234,179,8,0.12)", size: 440, x: "58%", y: "72%", dur: 34 }, { color: "rgba(217,161,58,0.10)", size: 400, x: "16%", y: "76%", dur: 28 }], []);
+      return <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"><div className="absolute inset-0" style={{ background: "radial-gradient(at 16% 12%, rgba(217,161,58,0.13) 0%, transparent 46%), radial-gradient(at 84% 82%, rgba(217,161,58,0.10) 0%, transparent 44%), radial-gradient(at 50% 50%, rgba(40,33,18,0.55) 0%, transparent 60%), linear-gradient(165deg, #080705 0%, #0a0907 55%, #0c0a06 100%)" }} />{orbs.map((o, i) => <motion.div key={`orb-${i}`} className="absolute rounded-full blur-3xl" style={{ width: o.size, height: o.size, left: o.x, top: o.y, background: `radial-gradient(circle, ${o.color} 0%, transparent 70%)` }} animate={{ x: [0, 50, -35, 0], y: [0, -35, 30, 0], scale: [1, 1.15, 0.92, 1] }} transition={{ duration: o.dur, repeat: Infinity, ease: "easeInOut" }} />)}<div className="grid-noise absolute inset-0 opacity-60" />{rain.map((it) => { const color = COLORS[it.colorIdx]; return <motion.span key={it.id} className="absolute top-0 font-mono font-bold select-none will-change-transform" style={{ left: `${it.left}%`, fontSize: `${it.size}px`, color, opacity: it.opacity, filter: `drop-shadow(0 0 12px ${color}66)` }} initial={{ y: "-12vh", opacity: 0, rotate: 0 }} animate={{ y: ["-12vh", `${it.fall}vh`], x: [0, it.drift, it.drift * 0.5, 0], rotate: [0, it.rotate, 0], opacity: [0, it.opacity, it.opacity, 0] }} transition={{ duration: it.duration, delay: it.delay, repeat: Infinity, ease: "linear", times: [0, 0.1, 0.85, 1] }}>{it.symbol}</motion.span>; })}<div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)" }} /></div>;
+    }
 
-                  <h1 className="mt-5 text-[clamp(32px,4vw,46px)] leading-[1.12] font-extrabold tracking-tight bg-gradient-to-b from-white to-[#cfd4e6] bg-clip-text text-transparent">
-                    {t.homeTitle}
-                  </h1>
+    /* ════════════ LAYOUT ════════════ */
+    const LOGO_URL = ""; // لینکی وێنەی لۆگۆی خۆتان لێرە دابنە
+    const navItems = [{ to: "/", label: "Dashboard" }, { to: "/math", label: "Mathematics" }, { to: "/logic-design", label: "Logic Design" }, { to: "/team", label: "Team" }, { to: "/contact", label: "Contact" }];
+    function Layout() {
+      const [open, setOpen] = useState(false);
+      return <div className="min-h-screen"><MathBackground /><nav className="fixed inset-x-0 top-0 z-50 glass border-b border-border/70"><div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-8"><Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}><div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl shadow-glow" style={LOGO_URL ? undefined : { background: "linear-gradient(to bottom right, hsl(var(--primary)), hsl(var(--accent)))" }}>{LOGO_URL ? <img src={LOGO_URL} alt="SolverX" className="h-full w-full object-cover" /> : <span className="font-heading text-lg font-bold text-white">Σ</span>}</div><div className="flex flex-col leading-none"><span className="font-heading text-base font-bold tracking-tight text-foreground">SolverX</span><span className="font-mono text-[0.6rem] font-medium uppercase tracking-[0.2em] text-primary">AMZ Group</span></div></Link><div className="hidden items-center gap-1 md:flex">{navItems.map((item) => <NavLink key={item.to} to={item.to} end={item.to === "/"} className={({ isActive }) => `relative rounded-lg px-4 py-2 font-heading text-sm font-semibold transition ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>{({ isActive }) => <>{item.label}{isActive && <motion.span layoutId="nav-underline" className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-primary" />}</>}</NavLink>)}</div><button className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary md:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu">{open ? "✕" : "☰"}</button></div><div className="serum-line h-px w-full" /></nav><AnimatePresence>{open && <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="fixed inset-x-0 top-16 z-40 glass border-b border-border md:hidden"><div className="flex flex-col gap-1 px-5 py-4">{navItems.map((item) => <NavLink key={item.to} to={item.to} end={item.to === "/"} onClick={() => setOpen(false)} className={({ isActive }) => `rounded-lg px-4 py-3 font-heading text-sm font-semibold transition ${isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-secondary"}`}>{item.label}</NavLink>)}</div></motion.div>}</AnimatePresence><main className="pt-16"><Outlet /></main></div>;
+    }
 
-                  <p className="mt-4 text-[17px] leading-[1.65] text-[#b8bfd4] max-w-xl">{t.homeDesc}</p>
-
-                  <div className={`flex gap-3 mt-7 flex-wrap ${rtl ? 'flex-row-reverse' : ''}`}>
-                    <button
-                      onClick={() => onNavigate('contact')}
-                      className="group inline-flex items-center gap-2 px-5 py-3.5 rounded-full font-semibold text-[14.5px] text-white bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#fbbf24] shadow-[0_10px_30px_-8px_rgba(245,185,66,0.65)] hover:shadow-[0_16px_40px_-8px_rgba(245,185,66,0.8)] hover:-translate-y-0.5 transition-all duration-300"
-                    >
-                      {t.contactBtn}
-                      <ArrowRight className={`w-4 h-4 ${rtl ? 'rotate-180' : ''} group-hover:translate-x-0.5 transition-transform`} />
-                    </button>
-                    <button
-                      onClick={() => onNavigate('project')}
-                      className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full font-semibold text-[14.5px] text-white bg-white/[0.035] border border-white/[0.09] hover:border-white/[0.16] hover:bg-white/[0.06] hover:-translate-y-0.5 transition-all duration-300"
-                    >
-                      {t.projectBtn}
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-                className="relative mx-auto w-full flex justify-center"
-              >
-                <SunRays size={280}>
-                  <img src={brandImage} alt="KRD group" className="w-full h-full object-cover" />
-                </SunRays>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full bg-[#fbbf24]/20 blur-[50px] pointer-events-none" />
-              </motion.div>
-            </div>
-
-            <div className="max-w-[1140px] mx-auto grid md:grid-cols-2 gap-6 mt-8">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6 }}
-                className="rounded-[20px] p-8 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)] hover:-translate-y-1 hover:border-white/[0.16] transition-all duration-500"
-              >
-                <div className="text-[12px] tracking-[0.14em] uppercase font-bold text-[#fbbf24]">{t.aboutTeam}</div>
-                <h2 className="mt-1.5 text-[26px] font-extrabold tracking-tight text-white">KRD GROUP</h2>
-                <p className="mt-3 text-[15px] leading-[1.65] text-[#b8bfd4]">{t.aboutDesc}</p>
-                <button
-                  onClick={() => onNavigate('about')}
-                  className="mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-[14px] text-white bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#fbbf24] shadow-[0_10px_30px_-8px_rgba(245,185,66,0.65)] hover:-translate-y-0.5 transition-all duration-300"
-                >
-                  {t.moreinfo}
-                </button>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="rounded-[20px] p-8 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)] hover:-translate-y-1 hover:border-white/[0.16] transition-all duration-500"
-              >
-                <div className="text-[12px] tracking-[0.14em] uppercase font-bold text-[#fbbf24]">{t.skill}</div>
-                <h2 className="mt-1.5 text-[26px] font-extrabold tracking-tight text-white">{t.skill2}</h2>
-                <div className="mt-4 space-y-3">
-                  {t.skillDesc.split('\n').map((line, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <span className="w-2.5 h-2.5 mt-1.5 rounded-full flex-none bg-gradient-to-br from-[#f5b942] to-[#fbbf24] shadow-[0_0_8px_rgba(245,185,66,0.6)]" />
-                      <p className="text-[15px] leading-[1.6] text-[#b8bfd4]">{line.replace(/^[•\s]+/, '')}</p>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          </section>
-        );
-      }
-
-      /* ===================== AboutDeveloper ===================== */
-      function AboutDeveloper({ t, lang, images }) {
-        const rtl = lang === 'ku';
-        const members = [
-          { img: images.member1, name: 'Mohammed Barzan', role: t.founder, num: '01', icon: Crown, desc: t.Mabout, link: 'https://mba.amzgroup.xyz', emoji: '👑' },
-          { img: images.member3, name: 'Anas Mohsin', role: t.projectManager, num: '02', icon: Shield, desc: t.Aabout, link: null, emoji: '🎖️' },
-          { img: images.member2, name: 'Zhalla Karwan', role: t.manager, num: '03', icon: Award, desc: t.Zabout, link: 'https://zhalla.amzgroup.xyz', emoji: '🎖️' },
-        ];
-
-        return (
-          <section className="px-6 py-12">
-            <div className="max-w-[1140px] mx-auto">
-              <div className="rounded-[26px] p-8 md:p-10 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)]">
-                <div className="text-[12px] tracking-[0.14em] uppercase font-bold text-[#fbbf24]">{t.aboutDev}</div>
-                <h2 className="mt-1.5 text-[28px] font-extrabold tracking-tight text-white">{t.devinfo}</h2>
-
-                <div className="grid md:grid-cols-3 gap-6 mt-8">
-                  {members.map((m, i) => {
-                    const Icon = m.icon;
-                    return (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 24 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 0.5, delay: i * 0.1 }}
-                        className="group rounded-[20px] p-7 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)] hover:-translate-y-1.5 hover:border-[#f5b942]/40 hover:shadow-[0_24px_60px_-18px_rgba(245,185,66,0.45)] transition-all duration-500"
-                      >
-                        <FacetFrame fluid>
-                          <img src={m.img} alt={m.name} className="w-full h-full object-cover" />
-                        </FacetFrame>
-
-                        <div className="mt-5 inline-flex items-center gap-2 text-[12.5px] font-bold text-[#fbbf24] tracking-wide">
-                          <span className="w-6 h-6 rounded-full grid place-items-center text-[11px] text-white bg-[#fbbf24]/12 border border-[#fbbf24]/35">
-                            {m.num}
-                          </span>
-                          {m.role}
-                        </div>
-
-                        <h3 className="mt-3 text-[19px] font-bold text-white flex items-center gap-2">
-                          <span>{m.emoji}</span>
-                          {m.name}
-                        </h3>
-                        <p className="mt-2 text-[14.5px] leading-[1.65] text-[#8992a9]">{m.desc}</p>
-
-                        {m.link && (
-                          <a
-                            href={m.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={`mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-[13.5px] text-white bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#fbbf24] shadow-[0_8px_20px_-8px_rgba(245,185,66,0.7)] hover:-translate-y-0.5 transition-all duration-300 ${rtl ? 'flex-row-reverse' : ''}`}
-                          >
-                            {t.moreinfo}
-                            <ArrowRight className={`w-3.5 h-3.5 ${rtl ? 'rotate-180' : ''}`} />
-                          </a>
-                        )}
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="mt-6 rounded-[20px] p-7 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)] flex flex-col md:flex-row items-center gap-6"
-                >
-                  <div className="flex-none w-40 md:w-48">
-                    <FacetFrame fluid glow={false}>
-                      <img src={images.university} alt="Lebanese French University" className="w-full h-full object-cover" />
-                    </FacetFrame>
-                  </div>
-                  <div className="text-center md:text-left">
-                    <h3 className="text-[19px] font-bold text-white">Lebanese French University</h3>
-                    <p className="mt-2 text-[14.5px] leading-[1.65] text-[#8992a9]">{t.lfu}</p>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </section>
-        );
-      }
-
-      /* ===================== Projects ===================== */
-      const projectsData = [
-        { key: 'math', title: 'MATHEMATICS SOLVER', descKey: 'mathSolver', imageKey: 'math', link: 'https://math.amzgroup.xyz/' },
-        { key: 'weather', title: 'WEATHER KRD', descKey: 'weather', imageKey: 'weather', link: 'https://weather.amzgroup.xyz/' },
-        { key: 'wifi', title: 'SPEED WIFI', descKey: 'wifi', imageKey: 'wifi', link: 'https://amz-group.github.io/Speed-wifi/' },
-        { key: 'qr', title: 'QRCODE PRO', descKey: 'qr', imageKey: 'qr', link: 'https://amz-group.github.io/QRcode-pro/' },
-        { key: 'snake', title: 'AMZ SNAKE', descKey: 'snake', imageKey: 'snake', link: 'https://amz-group.github.io/snakegame/' },
-        { key: 'flappy', title: 'AMZ FLAPPY BIRD', descKey: 'flappy', imageKey: 'flappy', link: 'https://amz-group.github.io/flappy-bird/' },
+    /* ════════════ PAGES ════════════ */
+    function Dashboard() {
+      const navigate = useNavigate();
+      const cards = [
+        { icon: "Σ", title: "Mathematics", color: "#0052ff", description: "Browse all math solvers organized by category — algebra, calculus, sequences and more.", topics: ["9 Topics", "Step-by-step"], onClick: () => navigate("/math") },
+        { icon: "⌬", title: "Logic Design", color: "#f59e0b", description: "Convert between Binary, Decimal, Octal and Hexadecimal number systems, step by step.", topics: ["Binary", "Octal", "Hex"], onClick: () => navigate("/logic-design") },
+        { icon: "☻", title: "Meet The Team", color: "#00d1c1", description: "Get to know the people behind AMZ GROUP and the SolverX platform.", topics: ["3 Members", "LFU"], onClick: () => navigate("/team") },
+        { icon: "ℹ", title: "About", color: "#8b5cf6", description: "The project's story, objectives, technologies used, and where it's headed next.", topics: ["Project Info", "Vision"], onClick: () => navigate("/about") },
+        { icon: "✉", title: "Contact", color: "#10b981", description: "Send us a message directly, or connect with AMZ GROUP on social media.", topics: ["Form", "Social"], onClick: () => navigate("/contact") }
       ];
+      return <div><section className="relative overflow-hidden px-6 pb-16 pt-20 md:px-10 md:pt-28"><div className="pointer-events-none absolute inset-0 grid-noise opacity-60" /><div className="pointer-events-none absolute -top-20 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-gradient-to-br from-primary/10 via-accent/5 to-transparent blur-3xl" /><div className="relative mx-auto max-w-4xl text-center"><motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary"><span className="h-1.5 w-1.5 rounded-full bg-accent" />Kurdistan · AMZ Group</motion.div><motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="font-heading text-5xl font-bold tracking-tight text-foreground md:text-7xl">Solver<span className="text-gradient">X</span></motion.h1><motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">Every part of AMZ Mathematics in one place — solvers, number systems, the people behind it, and ways to reach us.</motion.p><motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-8 flex flex-wrap justify-center gap-3"><button onClick={() => navigate("/math")} className="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-heading text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5">Explore Solvers →</button><button onClick={() => navigate("/logic-design")} className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 font-heading text-sm font-semibold text-foreground transition hover:border-primary hover:text-primary">Logic Design</button></motion.div></div></section><section className="mx-auto max-w-7xl px-6 pb-20 md:px-10"><div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">{cards.map((c, i) => <SubjectCard key={c.title} {...c} index={i} />)}</div></section><footer className="border-t border-border py-8 text-center"><p className="text-sm text-muted-foreground">Built by <span className="font-semibold text-primary">Mohammed Barzan Shexbzeny</span></p></footer></div>;
+    }
 
-      function Projects({ t, lang, images }) {
-        const rtl = lang === 'ku';
+    function CategoryTitle({ title, count }) { return <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 pt-10 md:px-10"><h3 className="whitespace-nowrap font-heading text-sm font-bold uppercase tracking-[0.12em] text-foreground">{title}</h3><div className="h-px flex-1 bg-border" /><span className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/10 px-3 py-1 font-mono text-xs font-semibold text-primary">{count}</span></div>; }
+    function MathHub() {
+      const navigate = useNavigate(); const open = (s) => navigate(`/solver/${s}`);
+      const foundations = [{ icon: "∪", title: "Set Theory", color: "#0052ff", description: "Unions, intersections, differences, complements and subset checks with full step-by-step workings.", topics: ["Union", "Intersection", "Subset"], onClick: () => open("set") }, { icon: "⊕", title: "Logic", color: "#f59e0b", description: "Evaluate logical propositions and auto-generate truth tables using AND, OR, NOT, IMPLIES, XOR.", topics: ["Truth Table", "Evaluate"], onClick: () => open("logic") }, { icon: "ℙ", title: "Prime Numbers", color: "#f97316", description: "Check primality, list all primes in a range, and factorize using step-by-step divisibility testing.", topics: ["Primality", "Factorization"], onClick: () => open("prime") }];
+      const numbers = [{ icon: "01", title: "Binary System", color: "#ef4444", description: "Binary arithmetic and conversions between binary and decimal with complete bit-level steps.", topics: ["Arithmetic", "Dec↔Bin"], onClick: () => open("binary") }, { icon: "⊞", title: "Matrix", color: "#10b981", description: "Add, subtract, multiply matrices, find determinants and transpose with element-by-element breakdown.", topics: ["Determinant", "Transpose"], onClick: () => open("matrix") }];
+      const calculus = [{ icon: "d/dx", title: "Derivatives", color: "#8b5cf6", description: "Differentiate polynomial, trigonometric, exponential and logarithmic functions step by step.", topics: ["Power Rule", "Chain Rule"], onClick: () => open("deriv") }, { icon: "∫", title: "Integrals", color: "#ec4899", description: "Compute definite and indefinite integrals of common functions with full antiderivative steps.", topics: ["Indefinite", "Definite"], onClick: () => open("integ") }];
+      const seqseries = [{ icon: "aₙ", title: "Sequences", color: "#06b6d4", description: "Find the nth term and partial sums of arithmetic and geometric sequences step by step.", topics: ["Arithmetic", "Geometric"], onClick: () => open("seq") }, { icon: "Σ", title: "Series", color: "#e17055", description: "Calculate sums and test convergence of infinite geometric series.", topics: ["Convergence"], onClick: () => open("series") }];
+      const renderGroup = (arr) => arr.map((c, i) => <SubjectCard key={c.title} {...c} index={i} />);
+      return <div><div className="border-b border-border bg-gradient-to-b from-secondary/60 to-transparent px-6 pb-8 pt-10 md:px-10"><BackButton to="/" label="← Back to Dashboard" /><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Mathematics</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">All 9 topics, organized by category. Pick one to open the step-by-step solver.</p></div><CategoryTitle title="Foundations" count="3 topics" /><div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-6 pb-4 sm:grid-cols-2 lg:grid-cols-3 md:px-10">{renderGroup(foundations)}</div><CategoryTitle title="Numbers & Matrices" count="2 topics" /><div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-6 pb-4 sm:grid-cols-2 lg:grid-cols-3 md:px-10">{renderGroup(numbers)}</div><CategoryTitle title="Calculus" count="2 topics" /><div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-6 pb-4 sm:grid-cols-2 lg:grid-cols-3 md:px-10">{renderGroup(calculus)}</div><CategoryTitle title="Sequences & Series" count="2 topics" /><div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-6 pb-20 sm:grid-cols-2 lg:grid-cols-3 md:px-10">{renderGroup(seqseries)}</div></div>;
+    }
 
-        return (
-          <section className="px-6 py-12">
-            <div className="max-w-[1140px] mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="text-center mb-10"
-              >
-                <div className="text-[12px] tracking-[0.14em] uppercase font-bold text-[#fbbf24]">{t.ourProjects}</div>
-                <h2 className="mt-2 text-[32px] font-extrabold tracking-tight bg-gradient-to-b from-white to-[#cfd4e6] bg-clip-text text-transparent">
-                  {t.navProject}
-                </h2>
-              </motion.div>
+    function LogicDesign() {
+      const navigate = useNavigate(); const open = (topic) => navigate(`/logic-design/${topic}`);
+      const cards = [{ icon: "01", title: "Binary Number System", color: "#ef4444", description: "Base 2 — the native language of digital circuits, using only the digits 0 and 1.", topics: ["Base 2", "Convert"], onClick: () => open("binary"), index: 0 }, { icon: "10", title: "Decimal Number System", color: "#0052ff", description: "Base 10 — the everyday number system built from the ten digits 0 through 9.", topics: ["Base 10", "Convert"], onClick: () => open("decimal"), index: 1 }, { icon: "08", title: "Octal Number System", color: "#f59e0b", description: "Base 8 — uses digits 0 to 7, historically a compact stand-in for groups of 3 bits.", topics: ["Base 8", "Convert"], onClick: () => open("octal"), index: 2 }, { icon: "16", title: "Hexadecimal Number System", color: "#8b5cf6", description: "Base 16 — uses 0–9 and A–F, a compact stand-in for groups of 4 bits.", topics: ["Base 16", "Convert"], onClick: () => open("hex"), index: 3 }];
+      return <div><div className="border-b border-border bg-gradient-to-b from-secondary/60 to-transparent px-6 pb-8 pt-10 md:px-10"><BackButton to="/" label="← Back to Dashboard" /><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Logic Design</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Number systems used in digital logic — open a topic to convert step by step.</p></div><div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4 md:px-10">{cards.map((c) => <SubjectCard key={c.title} {...c} />)}</div></div>;
+    }
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projectsData.map((p, i) => {
-                  const isPrivate = !p.link;
-                  return (
-                    <motion.article
-                      key={p.key}
-                      initial={{ opacity: 0, y: 28 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.15 }}
-                      transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
-                      className="group relative rounded-[20px] overflow-hidden bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)] hover:-translate-y-1.5 hover:border-[#f5b942]/40 hover:shadow-[0_24px_60px_-18px_rgba(245,185,66,0.45)] transition-all duration-500 flex flex-col"
-                    >
-                      <div className="relative h-48 overflow-hidden">
-                        <img src={images[p.imageKey]} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d18] via-transparent to-transparent" />
-                      </div>
-                      <div className="p-6 flex flex-col flex-1">
-                        <h3 className="text-[19px] font-bold text-white tracking-tight">{p.title}</h3>
-                        <p className="mt-2 text-[14.5px] leading-[1.65] text-[#8992a9] flex-1">{t[p.descKey]}</p>
-                        {isPrivate ? (
-                          <div className={`mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-[13px] text-[#8992a9] bg-white/[0.04] border border-white/[0.09] self-start ${rtl ? 'flex-row-reverse' : ''}`}>
-                            <Lock className="w-3.5 h-3.5" />
-                            {t.privateProject}
-                          </div>
-                        ) : (
-                          <a
-                            href={p.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={`mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-[13.5px] text-[#0a0d18] bg-gradient-to-br from-[#f5b942] to-[#fbbf24] shadow-[0_8px_20px_-8px_rgba(245,185,66,0.7)] hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-8px_rgba(245,185,66,0.85)] transition-all duration-300 self-start ${rtl ? 'flex-row-reverse' : ''}`}
-                          >
-                            {t.openProject}
-                            <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
-                        )}
-                      </div>
-                    </motion.article>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        );
-      }
+    const LD_SINFO = { binary: { base: 2, name: "Binary", digits: "0 and 1", desc: "uses only the digits 0 and 1. Each position represents a power of 2 — it's the native language of digital electronics and logic gates." }, decimal: { base: 10, name: "Decimal", digits: "0 to 9", desc: "the number system used in everyday life, built from the ten digits 0–9. Each position represents a power of 10." }, octal: { base: 8, name: "Octal", digits: "0 to 7", desc: "uses digits 0 to 7. Each position represents a power of 8 — historically used as a compact way to group 3 binary bits." }, hex: { base: 16, name: "Hexadecimal", digits: "0-9 and A-F", desc: "uses sixteen symbols, 0–9 and A–F. Each position represents a power of 16 — commonly used for memory addresses and color codes (4 bits per digit)." } };
+    const ldTabs = [{ id: "binary", label: "Binary" }, { id: "decimal", label: "Decimal" }, { id: "octal", label: "Octal" }, { id: "hex", label: "Hexadecimal" }];
+    function LogicDesignSolver() {
+      const { topic } = useParams(); const navigate = useNavigate();
+      const [active, setActive] = useState(topic || "binary"); const [vals, setVals] = useState({}); const [res, setRes] = useState(null);
+      useEffect(() => { if (topic && LD_SINFO[topic]) setActive(topic); }, [topic]);
+      const info = LD_SINFO[active]; const run = () => setRes(ldConvert(active, vals[active] || ""));
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/logic-design" label="← Back" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Logic Design — Number Systems</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Enter a number in the selected base — every conversion is shown step by step.</p></div><TabBar tabs={ldTabs} active={active} onChange={(t) => { setActive(t); setRes(null); navigate(`/logic-design/${t}`, { replace: true }); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10"><InfoBox><strong className="text-primary">{info.name} (Base {info.base}):</strong> {info.desc}</InfoBox><InputSection heading={`Convert a ${info.name} Number`}><Field label={`${info.name} value`}><input className={inputClass} value={vals[active] || ""} onChange={(e) => setVals((s) => ({ ...s, [active]: e.target.value }))} placeholder={active === "binary" ? "1011" : active === "decimal" ? "173" : active === "octal" ? "255" : "2F3"} /></Field><SolveButton onClick={run}>Convert →</SolveButton></InputSection><ResultPanel result={res} /></div></div>;
+    }
 
-      /* ===================== Services ===================== */
-      const servicesData = [
-        { key: 'restaurant', title: 'RESTAURANT MENU', descKey: 'restmenu', imageKey: 'restaurant', link: 'https://restaurant.amzgroup.xyz/' },
-        { key: 'shopping', title: 'SHOPPING WEBSITE', descKey: 'shoppingweb', imageKey: 'shopping', link: 'https://shopping.amzgroup.xyz/' },
-      ];
+    const team = [{ name: "Mohammed Barzan Ali", title: "Founder & Lead Developer", bio: "Visionary behind AMZ GROUP and the architect of this mathematics platform. Passionate about creating elegant digital experiences that bridge technology and education.", skills: ["Web Dev", "UI/UX", "JavaScript", "Graphic Design", "Leadership", "HTML/CSS", "C++"], accent: "#00d1c1", leader: true, badge: "👑 Team Leader", image: "" }, { name: "Anas Mohsin", title: "Core Developer", bio: "An integral part of the AMZ GROUP team, contributing solid development skills and fresh ideas. Dedicated to crafting clean, functional solutions that enhance the user experience.", skills: ["Development", "Logic", "HTML/CSS", "Collaboration"], accent: "#10b981", badge: "Manager", image: "" }, { name: "Zhalla Karwan", title: "Core Developer", bio: "A key contributor to the AMZ GROUP ecosystem. Brings precision and creative problem-solving to every project, helping build tools that students actually love to use.", skills: ["Frontend", "Problem Solving", "CSS", "Teamwork"], accent: "#8b5cf6", badge: "Team Manager", image: "" }];
+    const stats = [{ num: "3", label: "Members" }, { num: "13", label: "Math Topics" }, { num: "LFU", label: "University" }, { num: "IT", label: "Department" }];
+    function Team() {
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/" label="← Back to Dashboard" /></div><section className="relative overflow-hidden px-6 py-14 text-center md:px-10"><div className="pointer-events-none absolute -top-10 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-gradient-to-br from-accent/10 via-primary/5 to-transparent blur-3xl" /><div className="relative"><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-foreground"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />Mohammed Barzan Ali</div><h1 className="font-heading text-4xl font-bold tracking-tight md:text-6xl">The <span className="text-gradient">Minds</span> Behind<br />SolverX</h1><p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-muted-foreground">A dedicated student tech team from Lebanese French University, IT Department — building tools that make learning beautiful.</p></div></section><div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-10 px-6 pb-12 md:px-10">{stats.map((s) => <div key={s.label} className="text-center"><div className="font-mono text-3xl font-bold text-primary">{s.num}</div><div className="mt-1 font-mono text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">{s.label}</div></div>)}</div><div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 pb-20 sm:grid-cols-2 lg:grid-cols-3 md:px-10">{team.map((m, i) => <motion.div key={m.name} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="group overflow-hidden rounded-3xl border border-border bg-card shadow-clinical transition hover:-translate-y-1.5 hover:shadow-glow" style={{ borderColor: `${m.accent}40` }}><div className="relative h-52 overflow-hidden" style={m.image ? undefined : { background: `linear-gradient(135deg, ${m.accent}33, ${m.accent}14)` }}>{m.image ? <img src={m.image} alt={m.name} className="absolute inset-0 h-full w-full object-cover" /> : <><div className="absolute inset-0" style={{ background: `radial-gradient(circle at 25% 60%, ${m.accent}40, transparent 55%), radial-gradient(circle at 75% 30%, ${m.accent}22, transparent 50%)` }} /><span className="absolute inset-0 flex items-center justify-center font-heading text-7xl font-bold text-white/90">{m.name.charAt(0)}</span></>}<div className="absolute right-4 top-4 rounded-full border border-white/30 bg-white/70 px-3 py-1 font-mono text-[0.65rem] font-bold uppercase tracking-wider backdrop-blur" style={{ color: m.accent }}>{m.badge}</div></div><div className="px-6 pb-6 pt-6"><h3 className="font-heading text-xl font-bold text-foreground">{m.name}</h3><p className="mb-4 text-sm font-semibold uppercase tracking-wide" style={{ color: m.accent }}>{m.title}</p><p className="mb-5 text-sm leading-relaxed text-muted-foreground">{m.bio}</p><div className="mb-5 h-px bg-border" /><div className="flex flex-wrap gap-1.5">{m.skills.map((s) => <span key={s} className="rounded-md border border-border bg-secondary/50 px-2.5 py-1 font-mono text-xs font-medium text-muted-foreground">{s}</span>)}</div></div></motion.div>)}</div></div>;
+    }
 
-      function Services({ t, lang, images }) {
-        const rtl = lang === 'ku';
+    const objectives = [{ title: "Clarity", desc: "Turn abstract formulas into step-by-step walkthroughs anyone can follow.", icon: "◎" }, { title: "Speed", desc: "Instant, accurate results across math topics and number system conversions.", icon: "⚡" }, { title: "Access", desc: "A responsive, installable PWA that works smoothly on any device, anywhere.", icon: "▢" }];
+    const tech = ["HTML5", "CSS3", "Vanilla JavaScript", "Progressive Web App", "Google Fonts"];
+    function About() {
+      return <div><div className="border-b border-border bg-gradient-to-b from-secondary/60 to-transparent px-6 pb-8 pt-10 md:px-10"><BackButton to="/" label="← Back to Dashboard" /><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">About <span className="text-gradient">SolverX</span></h2><p className="mt-2 text-sm text-muted-foreground md:text-base">The story, the goals, and the technology behind this project.</p></div><div className="mx-auto max-w-3xl px-6 py-12 md:px-10"><motion.p initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-5 text-base leading-relaxed text-muted-foreground">AMZ Mathematics is an interactive learning platform built by <strong className="text-foreground">AMZ GROUP</strong>, a student tech team from the IT Department at Lebanese French University. It turns nine major math topics — and now digital number systems — into solvers that show every step of the working, not just the final answer.</motion.p><motion.p initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10 text-base leading-relaxed text-muted-foreground">The project started as a small classroom tool and grew into a full platform: a clean, luminous interface, instant calculations, and clear explanations designed to help students actually understand the "how," not just copy the "what."</motion.p><h4 className="mb-5 font-heading text-sm font-bold uppercase tracking-[0.12em] text-primary">Objectives</h4><div className="mb-10 grid gap-4 sm:grid-cols-3">{objectives.map((o, i) => <motion.div key={o.title} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="rounded-2xl border border-border bg-card p-5 shadow-clinical transition hover:-translate-y-1 hover:border-primary/30"><div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-lg text-primary">{o.icon}</div><h5 className="mb-1.5 font-heading text-base font-bold text-foreground">{o.title}</h5><p className="text-sm leading-relaxed text-muted-foreground">{o.desc}</p></motion.div>)}</div><h4 className="mb-4 font-heading text-sm font-bold uppercase tracking-[0.12em] text-primary">Technologies Used</h4><div className="mb-10 flex flex-wrap gap-2">{tech.map((t) => <span key={t} className="rounded-full border border-border bg-secondary/60 px-3 py-1.5 font-mono text-xs font-medium text-muted-foreground">{t}</span>)}</div><h4 className="mb-3 font-heading text-sm font-bold uppercase tracking-[0.12em] text-primary">Vision</h4><p className="text-base leading-relaxed text-muted-foreground">AMZ GROUP wants AMZ Mathematics to grow into a complete reference for students — covering more branches of mathematics and logic design, while staying fast, free, and refreshingly simple to use.</p></div></div>;
+    }
 
-        return (
-          <section className="px-6 py-12">
-            <div className="max-w-[1140px] mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="text-center mb-10"
-              >
-                <div className="text-[12px] tracking-[0.14em] uppercase font-bold text-[#f5b942]">{t.ourServices}</div>
-                <h2 className="mt-2 text-[32px] font-extrabold tracking-tight bg-gradient-to-b from-white to-[#cfd4e6] bg-clip-text text-transparent">
-                  {t.navService}
-                </h2>
-              </motion.div>
+    function Contact() {
+      const [name, setName] = useState(""); const [email, setEmail] = useState(""); const [subject, setSubject] = useState(""); const [message, setMessage] = useState(""); const [status, setStatus] = useState(null);
+      const send = () => { const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); if (!name || !emailOk || !subject || !message) { setStatus({ type: "err", text: "Please fill in all fields with a valid email address." }); return; } setStatus({ type: "ok", text: "Opening your email app to send this message…" }); const mailSubject = encodeURIComponent(subject); const mailBody = encodeURIComponent(message + "\n\n— " + name + " (" + email + ")"); window.location.href = "mailto:muhammadbarzan889@gmail.com?subject=" + mailSubject + "&body=" + mailBody; };
+      const socials = [{ label: "Email", href: "mailto:muhammadbarzan889@gmail.com", color: "#0052ff", icon: "✉" }, { label: "amzgroup.xyz", href: "https://amzgroup.xyz", color: "#10b981", icon: "🌐" }, { label: "Instagram", href: "https://www.instagram.com/mohammed_haji_barzan?igsh=dDhhemtpNXBob2Ju&utm_source=qr", color: "#ec4899", icon: "◎" }];
+      return <div><div className="border-b border-border bg-gradient-to-b from-secondary/60 to-transparent px-6 pb-8 pt-10 md:px-10"><BackButton to="/" label="← Back to Dashboard" /><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Contact <span className="text-gradient">Us</span></h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Have a question, suggestion, or want to collaborate? Send us a message.</p></div><div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 px-6 py-10 md:px-10 lg:grid-cols-[1.2fr_0.8fr]"><div className="rounded-2xl border border-border bg-card p-6 shadow-clinical md:p-8"><h4 className="mb-5 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">Send a Message</h4><div className="space-y-4"><Field label="Name"><input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" /></Field><Field label="Email"><input className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" /></Field><Field label="Subject"><input className={inputClass} value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="What's this about?" /></Field><Field label="Message"><textarea className={`${inputClass} min-h-[120px] resize-y`} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write your message..." /></Field><button onClick={send} className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-heading text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5 hover:bg-primary/90">Send a Message</button>{status && <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm font-medium ${status.type === "ok" ? "border-accent/40 bg-accent/10 text-accent-foreground" : "border-red-500/30 bg-red-500/10 text-red-400"}`}>{status.type === "ok" ? "✓" : "⚠"}{status.text}</motion.div>}</div></div><div className="rounded-2xl border border-border bg-card p-6 shadow-clinical md:p-8"><h4 className="mb-5 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">Connect With Us</h4><div className="flex flex-col gap-2.5">{socials.map((s) => <a key={s.label} href={s.href} target={s.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="group flex items-center gap-3 rounded-xl border border-border bg-secondary/40 px-4 py-3.5 text-sm font-semibold text-foreground transition hover:border-primary hover:bg-card"><span className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ background: `${s.color}15`, color: s.color }}>{s.icon}</span>{s.label}</a>)}</div><p className="mt-5 text-xs leading-relaxed text-muted-foreground">The "Send Message" button opens your email app with the message pre-filled.</p></div></div></div>;
+    }
 
-              <div className="grid sm:grid-cols-2 gap-6">
-                {servicesData.map((s, i) => (
-                  <motion.article
-                    key={s.key}
-                    initial={{ opacity: 0, y: 28 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="group relative rounded-[20px] overflow-hidden bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_4px_14px_rgba(0,0,0,0.28)] hover:-translate-y-1.5 hover:border-[#f5b942]/40 hover:shadow-[0_24px_60px_-18px_rgba(245,185,66,0.45)] transition-all duration-500 flex flex-col"
-                  >
-                    <div className="relative h-48 overflow-hidden">
-                      <img src={images[s.imageKey]} alt={s.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d18] via-transparent to-transparent" />
-                    </div>
-                    <div className="p-6 flex flex-col flex-1">
-                      <h3 className="text-[19px] font-bold text-white tracking-tight">{s.title}</h3>
-                      <p className="mt-2 text-[14.5px] leading-[1.65] text-[#8992a9] flex-1">{t[s.descKey]}</p>
-                      <a
-                        href={s.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-[13.5px] text-[#0a0d18] bg-gradient-to-br from-[#f5b942] to-[#fbbf24] shadow-[0_8px_20px_-8px_rgba(245,185,66,0.7)] hover:-translate-y-0.5 hover:shadow-[0_12px_26px_-8px_rgba(245,185,66,0.85)] transition-all duration-300 self-start ${rtl ? 'flex-row-reverse' : ''}`}
-                      >
-                        {t.openProject}
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    </div>
-                  </motion.article>
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      }
+    /* ════════════ SOLVERS ════════════ */
+    function SetSolver() {
+      const [tab, setTab] = useState("union"); const [res, setRes] = useState(null); const [v, setV] = useState({});
+      const set = (k, val) => setV((s) => ({ ...s, [k]: val }));
+      const run = () => { if (tab === "union") setRes(solveSetUnion(v.suA || "", v.suB || "")); else if (tab === "inter") setRes(solveSetInter(v.siA || "", v.siB || "")); else if (tab === "diff") setRes(solveSetDiff(v.sdA || "", v.sdB || "")); else if (tab === "comp") setRes(solveSetComp(v.scU || "", v.scA || "")); else if (tab === "subset") setRes(solveSubset(v.ssA || "", v.ssB || "")); };
+      const tabs = [{ id: "union", label: "Union" }, { id: "inter", label: "Intersection" }, { id: "diff", label: "Difference" }, { id: "comp", label: "Complement" }, { id: "subset", label: "Subset" }];
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Set Theory</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Enter sets as comma-separated values (e.g. 1, 2, 3)</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "union" && <InputSection heading="Union A ∪ B"><div className="flex flex-wrap gap-3"><Field label="Set A"><input className={inputClass} value={v.suA || ""} onChange={(e) => set("suA", e.target.value)} placeholder="1, 2, 3, 4" /></Field><Field label="Set B"><input className={inputClass} value={v.suB || ""} onChange={(e) => set("suB", e.target.value)} placeholder="3, 4, 5, 6" /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection>}{tab === "inter" && <InputSection heading="Intersection A ∩ B"><div className="flex flex-wrap gap-3"><Field label="Set A"><input className={inputClass} value={v.siA || ""} onChange={(e) => set("siA", e.target.value)} placeholder="1, 2, 3, 4" /></Field><Field label="Set B"><input className={inputClass} value={v.siB || ""} onChange={(e) => set("siB", e.target.value)} placeholder="3, 4, 5, 6" /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection>}{tab === "diff" && <InputSection heading="Difference A − B"><div className="flex flex-wrap gap-3"><Field label="Set A"><input className={inputClass} value={v.sdA || ""} onChange={(e) => set("sdA", e.target.value)} placeholder="1, 2, 3, 4" /></Field><Field label="Set B"><input className={inputClass} value={v.sdB || ""} onChange={(e) => set("sdB", e.target.value)} placeholder="3, 4, 5, 6" /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection>}{tab === "comp" && <InputSection heading="Complement A′ (relative to U)"><div className="flex flex-wrap gap-3"><Field label="Universal Set U"><input className={inputClass} value={v.scU || ""} onChange={(e) => set("scU", e.target.value)} placeholder="1, 2, 3, 4, 5, 6" /></Field><Field label="Set A"><input className={inputClass} value={v.scA || ""} onChange={(e) => set("scA", e.target.value)} placeholder="1, 2, 3" /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection>}{tab === "subset" && <InputSection heading="Check A ⊆ B"><div className="flex flex-wrap gap-3"><Field label="Set A"><input className={inputClass} value={v.ssA || ""} onChange={(e) => set("ssA", e.target.value)} placeholder="1, 2" /></Field><Field label="Set B"><input className={inputClass} value={v.ssB || ""} onChange={(e) => set("ssB", e.target.value)} placeholder="1, 2, 3, 4" /></Field></div><SolveButton onClick={run}>Check →</SolveButton></InputSection>}<ResultPanel result={res} /></div></div>;
+    }
 
-      /* ===================== Contact ===================== */
-      function Contact({ t, lang }) {
-        const rtl = lang === 'ku';
-        const options = [
-          { label: t.email, href: 'mailto:amz.group.development@gmail.com', icon: Mail, primary: true },
-          { label: 'Telegram', href: 'https://t.me/amzgroup_xyz', icon: Send, primary: false },
-          { label: 'GitHub', href: 'https://github.com/amz-group', icon: Github, primary: false },
-        ];
+    function LogicSolver() {
+      const [tab, setTab] = useState("eval"); const [res, setRes] = useState(null); const [p, setP] = useState("true"); const [q, setQ] = useState("true"); const [exprEval, setExprEval] = useState("P AND Q"); const [exprTruth, setExprTruth] = useState("(P OR Q) AND (NOT P)");
+      const tabs = [{ id: "eval", label: "Evaluate" }, { id: "truth", label: "Truth Table" }];
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Logic</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Use T/F · Operators: AND, OR, NOT, IMPLIES, XOR · Variables: P, Q</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "eval" && <InputSection heading="Evaluate Expression"><div className="flex flex-wrap gap-3"><Field label="Value of P"><select className={inputClass} value={p} onChange={(e) => setP(e.target.value)}><option value="true">True (T)</option><option value="false">False (F)</option></select></Field><Field label="Value of Q"><select className={inputClass} value={q} onChange={(e) => setQ(e.target.value)}><option value="true">True (T)</option><option value="false">False (F)</option></select></Field></div><div className="mt-3"><Field label="Expression" className="min-w-[300px]"><input className={inputClass} value={exprEval} onChange={(e) => setExprEval(e.target.value)} /></Field></div><SolveButton onClick={() => setRes(solveLogicEval(p === "true", q === "true", exprEval))}>Evaluate →</SolveButton></InputSection>}{tab === "truth" && <InputSection heading="Generate Truth Table"><Field label="Expression (use P, Q)" className="min-w-[300px]"><input className={inputClass} value={exprTruth} onChange={(e) => setExprTruth(e.target.value)} /></Field><SolveButton onClick={() => setRes(solveTruthTable(exprTruth))}>Generate →</SolveButton></InputSection>}<ResultPanel result={res} /></div></div>;
+    }
 
-        return (
-          <section className="px-6 py-12">
-            <div className="max-w-[1140px] mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6 }}
-                className="relative rounded-[26px] p-8 md:p-12 bg-gradient-to-b from-white/[0.045] to-white/[0.012] border border-white/[0.09] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.55)] overflow-hidden text-center"
-              >
-                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-[#f5b942]/15 blur-[90px] pointer-events-none" />
-                <div className="relative">
-                  <div className="text-[12px] tracking-[0.14em] uppercase font-bold text-[#fbbf24]">Contact</div>
-                  <h2 className="mt-2 text-[32px] font-extrabold tracking-tight bg-gradient-to-b from-white to-[#cfd4e6] bg-clip-text text-transparent">
-                    {t.contactTitle}
-                  </h2>
-                  <p className="mt-4 text-[17px] leading-[1.65] text-[#b8bfd4] max-w-2xl mx-auto">{t.conAbout}</p>
+    function BinarySolver() {
+      const [tab, setTab] = useState("badd"); const [res, setRes] = useState(null); const [v, setV] = useState({});
+      const set = (k, val) => setV((s) => ({ ...s, [k]: val }));
+      const run = () => { if (tab === "badd") setRes(solveBinAdd(v.baA || "", v.baB || "")); else if (tab === "bsub") setRes(solveBinSub(v.bsA || "", v.bsB || "")); else if (tab === "bmul") setRes(solveBinMul(v.bmA || "", v.bmB || "")); else if (tab === "bdiv") setRes(solveBinDiv(v.bdA || "", v.bdB || "")); else if (tab === "d2b") setRes(solveDec2Bin(v.d2b || "")); else if (tab === "b2d") setRes(solveBin2Dec(v.b2d || "")); };
+      const tabs = [{ id: "badd", label: "Addition" }, { id: "bsub", label: "Subtraction" }, { id: "bmul", label: "Multiply" }, { id: "bdiv", label: "Division" }, { id: "d2b", label: "Dec → Bin" }, { id: "b2d", label: "Bin → Dec" }];
+      const pair = (aKey, bKey, aPh, bPh, heading) => <InputSection heading={heading}><div className="flex flex-wrap gap-3"><Field label="Binary A"><input className={inputClass} value={v[aKey] || ""} onChange={(e) => set(aKey, e.target.value)} placeholder={aPh} /></Field><Field label="Binary B"><input className={inputClass} value={v[bKey] || ""} onChange={(e) => set(bKey, e.target.value)} placeholder={bPh} /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection>;
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Binary System</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Enter binary numbers (only 0s and 1s) or decimal integers for conversion</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "badd" && pair("baA", "baB", "1011", "0110", "Binary Addition")}{tab === "bsub" && pair("bsA", "bsB", "1011", "0101", "Binary Subtraction (A − B)")}{tab === "bmul" && pair("bmA", "bmB", "101", "011", "Binary Multiplication")}{tab === "bdiv" && <InputSection heading="Binary Division (A ÷ B)"><div className="flex flex-wrap gap-3"><Field label="Dividend (Binary A)"><input className={inputClass} value={v.bdA || ""} onChange={(e) => set("bdA", e.target.value)} placeholder="1100" /></Field><Field label="Divisor (Binary B)"><input className={inputClass} value={v.bdB || ""} onChange={(e) => set("bdB", e.target.value)} placeholder="10" /></Field></div><SolveButton onClick={run}>Divide →</SolveButton></InputSection>}{tab === "d2b" && <InputSection heading="Decimal to Binary"><Field label="Decimal Number"><input type="number" min="0" className={inputClass} value={v.d2b || ""} onChange={(e) => set("d2b", e.target.value)} placeholder="42" /></Field><SolveButton onClick={run}>Convert →</SolveButton></InputSection>}{tab === "b2d" && <InputSection heading="Binary to Decimal"><Field label="Binary Number"><input className={inputClass} value={v.b2d || ""} onChange={(e) => set("b2d", e.target.value)} placeholder="101010" /></Field><SolveButton onClick={run}>Convert →</SolveButton></InputSection>}<ResultPanel result={res} /></div></div>;
+    }
 
-                  <div className={`flex gap-3 mt-8 flex-wrap justify-center ${rtl ? 'flex-row-reverse' : ''}`}>
-                    {options.map((o, i) => {
-                      const Icon = o.icon;
-                      return (
-                        <a
-                          key={i}
-                          href={o.href}
-                          target={o.href.startsWith('http') ? '_blank' : undefined}
-                          rel="noreferrer"
-                          className={`group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full font-semibold text-[14.5px] transition-all duration-300 hover:-translate-y-0.5 ${
-                            o.primary
-                              ? 'text-white bg-gradient-to-br from-[#f5b942] via-[#fbbf24] to-[#fbbf24] shadow-[0_10px_30px_-8px_rgba(245,185,66,0.65)] hover:shadow-[0_16px_40px_-8px_rgba(245,185,66,0.8)]'
-                              : 'text-white bg-white/[0.035] border border-white/[0.09] hover:border-white/[0.16] hover:bg-white/[0.06]'
-                          }`}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {o.label}
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </section>
-        );
-      }
+    function MatrixGrid({ matrix, onChange, label }) { return <div className="mb-4"><p className="mb-2 font-mono text-xs font-bold uppercase tracking-wide text-primary">{label}</p><div className="inline-grid gap-1.5" style={{ gridTemplateColumns: `repeat(${matrix[0].length}, 64px)` }}>{matrix.map((row, i) => row.map((val, j) => <input key={`${i}-${j}`} type="number" value={val} onChange={(e) => { const next = matrix.map((r) => r.slice()); next[i][j] = parseFloat(e.target.value) || 0; onChange(next); }} className="rounded-lg border border-input bg-secondary/50 px-2 py-2 text-center font-mono text-sm outline-none focus:border-primary focus:bg-card" />))}</div></div>; }
+    function MatrixSolver() {
+      const [tab, setTab] = useState("madd"); const [res, setRes] = useState(null);
+      const makeMatrix = (r, c, val = 0) => Array.from({ length: r }, () => Array.from({ length: c }, () => val));
+      const [addR, setAddR] = useState(2); const [addC, setAddC] = useState(2); const [matA, setMatA] = useState(makeMatrix(2, 2)); const [matB, setMatB] = useState(makeMatrix(2, 2));
+      const [mulM, setMulM] = useState(2); const [mulN, setMulN] = useState(2); const [mulP, setMulP] = useState(2); const [mulA, setMulA] = useState(makeMatrix(2, 2)); const [mulB, setMulB] = useState(makeMatrix(2, 2));
+      const [detSize, setDetSize] = useState(2); const [detA, setDetA] = useState(makeMatrix(2, 2));
+      const [transR, setTransR] = useState(2); const [transC, setTransC] = useState(3); const [transA, setTransA] = useState(makeMatrix(2, 3));
+      useEffect(() => { setMatA(makeMatrix(addR, addC)); setMatB(makeMatrix(addR, addC)); }, [addR, addC]);
+      useEffect(() => { setMulA(makeMatrix(mulM, mulN)); setMulB(makeMatrix(mulN, mulP)); }, [mulM, mulN, mulP]);
+      useEffect(() => { setDetA(makeMatrix(detSize, detSize)); }, [detSize]);
+      useEffect(() => { setTransA(makeMatrix(transR, transC)); }, [transR, transC]);
+      const run = () => { if (tab === "madd") setRes(solveMatAdd(matA, matB)); else if (tab === "msub") setRes(solveMatSub(matA, matB)); else if (tab === "mmul") setRes(solveMatMul(mulA, mulB)); else if (tab === "mdet") setRes(solveMatDet(detA, detSize)); else if (tab === "mtrans") setRes(solveMatTrans(transA)); };
+      const tabs = [{ id: "madd", label: "Addition" }, { id: "msub", label: "Subtraction" }, { id: "mmul", label: "Multiply" }, { id: "mdet", label: "Determinant" }, { id: "mtrans", label: "Transpose" }];
+      const sizeField = (label, val, set, min = 1, max = 5) => <Field label={label}><input type="number" min={min} max={max} value={val} onChange={(e) => set(Math.max(min, Math.min(max, parseInt(e.target.value) || min)))} className={inputClass} /></Field>;
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Matrix</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Specify rows and columns, fill in the values, then solve</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{(tab === "madd" || tab === "msub") && <InputSection heading={tab === "madd" ? "Matrix Addition A + B" : "Matrix Subtraction A − B"}><div className="mb-4 flex gap-3">{sizeField("Rows", addR, setAddR)}{sizeField("Cols", addC, setAddC)}</div><MatrixGrid matrix={matA} onChange={setMatA} label="Matrix A" /><MatrixGrid matrix={matB} onChange={setMatB} label="Matrix B" /><SolveButton onClick={run}>{tab === "madd" ? "Add →" : "Subtract →"}</SolveButton></InputSection>}{tab === "mmul" && <InputSection heading="Matrix Multiplication A × B (A is m×n, B is n×p)"><div className="mb-4 flex gap-3">{sizeField("A Rows (m)", mulM, setMulM, 1, 4)}{sizeField("Shared (n)", mulN, setMulN, 1, 4)}{sizeField("B Cols (p)", mulP, setMulP, 1, 4)}</div><MatrixGrid matrix={mulA} onChange={setMulA} label={`Matrix A (${mulM}×${mulN})`} /><MatrixGrid matrix={mulB} onChange={setMulB} label={`Matrix B (${mulN}×${mulP})`} /><SolveButton onClick={run}>Multiply →</SolveButton></InputSection>}{tab === "mdet" && <InputSection heading="Determinant of Square Matrix"><div className="mb-4"><Field label="Size"><select className={inputClass} value={detSize} onChange={(e) => setDetSize(parseInt(e.target.value))}><option value={2}>2×2</option><option value={3}>3×3</option></select></Field></div><MatrixGrid matrix={detA} onChange={setDetA} label={`Matrix A (${detSize}×${detSize})`} /><SolveButton onClick={run}>Determinant →</SolveButton></InputSection>}{tab === "mtrans" && <InputSection heading="Matrix Transpose"><div className="mb-4 flex gap-3">{sizeField("Rows", transR, setTransR)}{sizeField("Cols", transC, setTransC)}</div><MatrixGrid matrix={transA} onChange={setTransA} label={`Matrix A (${transR}×${transC})`} /><SolveButton onClick={run}>Transpose →</SolveButton></InputSection>}<ResultPanel result={res} /></div></div>;
+    }
 
-      /* ===================== Footer ===================== */
-      function Footer({ t }) {
-        const [year, setYear] = useState('');
-        useEffect(() => setYear(new Date().getFullYear()), []);
-        return (
-          <footer className="px-6 py-12 border-t border-white/[0.09] text-[#8992a9] text-[14px]">
-            <div className="max-w-[1140px] mx-auto flex flex-wrap gap-4 items-center justify-between">
-              <div>© {year} KRD Group. {t.rights}</div>
-              <div className="flex gap-2">
-                <span className="px-3.5 py-2 rounded-full border border-white/[0.09] bg-white/[0.035] text-[13px] hover:border-white/[0.16] hover:bg-white/[0.06] transition-all duration-300">
-                  Build for the Future
-                </span>
-              </div>
-            </div>
-          </footer>
-        );
-      }
+    function PrimeSolver() {
+      const [tab, setTab] = useState("ptest"); const [res, setRes] = useState(null); const [n, setN] = useState(""); const [from, setFrom] = useState(1); const [to, setTo] = useState(50);
+      const run = () => { if (tab === "ptest") setRes(solvePrimeTest(n)); else if (tab === "plist") setRes(solvePrimeList(from, to)); else if (tab === "pfact") setRes(solvePrimeFact(n)); };
+      const tabs = [{ id: "ptest", label: "Primality Test" }, { id: "plist", label: "List Primes" }, { id: "pfact", label: "Factorization" }];
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Prime Numbers</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Test primality, list primes in a range, or factorize numbers</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "ptest" && <InputSection heading="Is this number prime?"><Field label="Number (≥ 2)"><input type="number" min="2" className={inputClass} value={n} onChange={(e) => setN(e.target.value)} placeholder="17" /></Field><SolveButton onClick={run}>Test →</SolveButton></InputSection>}{tab === "plist" && <InputSection heading="List All Primes in Range"><div className="flex flex-wrap gap-3"><Field label="From"><input type="number" min="1" className={inputClass} value={from} onChange={(e) => setFrom(e.target.value)} /></Field><Field label="To"><input type="number" min="2" className={inputClass} value={to} onChange={(e) => setTo(e.target.value)} /></Field></div><SolveButton onClick={run}>List →</SolveButton></InputSection>}{tab === "pfact" && <InputSection heading="Prime Factorization"><Field label="Number (≥ 2)"><input type="number" min="2" className={inputClass} value={n} onChange={(e) => setN(e.target.value)} placeholder="60" /></Field><SolveButton onClick={run}>Factorize →</SolveButton></InputSection>}<ResultPanel result={res} /></div></div>;
+    }
 
-      /* ===================== Home ===================== */
-      const images = {
-        brand: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/9affefcba_IMG_7939.PNG',
-        member1: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/2675091fc_generated_1924f71d.png',
-        member2: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/72a14130a_generated_8c239d0c.png',
-        member3: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/7a39fe4c9_generated_cd5e165e.png',
-        university: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/490f33abf_generated_eabc1327.png',
-        math: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/19824fe87_generated_cbe24efc.png',
-        weather: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/1aa5bae2a_generated_0d31667b.png',
-        wifi: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/90a648303_generated_f4cb3b85.png',
-        qr: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/b6726c04a_generated_80bd0020.png',
-        snake: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/d0a7b0883_generated_5f88d148.png',
-        flappy: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/64d46e8fa_generated_0fbb036e.png',
-        restaurant: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/402802573_generated_72dcfcf8.png',
-        shopping: 'https://media.base44.com/images/public/6a8cbd5a95c891aa3ab3fa47/9ef119a2a_generated_56c744fe.png',
-      };
+    function DerivSolver() {
+      const [tab, setTab] = useState("dpower"); const [res, setRes] = useState(null); const [fx, setFx] = useState("3x^4 + 2x^2 - 5x + 7"); const [outer, setOuter] = useState("pow"); const [p, setP] = useState(3); const [a, setA] = useState(2); const [n, setN] = useState(2); const [trigType, setTrigType] = useState("sin"); const [trigA, setTrigA] = useState(2);
+      const run = () => { if (tab === "dpower") setRes(solvePowerRule(fx)); else if (tab === "dchain") setRes(solveChainRule(outer, p, a, n)); else if (tab === "dtrig") setRes(solveTrigDeriv(trigType, trigA)); };
+      const tabs = [{ id: "dpower", label: "Power Rule" }, { id: "dchain", label: "Chain Rule" }, { id: "dtrig", label: "Trig / Exp / Log" }];
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Derivatives</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Find derivatives of common function types step by step</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "dpower" && <><InfoBox><strong className="text-primary">Power Rule:</strong> d/dx [axⁿ] = n·a·xⁿ⁻¹<br />Enter a polynomial as a sum of terms, e.g. <strong className="text-primary">3x^4 + 2x^2 - 5x + 7</strong></InfoBox><InputSection heading="Differentiate Polynomial"><Field label="f(x)" className="min-w-[320px]"><input className={inputClass} value={fx} onChange={(e) => setFx(e.target.value)} /></Field><SolveButton onClick={run}>Differentiate →</SolveButton></InputSection></>}{tab === "dchain" && <><InfoBox><strong className="text-primary">Chain Rule:</strong> d/dx [f(g(x))] = f'(g(x)) · g'(x)<br />Outer function choices: xⁿ, sin, cos, eˣ, ln · Inner g(x) = ax^n</InfoBox><InputSection heading="Outer f applied to Inner g(x) = ax^n"><div className="flex flex-wrap gap-3"><Field label="Outer function f"><select className={inputClass} value={outer} onChange={(e) => setOuter(e.target.value)}><option value="pow">Power: (...)^p</option><option value="sin">sin(...)</option><option value="cos">cos(...)</option><option value="exp">e^(...)</option><option value="ln">ln(...)</option></select></Field>{outer === "pow" && <Field label="Outer power p"><input type="number" className={inputClass} value={p} onChange={(e) => setP(e.target.value)} /></Field>}</div><div className="mt-3 flex flex-wrap gap-3"><Field label="Inner g(x) — coefficient a"><input type="number" className={inputClass} value={a} onChange={(e) => setA(e.target.value)} /></Field><Field label="Inner g(x) — power n"><input type="number" className={inputClass} value={n} onChange={(e) => setN(e.target.value)} /></Field></div><SolveButton onClick={run}>Apply Chain Rule →</SolveButton></InputSection></>}{tab === "dtrig" && <><InfoBox><strong className="text-primary">Standard Derivatives:</strong> d/dx[sin x]=cos x · d/dx[cos x]=−sin x · d/dx[tan x]=sec²x · d/dx[eˣ]=eˣ · d/dx[aˣ]=aˣln(a) · d/dx[ln x]=1/x</InfoBox><InputSection heading="Find derivative of standard function"><div className="flex flex-wrap gap-3"><Field label="Function type"><select className={inputClass} value={trigType} onChange={(e) => setTrigType(e.target.value)}><option value="sin">sin(x)</option><option value="cos">cos(x)</option><option value="tan">tan(x)</option><option value="ex">eˣ</option><option value="ax">aˣ (specify a)</option><option value="lnx">ln(x)</option><option value="loga">log_a(x) (specify a)</option></select></Field><Field label="Base a (for aˣ or log_a)"><input type="number" min="0.001" className={inputClass} value={trigA} onChange={(e) => setTrigA(e.target.value)} /></Field></div><SolveButton onClick={run}>Find Derivative →</SolveButton></InputSection></>}<ResultPanel result={res} /></div></div>;
+    }
 
-      function Home() {
-        const [lang, setLang] = useState(() => localStorage.getItem('amz-lang') || 'en');
-        const [activeSection, setActiveSection] = useState('home');
+    function IntegSolver() {
+      const [tab, setTab] = useState("indef"); const [res, setRes] = useState(null); const [fxIndef, setFxIndef] = useState("4x^3 + 2x - 6"); const [fxDef, setFxDef] = useState("3x^2 + 2x"); const [limA, setLimA] = useState(0); const [limB, setLimB] = useState(3); const [trigType, setTrigType] = useState("sinx"); const [trigA, setTrigA] = useState(2);
+      const run = () => { if (tab === "indef") setRes(solveIndef(fxIndef)); else if (tab === "defin") setRes(solveDefin(fxDef, limA, limB)); else if (tab === "itrig") setRes(solveTrigInteg(trigType, trigA)); };
+      const tabs = [{ id: "indef", label: "Indefinite" }, { id: "defin", label: "Definite" }, { id: "itrig", label: "Trig / Exp / Log" }];
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Integrals</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Compute indefinite and definite integrals step by step</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "indef" && <><InfoBox><strong className="text-primary">Power Rule of Integration:</strong> ∫axⁿ dx = (a/(n+1))xⁿ⁺¹ + C &nbsp; (n ≠ −1)<br />Enter a polynomial e.g. <strong className="text-primary">4x^3 + 2x - 6</strong></InfoBox><InputSection heading="∫ f(x) dx — Indefinite Integral"><Field label="f(x)" className="min-w-[320px]"><input className={inputClass} value={fxIndef} onChange={(e) => setFxIndef(e.target.value)} /></Field><SolveButton onClick={run}>Integrate →</SolveButton></InputSection></>}{tab === "defin" && <><InfoBox><strong className="text-primary">Definite Integral:</strong> ∫ₐᵇ f(x) dx = F(b) − F(a) where F is the antiderivative<br />Enter a polynomial e.g. <strong className="text-primary">3x^2 + 2x</strong></InfoBox><InputSection heading="∫ₐᵇ f(x) dx — Definite Integral"><Field label="f(x)" className="min-w-[320px]"><input className={inputClass} value={fxDef} onChange={(e) => setFxDef(e.target.value)} /></Field><div className="mt-3 flex flex-wrap gap-3"><Field label="Lower limit a"><input type="number" className={inputClass} value={limA} onChange={(e) => setLimA(e.target.value)} /></Field><Field label="Upper limit b"><input type="number" className={inputClass} value={limB} onChange={(e) => setLimB(e.target.value)} /></Field></div><SolveButton onClick={run}>Evaluate →</SolveButton></InputSection></>}{tab === "itrig" && <><InfoBox><strong className="text-primary">Standard Integrals:</strong> ∫sin x dx=−cos x+C · ∫cos x dx=sin x+C · ∫eˣ dx=eˣ+C · ∫(1/x)dx=ln|x|+C · ∫aˣdx=aˣ/ln(a)+C</InfoBox><InputSection heading="Standard function integration"><div className="flex flex-wrap gap-3"><Field label="Function type"><select className={inputClass} value={trigType} onChange={(e) => setTrigType(e.target.value)}><option value="sinx">sin(x)</option><option value="cosx">cos(x)</option><option value="ex">eˣ</option><option value="invx">1/x</option><option value="ax">aˣ (specify a)</option><option value="tanx">tan(x)</option></select></Field><Field label="Base a (for aˣ)"><input type="number" min="0.001" className={inputClass} value={trigA} onChange={(e) => setTrigA(e.target.value)} /></Field></div><SolveButton onClick={run}>Integrate →</SolveButton></InputSection></>}<ResultPanel result={res} /></div></div>;
+    }
 
-        useEffect(() => {
-          localStorage.setItem('amz-lang', lang);
-          document.documentElement.setAttribute('dir', lang === 'ku' ? 'rtl' : 'ltr');
-          document.documentElement.setAttribute('lang', lang === 'ku' ? 'ku' : 'en');
-        }, [lang]);
+    function SeqSolver() {
+      const [tab, setTab] = useState("sarith"); const [res, setRes] = useState(null); const [a1, setA1] = useState(2); const [d, setD] = useState(3); const [n, setN] = useState(10); const [ga1, setGA1] = useState(3); const [r, setR] = useState(2); const [gn, setGN] = useState(6);
+      const run = () => { if (tab === "sarith") setRes(solveArithSeq(a1, d, n)); else setRes(solveGeoSeq(ga1, r, gn)); };
+      const tabs = [{ id: "sarith", label: "Arithmetic" }, { id: "sgeo", label: "Geometric" }];
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Sequences</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Find the nth term and partial sums of arithmetic and geometric sequences</p></div><TabBar tabs={tabs} active={tab} onChange={(t) => { setTab(t); setRes(null); }} /><div className="mx-auto max-w-3xl px-6 py-8 md:px-10">{tab === "sarith" && <><InfoBox><strong className="text-primary">Arithmetic Sequence:</strong> aₙ = a₁ + (n−1)·d &nbsp;|&nbsp; Sₙ = n/2 · (2a₁ + (n−1)d)</InfoBox><InputSection heading="Arithmetic Sequence"><div className="flex flex-wrap gap-3"><Field label="First term a₁"><input type="number" className={inputClass} value={a1} onChange={(e) => setA1(e.target.value)} /></Field><Field label="Common difference d"><input type="number" className={inputClass} value={d} onChange={(e) => setD(e.target.value)} /></Field><Field label="Find nth term (n)"><input type="number" min="1" className={inputClass} value={n} onChange={(e) => setN(e.target.value)} /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection></>}{tab === "sgeo" && <><InfoBox><strong className="text-primary">Geometric Sequence:</strong> aₙ = a₁ · rⁿ⁻¹ &nbsp;|&nbsp; Sₙ = a₁·(1−rⁿ)/(1−r) for r≠1</InfoBox><InputSection heading="Geometric Sequence"><div className="flex flex-wrap gap-3"><Field label="First term a₁"><input type="number" className={inputClass} value={ga1} onChange={(e) => setGA1(e.target.value)} /></Field><Field label="Common ratio r"><input type="number" step="any" className={inputClass} value={r} onChange={(e) => setR(e.target.value)} /></Field><Field label="Find nth term (n)"><input type="number" min="1" className={inputClass} value={gn} onChange={(e) => setGN(e.target.value)} /></Field></div><SolveButton onClick={run}>Solve →</SolveButton></InputSection></>}<ResultPanel result={res} /></div></div>;
+    }
 
-        const t = useMemo(() => {
-          if (lang === 'ku') return { ...defaultEnglish, ...translations.ku };
-          return defaultEnglish;
-        }, [lang]);
+    function SeriesSolver() {
+      const [res, setRes] = useState(null); const [a1, setA1] = useState(6); const [r, setR] = useState(0.5);
+      return <div><div className="px-6 pt-10 md:px-10"><BackButton to="/math" label="← Back to Mathematics" /></div><div className="px-6 pb-8 md:px-10"><h2 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">Series</h2><p className="mt-2 text-sm text-muted-foreground md:text-base">Test convergence and calculate sums of infinite geometric series</p></div><div className="mx-auto max-w-3xl px-6 py-8 md:px-10"><InfoBox><strong className="text-primary">Infinite Geometric Series:</strong> S∞ = a₁ / (1−r) &nbsp; only if |r| &lt; 1 (converges)<br />If |r| ≥ 1 the series diverges (no finite sum)</InfoBox><InputSection heading="Sum of Infinite Geometric Series"><div className="flex flex-wrap gap-3"><Field label="First term a₁"><input type="number" className={inputClass} value={a1} onChange={(e) => setA1(e.target.value)} /></Field><Field label="Common ratio r"><input type="number" step="any" className={inputClass} value={r} onChange={(e) => setR(e.target.value)} /></Field></div><SolveButton onClick={() => setRes(solveInfSeries(a1, r))}>Test &amp; Calculate →</SolveButton></InputSection><ResultPanel result={res} /></div></div>;
+    }
 
-        const handleNavigate = (id) => {
-          setActiveSection(id);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
+    const solverMap = { set: SetSolver, logic: LogicSolver, binary: BinarySolver, matrix: MatrixSolver, prime: PrimeSolver, deriv: DerivSolver, integ: IntegSolver, seq: SeqSolver, series: SeriesSolver };
+    function Solver() { const { subject } = useParams(); const Component = solverMap[subject]; if (!Component) return <Navigate to="/math" replace />; return <Component />; }
 
-        const sections = {
-          home: <Hero t={t} lang={lang} onNavigate={handleNavigate} brandImage={images.brand} />,
-          about: <AboutDeveloper t={t} lang={lang} images={images} />,
-          project: <Projects t={t} lang={lang} images={images} />,
-          ourservice: <Services t={t} lang={lang} images={images} />,
-          contact: <Contact t={t} lang={lang} />,
-        };
+    function PageNotFound() { return <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center"><h1 className="font-heading text-6xl font-bold text-foreground">404</h1><p className="mt-4 text-muted-foreground">This page could not be found.</p><Link to="/" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-heading text-sm font-semibold text-white shadow-glow">← Back to Dashboard</Link></div>; }
 
-        return (
-          <div className="min-h-screen text-[#eef1f8] font-body antialiased tracking-tight relative overflow-x-hidden">
-            <div className="fixed inset-0 -z-10 pointer-events-none">
-              <div className="absolute inset-0 bg-[#000000]" />
-              <div className="absolute top-0 left-[12%] w-[1000px] h-[560px] rounded-full bg-[#f5b942]/6 blur-[140px]" />
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1200px] h-[700px] rounded-full bg-[#d97706]/5 blur-[160px]" />
-              <StarField />
-            </div>
+    function App() {
+      return <Router><ScrollToTop /><Routes><Route element={<Layout />}><Route path="/" element={<Dashboard />} /><Route path="/math" element={<MathHub />} /><Route path="/logic-design" element={<LogicDesign />} /><Route path="/logic-design/:topic" element={<LogicDesignSolver />} /><Route path="/team" element={<Team />} /><Route path="/about" element={<About />} /><Route path="/contact" element={<Contact />} /><Route path="/solver/:subject" element={<Solver />} /></Route><Route path="*" element={<PageNotFound />} /></Routes></Router>;
+    }
 
-            <Header lang={lang} setLang={setLang} t={t} activeSection={activeSection} onNavigate={handleNavigate} brandImage={images.brand} />
-
-            <main className="pt-4">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeSection}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {sections[activeSection]}
-                </motion.div>
-              </AnimatePresence>
-            </main>
-
-            <Footer t={t} />
-          </div>
-        );
-      }
-
-      /* ===================== Render ===================== */
-      const root = createRoot(document.getElementById('root'));
-      root.render(<Home />);
-    </script>
-  </body>
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
 </html>
